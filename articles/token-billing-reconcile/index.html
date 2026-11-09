@@ -45,8 +45,6 @@
 <div class="article-body">
 <h1>API 中转站 Token 扣费对不上：从一条 request_id 开始，四类原因按顺序排查</h1>
 <div class="meta-line"><span class="tag">billing</span><span>2026-11-09</span><span class="dot">·</span><span>token扣费对不上</span></div>
-<div class="article-lead">经常有人搜「中转站偷量了吗」「余额掉得比预期快」「API 中转 账单对不上」「token 消耗 忽然变多」。这几个问法看着不同，落到排查上其实是同一件事：把一条具体请求的账拆开，看差在哪一层。</div>
-
 <p>去年年底我们有个批量摘要的任务，月底对账发现比预估高了三成多。群里第一反应是平台偷量，有人已经准备换站了。后来花了大概二十分钟，把一条样本请求从客户端到上游捋了一遍，问题出在自己这边的重试逻辑上。钱不多，但这事之后我们把排查顺序固定下来了，后来又用过好几次。</p>
 <p>先说结论：扣费对不上，八成不是「有人改数字」。按正常消耗被漏算 → 协议口径不一致 → 技术性漏记或多记 → 真的有人动手脚，这个顺序走，别一上来就怀疑平台。跳步只会把简单问题复杂化。</p>
 <h2 id="sec-1">第 0 分钟：别看汇总账单</h2>
@@ -84,10 +82,8 @@
 <p>反过来，下面几条同时出现，就该进入换不换的决策了：拆完字段、扣掉重试、本地重算仍对不上；差距是持续性的而非单次异常；集中在输入侧或缓存字段；平台给不出原始 usage 和请求级日志；解释永远停在「上游就这样」，拿不出可验证的数据。</p>
 <h2 id="sec-8">一句实话</h2>
 <p>对账这件事，最怕的不是差那几毛钱，是差得不明不白。选平台时「能不能查一条请求的完整 usage」比「便宜几折」重要得多 —— 能查，五分钟定位；不能查，只能换一家重跑一遍，然后继续不知道。</p>
-<p>（各家字段命名和计费规则会随版本调整，具体以自己后台当前显示的为准。这篇写的是排查方法，不是任何一家的账单说明。）</p>
 <div class="cta"><strong>继续看：</strong><a href="/topics/billing/">计费与成本</a> ·
-<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
-型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a></div>
 <section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/api-relay-pricing-ratio/">API 中转站倍率是什么意思：计费口径与对账</a><p class="card-desc">两层换算拆开讲，倍率按方向 / 模型 / 分组 / 时段的差异、综合单价公式、四类搜索意图与可填的比价工作表。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">API中转站倍率</span></div></article><article class="card"><a class="card-title" href="/articles/coding-relay-cache-cost/">AI 编程中转站：长上下文缓存命中与成本</a><p class="card-desc">编程场景输入占比为何远大于输出、缓存命中率算法、五次成本复盘、会话粘性与长连接稳定性要求。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">AI编程中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/api-relay-faq-troubleshooting/">API 中转站 FAQ：401、404、流式断流排查</a><p class="card-desc">按现象组织的速查：认证失败、model not found、模型列表为空、Base URL、断流、超时重试、402、429、账单差异。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">API中转站报错排查</span></div></article></div></section>
 </div>
 <aside class="toc"><strong>本文目录</strong><a href="#sec-1">第 0 分钟：别看汇总账单</a><a href="#sec-2">第 1 类：不是扣错了，是计费范围比你想的大</a><a href="#sec-3">第 2 类：协议口径不一致，两边都没错</a><a href="#sec-4">第 3 类：网关 bug 造成的漏记或多记</a><a href="#sec-5">第 4 类：确实有人在数字上做手脚</a><a href="#sec-6">5 分钟排查顺序，别跳步</a><a href="#sec-7">什么时候不是中转站的问题</a><a href="#sec-8">一句实话</a></aside>
@@ -99,7 +95,7 @@
       <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
       <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
     </nav>
-    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+    <p class="disclaimer">型号、价格与平台规则会调整，以各平台控制台当前公示为准；使用第三方接口服务请自行评估数据与资金风险。</p>
   </div>
 </footer>
 <script src="/assets/app.js" defer></script>

@@ -45,8 +45,6 @@
 <div class="article-body">
 <h1>国产模型 API 聚合：DeepSeek、GLM、Kimi、MiniMax 混着用，省钱在调度不在单价</h1>
 <div class="meta-line"><span class="tag">models</span><span>2026-11-09</span><span class="dot">·</span><span>国产模型中转API</span></div>
-<div class="article-lead">「国产大模型 API 中转」「DeepSeek V4 哪个平台便宜」「一个 Key 调多家国产模型」「国内直连 大模型 API 平台」—— 2026 年这类搜索的落点，已经从「哪家最便宜」变成「怎么按任务分模型」。</div>
-
 <p>国产线这两年有个明显变化：模型之间的能力差在缩小，价格和延迟的差反而拉开了。分类抽取这种活，用旗舰推理模型跑是纯浪费；反过来真要啃几十页材料，快速档的输出又不够用。所以现在更值得花时间的不是挨个比价，是设计一条降级链。</p>
 <h2 id="sec-1">一条能直接用的降级链</h2>
 <pre><code>请求进来
@@ -94,8 +92,7 @@ def complete(prompt, tier="light", **kw):
 <h2 id="sec-6">收尾</h2>
 <p>把成本降下来最有效的一步，通常不是谈到更低的折扣，是让便宜模型真的承担了大部分请求。分档、缓存、峰谷、升级触发条件，这四件事做完，再回头看要不要换平台，结论往往已经不一样了。</p>
 <div class="cta"><strong>继续看：</strong><a href="/topics/models/">模型与型号专题</a> ·
-<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
-型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a></div>
 <section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/llm-relay-model-list-2026/">AI 中转站支持哪些模型：2026 型号 ID 整理</a><p class="card-desc">26 个型号按 Claude / GPT / Gemini / Grok / 国产 / 视觉分组，附命名规则、/v1/models 校验脚本与最小验证组。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">AI中转站模型列表</span></div></article><article class="card"><a class="card-title" href="/articles/agent-multi-model-routing/">AI Agent 工作流多模型调度：统一 API 网关实践</a><p class="card-desc">网关层四件事、成本 / 性能 / 稳定三种路由策略、分层结构图、按步骤打标签的记账方式与兜底清单。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">Agent多模型调度</span></div></article><article class="card"><a class="card-title" href="/articles/coding-relay-cache-cost/">AI 编程中转站：长上下文缓存命中与成本</a><p class="card-desc">编程场景输入占比为何远大于输出、缓存命中率算法、五次成本复盘、会话粘性与长连接稳定性要求。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">AI编程中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/gpt-api-relay-models/">GPT 中转平台：gpt-6-sol 与 gpt-5.6-terra 怎么选</a><p class="card-desc">按轻中重三档绑型号，用综合单价而非折扣横比；附 2026 年型号命名规则、A/B 记录模板和默认旗舰习惯的成本账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">GPT中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/claude-api-relay-models/">Claude 中转平台：长任务翻车复盘与型号配置</a><p class="card-desc">一次超时重发导致的缓存失效复盘，claude-opus-5-5 / sonnet-5-5 / haiku-5-5 分档、缓存命中率算法与长任务参数清单。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Claude中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/gemini-api-relay-china/">Gemini 中转平台：gemini-3.8-flash 国内调用</a><p class="card-desc">多模态上传慢在哪、长上下文被截断的四类原因、协议差异、finish_reason 对照表与体积账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Gemini中转平台</span></div></article></div></section>
 </div>
 <aside class="toc"><strong>本文目录</strong><a href="#sec-1">一条能直接用的降级链</a><a href="#sec-2">缓存和峰谷，比折扣更影响账单</a><a href="#sec-3">接聚合平台，还是分别接官方</a><a href="#sec-4">海外型号做兜底，别做默认</a><a href="#sec-5">几个实测才发现的细节</a><a href="#sec-6">收尾</a></aside>
@@ -107,7 +104,7 @@ def complete(prompt, tier="light", **kw):
       <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
       <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
     </nav>
-    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+    <p class="disclaimer">型号、价格与平台规则会调整，以各平台控制台当前公示为准；使用第三方接口服务请自行评估数据与资金风险。</p>
   </div>
 </footer>
 <script src="/assets/app.js" defer></script>

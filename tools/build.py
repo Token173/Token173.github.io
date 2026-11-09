@@ -230,7 +230,7 @@ def shell(*, title, seo_title, desc, kws, body, canonical, breadcrumbs, extra_he
       <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
       <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
     </nav>
-    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+    <p class="disclaimer">型号、价格与平台规则会调整，以各平台控制台当前公示为准；使用第三方接口服务请自行评估数据与资金风险。</p>
   </div>
 </footer>
 <script src="/assets/app.js" defer></script>
@@ -326,7 +326,6 @@ th{background:var(--bg-soft);font-weight:600;white-space:nowrap}
 tr:last-child td{border-bottom:0}
 .article-layout{display:grid;grid-template-columns:minmax(0,1fr) 232px;gap:46px;align-items:start}
 .article-body{min-width:0;font-size:15.5px}
-.article-lead{font-size:16.5px;color:#3b4654;background:var(--bg-soft);border-radius:var(--radius);padding:18px 20px;margin-bottom:26px}
 .toc{position:sticky;top:86px;font-size:13.5px;border-left:1px solid var(--line);padding-left:16px;max-height:calc(100vh - 110px);overflow:auto}
 .toc strong{display:block;font-size:12px;letter-spacing:.08em;color:var(--muted);margin-bottom:10px;text-transform:uppercase}
 .toc a{display:block;color:var(--muted);padding:4px 0;line-height:1.5}
@@ -457,12 +456,10 @@ def main():
         raw = docs[no]
         h1 = re.search(r"^#\s+(.*)$", raw, re.M).group(1).strip()
         body_html, toc = md_to_html(raw)
-        # 引言段单独提出来做 lead
-        lead = ""
-        lm = re.search(r"^>\s+(.*)$", raw, re.M)
-        if lm:
-            lead = '<div class="article-lead">%s</div>' % inline(lm.group(1))
-            body_html = re.sub(r"<blockquote>.*?</blockquote>", "", body_html, count=1, flags=re.S)
+        # 源文中以 > 开头的是编辑注记（搜索问法 / SEO 说明），属于元信息，不输出到可见正文。
+        # 关键词由 title、H1、URL、meta description/keywords 承接，不以「我在布局关键词」的口吻出现在文章里。
+        if body_html.startswith("<blockquote>"):
+            body_html = re.sub(r"^<blockquote>.*?</blockquote>\s*", "", body_html, count=1, flags=re.S)
         related = []
         for r in list(extra_related) + [x[0] for x in META if x[6] == topic and x[0] != no]:
             if r != no and r not in related and r in META_BY_NO:
@@ -489,16 +486,14 @@ def main():
 <div class="article-body">
 <h1>{h1}</h1>
 <div class="meta-line"><span class="tag">{topic}</span><span>{date}</span><span class="dot">·</span><span>{kw}</span></div>
-{lead}
 {content}
 <div class="cta"><strong>继续看：</strong><a href="/topics/{topic}/">{tname}</a> ·
-<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
-型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a></div>
 <section class="related"><h2>相关文章</h2><div class="grid">{related}</div></section>
 </div>
 <aside class="toc"><strong>本文目录</strong>{toc}</aside>
 </div>""".format(h1=esc(h1), topic=esc(topic), date=TODAY, kw=esc(kw),
-                 tname=esc(TOPICS[topic][0]), lead=lead, content=body_html,
+                 tname=esc(TOPICS[topic][0]), content=body_html,
                  related="".join(article_card(r) for r in related), toc=toc_html)
         canonical = "/articles/%s/" % slug
         write("articles/%s/index.html" % slug, shell(
@@ -615,25 +610,19 @@ def main():
 
     # ---- 关于页 ----
     about = """<h1>关于本站</h1>
-<p class="section-desc">一份关于大模型 API 中转、聚合与接入的技术笔记。</p>
-<h2>写什么</h2>
-<p>选型与验收、国内直连与协议配置、模型型号清单、计费口径与对账、风险边界、多模型调度工程实践。内容按公开资料和实际接入过程整理，带可复现的命令、字段名、报错码和记录表。</p>
-<h2>不写什么</h2>
-<p>不列无来源的排行榜，不承诺任何平台的稳定性或折扣数字，不代任何平台作资质背书。所有型号 ID、价格与规则都会调整，文中一律以平台控制台当前公示为准。</p>
+<p>这里记录大模型 API 中转、聚合与接入过程中的实际问题：怎么选、怎么配、怎么算账、出了问题怎么查。</p>
+<p>内容来自公开资料与真实接入记录，尽量给出可复现的命令、字段名、报错码和记录表，而不是结论式的推荐。</p>
+<h2>内容范围</h2>
+<p>选型与验收方法、国内直连与协议配置、按家族整理的模型型号清单、计费口径与账单对账、风险边界，以及多模型调度和长耗时任务的工程实践。</p>
+<h2>更新口径</h2>
+<p>模型 ID、分组和价格变动频繁，文中不写死具体折扣或可用性数字。接入前请以平台控制台和价格页当前公示为准，并用 <code>/v1/models</code> 核对一次可用型号。</p>
 <h2>风险提示</h2>
-<p>第三方 API 中转属于预充值、请求经过第三方服务器的服务形态，存在上游波动、账号风控、数据留存与资金敞口风险。请自行评估，敏感数据不要走公共托管链路，额度按周小额充值。</p>
-<h2>站点信息架构</h2>
-<div class="table-wrap"><table><thead><tr><th>层级</th><th>承接的搜索意图</th><th>页面</th></tr></thead><tbody>
-<tr><td>核心词</td><td>AI 中转站推荐 / API 中转站 / 大模型聚合平台</td><td><a href="/">首页</a></td></tr>
-<tr><td>修饰长尾</td><td>好用 / 靠谱 / 稳定 / 老牌 / 国内直连 / 各模型家族</td><td><a href="/topics/">六个分类页</a></td></tr>
-<tr><td>问题与教程词</td><td>怎么配 / 怎么查 / 怎么算 / 怎么测</td><td>30 篇教程页</td></tr>
-<tr><td>型号词</td><td>具体模型 ID 能不能用、怎么调用</td><td><a href="/models/">型号索引</a></td></tr>
-<tr><td>疑问词</td><td>是什么 / 会不会 / 怎么办</td><td><a href="/faq/">FAQ</a></td></tr>
-</tbody></table></div>
-<p><a href="/sitemap.xml">站点地图</a> · <a href="/topics/">全部分类</a></p>"""
+<p>第三方 API 中转是预充值服务，请求会经过第三方服务器，存在上游波动、账号风控、数据留存与资金敞口风险。敏感数据不要走公共托管链路，额度按周小额充值，主力之外留一条备用通道。</p>
+<p>本站不代任何平台作资质背书，也不承诺稳定性或折扣数字。</p>
+<p><a href="/topics/">按分类浏览</a> · <a href="/models/">型号索引</a> · <a href="/faq/">常见问题</a></p>"""
     write("about/index.html", shell(
         title="关于", seo_title="关于本站｜Token173 API 中转笔记",
-        desc="本站的内容范围、写作口径、风险提示与 SEO 信息架构说明。",
+        desc="本站的内容范围、更新口径与风险提示。",
         kws="关于本站,Token173,API中转笔记", body=about, canonical="/about/",
         breadcrumbs=[("首页", "/"), ("关于", "")]))
     sitemap.append("/about/")

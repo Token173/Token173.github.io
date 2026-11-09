@@ -45,8 +45,6 @@
 <div class="article-body">
 <h1>Gemini 中转平台：长上下文和多模态上传，卡住的不是模型</h1>
 <div class="meta-line"><span class="tag">models</span><span>2026-11-09</span><span class="dot">·</span><span>Gemini中转平台</span></div>
-<div class="article-lead">「Gemini 中转平台推荐」「gemini-3.8-flash 国内调用」「Gemini API 上传超时」「2026 多模态接口 长上下文截断」——多模态请求和纯文本不是一套排错思路，卡住的位置往往在上传和网关限制，不在模型。</div>
-
 <p>Gemini 这条线在国内用，最常见的三个现场：传一张高清图等半天、长文档塞进去被截断、视频分析请求传到一半连接重置。都容易被归成「中转不靠谱」，实际拆开看，很多是配置和协议差异。</p>
 <h2 id="sec-1">上传慢，慢在哪</h2>
 <p>多模态请求的体积和文本不在一个量级。图片 base64 编码后膨胀约三分之一，一段视频或几十页 PDF 更容易到几十 MB。这道数据要先完整到达中转节点，再由节点转给上游，中间任何一层有请求体大小限制或超时，都会在前半段就失败。</p>
@@ -81,8 +79,7 @@
 <p>第 2 行最阴。返回是正常结束，模型也认真答了，只是它根本没看到后面的材料。所以多模态和长文任务，把 <code>prompt_tokens</code> 的量级核对做成上线前的固定动作，比事后调 prompt 有效得多。</p>
 <p>另外，涉及客户资料、合同扫描件、内部图纸这类文件，别走任何第三方中转 —— 原文是整份上传的，和文本 prompt 一样会经过中间服务器。</p>
 <div class="cta"><strong>继续看：</strong><a href="/topics/models/">模型与型号专题</a> ·
-<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
-型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a></div>
 <section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/gpt-image-2-api-relay/">gpt-image-2 生图 API 中转：调用与批量跑</a><p class="card-desc">图像端点与文本端点差异、按次计费口径、上传体积、超时重试、结果落地、批量前检查清单与排错表。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">gpt-image-2 API</span></div></article><article class="card"><a class="card-title" href="/articles/seedance-video-api-relay/">Seedance 视频生成 API 中转：异步任务与轮询</a><p class="card-desc">提交—轮询—转存的任务状态机、幂等提交、指数退避、临时 URL、按次计费，附可复用代码骨架与上线检查清单。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Seedance视频生成API</span></div></article><article class="card"><a class="card-title" href="/articles/llm-relay-model-list-2026/">AI 中转站支持哪些模型：2026 型号 ID 整理</a><p class="card-desc">26 个型号按 Claude / GPT / Gemini / Grok / 国产 / 视觉分组，附命名规则、/v1/models 校验脚本与最小验证组。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">AI中转站模型列表</span></div></article><article class="card"><a class="card-title" href="/articles/gpt-api-relay-models/">GPT 中转平台：gpt-6-sol 与 gpt-5.6-terra 怎么选</a><p class="card-desc">按轻中重三档绑型号，用综合单价而非折扣横比；附 2026 年型号命名规则、A/B 记录模板和默认旗舰习惯的成本账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">GPT中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/claude-api-relay-models/">Claude 中转平台：长任务翻车复盘与型号配置</a><p class="card-desc">一次超时重发导致的缓存失效复盘，claude-opus-5-5 / sonnet-5-5 / haiku-5-5 分档、缓存命中率算法与长任务参数清单。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Claude中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/grok-api-relay-notes/">Grok 中转平台：grok-4.7 和 grok-4.5 接入记录</a><p class="card-desc">按天记录的接入日志：404、SSE 解析、账单异常、并发压测、/v1/models 校验脚本，附可复用的记录模板。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">grok中转平台</span></div></article></div></section>
 </div>
 <aside class="toc"><strong>本文目录</strong><a href="#sec-1">上传慢，慢在哪</a><a href="#sec-2">长上下文被截断，通常是这几个原因</a><a href="#sec-3">协议差异要提前知道</a><a href="#sec-4">型号选择</a><a href="#sec-5">平台侧</a><a href="#sec-6">顺带一句</a><a href="#sec-7">多模态请求的体积账</a><a href="#sec-8">截断问题看 finish_reason</a></aside>
@@ -94,7 +91,7 @@
       <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
       <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
     </nav>
-    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+    <p class="disclaimer">型号、价格与平台规则会调整，以各平台控制台当前公示为准；使用第三方接口服务请自行评估数据与资金风险。</p>
   </div>
 </footer>
 <script src="/assets/app.js" defer></script>

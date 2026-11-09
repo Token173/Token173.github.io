@@ -45,8 +45,6 @@
 <div class="article-body">
 <h1>gpt-image-2 生图 API 中转：从调通到能批量跑，中间那几道坎</h1>
 <div class="meta-line"><span class="tag">models</span><span>2026-11-09</span><span class="dot">·</span><span>gpt-image-2 API</span></div>
-<div class="article-lead">「gpt-image-2 API 怎么调用」「生图模型中转站」「GPT 图像生成 国内直连」「gpt-image-2-d 和 gpt-image-2 区别」—— 这类搜索在 2026 年多了起来，原因不复杂：内容团队开始把生图并进自动化流程，不再是打开网页点几下。</div>
-
 <p>文本模型的接入经验，搬到图像上有一半不适用。端点不同、计费不同、返回不是流、任务是异步或长耗时、失败原因经常藏在请求体里。这篇把踩过的几道坎按顺序列出来。</p>
 <h2 id="sec-1">端点和文本模型不是一套</h2>
 <p>聊天补全走 <code>/v1/chat/completions</code>，图像生成通常走 <code>/v1/images/generations</code>。用 OpenAI SDK 的话：</p>
@@ -86,8 +84,7 @@ print(r.data[0].url)</code></pre>
 <h2 id="sec-7">收尾</h2>
 <p>生图接入的技术难点从来不在那条 <code>images.generate</code>，在超时、重试、体积、计费口径和结果落地。把这五样理顺，剩下的就是老老实实跑样本。型号 ID、尺寸档位和价格会调，接之前拉一次 <code>/v1/models</code>，再看价格页当前口径。</p>
 <div class="cta"><strong>继续看：</strong><a href="/topics/models/">模型与型号专题</a> ·
-<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
-型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a></div>
 <section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/seedance-video-api-relay/">Seedance 视频生成 API 中转：异步任务与轮询</a><p class="card-desc">提交—轮询—转存的任务状态机、幂等提交、指数退避、临时 URL、按次计费，附可复用代码骨架与上线检查清单。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Seedance视频生成API</span></div></article><article class="card"><a class="card-title" href="/articles/llm-relay-model-list-2026/">AI 中转站支持哪些模型：2026 型号 ID 整理</a><p class="card-desc">26 个型号按 Claude / GPT / Gemini / Grok / 国产 / 视觉分组，附命名规则、/v1/models 校验脚本与最小验证组。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">AI中转站模型列表</span></div></article><article class="card"><a class="card-title" href="/articles/gemini-api-relay-china/">Gemini 中转平台：gemini-3.8-flash 国内调用</a><p class="card-desc">多模态上传慢在哪、长上下文被截断的四类原因、协议差异、finish_reason 对照表与体积账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Gemini中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/gpt-api-relay-models/">GPT 中转平台：gpt-6-sol 与 gpt-5.6-terra 怎么选</a><p class="card-desc">按轻中重三档绑型号，用综合单价而非折扣横比；附 2026 年型号命名规则、A/B 记录模板和默认旗舰习惯的成本账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">GPT中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/claude-api-relay-models/">Claude 中转平台：长任务翻车复盘与型号配置</a><p class="card-desc">一次超时重发导致的缓存失效复盘，claude-opus-5-5 / sonnet-5-5 / haiku-5-5 分档、缓存命中率算法与长任务参数清单。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Claude中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/grok-api-relay-notes/">Grok 中转平台：grok-4.7 和 grok-4.5 接入记录</a><p class="card-desc">按天记录的接入日志：404、SSE 解析、账单异常、并发压测、/v1/models 校验脚本，附可复用的记录模板。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">grok中转平台</span></div></article></div></section>
 </div>
 <aside class="toc"><strong>本文目录</strong><a href="#sec-1">端点和文本模型不是一套</a><a href="#sec-2">计费逻辑和文本完全不同</a><a href="#sec-3">国内直连下的两个具体麻烦</a><a href="#sec-4">一次典型的排错顺序</a><a href="#sec-5">批量跑之前先做这几件事</a><a href="#sec-6">平台这块</a><a href="#sec-7">收尾</a></aside>
@@ -99,7 +96,7 @@ print(r.data[0].url)</code></pre>
       <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
       <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
     </nav>
-    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+    <p class="disclaimer">型号、价格与平台规则会调整，以各平台控制台当前公示为准；使用第三方接口服务请自行评估数据与资金风险。</p>
   </div>
 </footer>
 <script src="/assets/app.js" defer></script>

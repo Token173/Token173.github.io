@@ -45,8 +45,6 @@
 <div class="article-body">
 <h1>AI Agent 工作流里的多模型调度：为什么最后都会收进一个网关</h1>
 <div class="meta-line"><span class="tag">engineering</span><span>2026-11-09</span><span class="dot">·</span><span>Agent多模型调度</span></div>
-<div class="article-lead">「Agent 多模型路由」「统一 API 网关 实践」「一个 Key 调 GPT Claude Gemini」「工作流里怎么自动降级」—— 这类搜索在 2026 年变多，跟 Agent 从 Demo 走向长任务有关系。单次对话用哪家都行，跑几十步的工作流，接入层的复杂度会成倍冒出来。</div>
-
 <p>一个典型的工作流：用户提问 → 意图分类 → 检索 → 长文分析 → 工具调用 → 结果校验 → 生成回复 → 成本核算。八步里可能用到四五个模型，还要在失败时降级、在超预算时切便宜档。</p>
 <p>如果每一步直连不同厂商，你要维护的是五套鉴权、五套请求格式、五套错误码、五套流式解析、五本账单。跑通一次不难，跑一周就乱了。</p>
 <h2 id="sec-1">网关层要接住的四件事</h2>
@@ -87,8 +85,7 @@
 <h2 id="sec-7">收尾</h2>
 <p>多模型调度的难点从来不是「能不能调到」，是「出问题时能不能说清楚」：这一步走的哪个模型、哪条通道、为什么升档、重试了几次、花了多少。把统一入口和按步骤记账先搭好，再谈路由策略优化，顺序反了会一直在救火。</p>
 <div class="cta"><strong>继续看：</strong><a href="/topics/engineering/">工程实践</a> ·
-<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
-型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a></div>
 <section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/one-key-multi-model-api/">第三方 API 巨模平台：一个 Key 调用多模型</a><p class="card-desc">聚合层实际做的四件事——鉴权、协议适配、调度、计量；附多模态流水线配置示例与调度、计费两道工序的拆解。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">第三方API巨模平台</span></div></article><article class="card"><a class="card-title" href="/articles/domestic-llm-api-aggregator/">国产模型中转 API：DeepSeek、GLM、Kimi、MiniMax 混合调度</a><p class="card-desc">按任务分档的降级链、升级触发条件、缓存与峰谷计价、跨家族兜底，以及带日期后缀型号 ID 的实测细节。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">国产模型中转API</span></div></article><article class="card"><a class="card-title" href="/articles/seedance-video-api-relay/">Seedance 视频生成 API 中转：异步任务与轮询</a><p class="card-desc">提交—轮询—转存的任务状态机、幂等提交、指数退避、临时 URL、按次计费，附可复用代码骨架与上线检查清单。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Seedance视频生成API</span></div></article><article class="card"><a class="card-title" href="/articles/api-relay-faq-troubleshooting/">API 中转站 FAQ：401、404、流式断流排查</a><p class="card-desc">按现象组织的速查：认证失败、model not found、模型列表为空、Base URL、断流、超时重试、402、429、账单差异。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">API中转站报错排查</span></div></article></div></section>
 </div>
 <aside class="toc"><strong>本文目录</strong><a href="#sec-1">网关层要接住的四件事</a><a href="#sec-2">路由策略别只看价格</a><a href="#sec-3">一个能落地的分层结构</a><a href="#sec-4">记账要按「步骤」打标签</a><a href="#sec-5">兜底比选得准更重要</a><a href="#sec-6">数据边界</a><a href="#sec-7">收尾</a></aside>
@@ -100,7 +97,7 @@
       <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
       <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
     </nav>
-    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+    <p class="disclaimer">型号、价格与平台规则会调整，以各平台控制台当前公示为准；使用第三方接口服务请自行评估数据与资金风险。</p>
   </div>
 </footer>
 <script src="/assets/app.js" defer></script>

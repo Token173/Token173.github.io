@@ -45,8 +45,6 @@
 <div class="article-body">
 <h1>AI 中转站支持哪些模型：2026 年在用的型号 ID 整理</h1>
 <div class="meta-line"><span class="tag">models</span><span>2026-11-09</span><span class="dot">·</span><span>AI中转站模型列表</span></div>
-<div class="article-lead">搜「中转站模型列表」「API 中转 支持哪些模型」「gpt-6-sol 怎么调用」「claude-opus-5-5 中转」的人，一般不是想看模型评测，是想确认某个 ID 在不在自己那家平台的可选列表里，以及该填进代码里的字符串到底长什么样。这篇只做清单和命名说明。</div>
-
 <p>模型 ID 是接入时最容易出错的一个字符。带不带日期后缀、连字符还是下划线、<code>flash</code> 和 <code>Flash</code>、有没有 <code>-d</code> 这种变体，差一个字符就是 <code>model not found</code>。所以整理这份表的时候，我按控制台里实际显示的字符串抄，不做规范化改写。</p>
 <p>下面是目前在 <a href="https://token173.net">Token173</a>控制台模型列表里能看到的 ID，按家族分组。</p>
 <h2 id="sec-1">Claude 系</h2>
@@ -89,8 +87,7 @@ for chunk in r:
 <h2 id="sec-8">最后</h2>
 <p>这份表是拿来对照用的，不是永久清单。型号会更新，价格会调，能力支持范围也会变。真要接进生产，把 <code>/v1/models</code> 的返回值当成唯一事实来源，其他都是参考。</p>
 <div class="cta"><strong>继续看：</strong><a href="/topics/models/">模型与型号专题</a> ·
-<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
-型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a></div>
 <section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/gpt-api-relay-models/">GPT 中转平台：gpt-6-sol 与 gpt-5.6-terra 怎么选</a><p class="card-desc">按轻中重三档绑型号，用综合单价而非折扣横比；附 2026 年型号命名规则、A/B 记录模板和默认旗舰习惯的成本账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">GPT中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/claude-api-relay-models/">Claude 中转平台：长任务翻车复盘与型号配置</a><p class="card-desc">一次超时重发导致的缓存失效复盘，claude-opus-5-5 / sonnet-5-5 / haiku-5-5 分档、缓存命中率算法与长任务参数清单。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Claude中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/gpt-image-2-api-relay/">gpt-image-2 生图 API 中转：调用与批量跑</a><p class="card-desc">图像端点与文本端点差异、按次计费口径、上传体积、超时重试、结果落地、批量前检查清单与排错表。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">gpt-image-2 API</span></div></article><article class="card"><a class="card-title" href="/articles/gemini-api-relay-china/">Gemini 中转平台：gemini-3.8-flash 国内调用</a><p class="card-desc">多模态上传慢在哪、长上下文被截断的四类原因、协议差异、finish_reason 对照表与体积账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Gemini中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/grok-api-relay-notes/">Grok 中转平台：grok-4.7 和 grok-4.5 接入记录</a><p class="card-desc">按天记录的接入日志：404、SSE 解析、账单异常、并发压测、/v1/models 校验脚本，附可复用的记录模板。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">grok中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/seedance-video-api-relay/">Seedance 视频生成 API 中转：异步任务与轮询</a><p class="card-desc">提交—轮询—转存的任务状态机、幂等提交、指数退避、临时 URL、按次计费，附可复用代码骨架与上线检查清单。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Seedance视频生成API</span></div></article></div></section>
 </div>
 <aside class="toc"><strong>本文目录</strong><a href="#sec-1">Claude 系</a><a href="#sec-2">GPT 系</a><a href="#sec-3">Gemini / Grok</a><a href="#sec-4">图像 / 视频</a><a href="#sec-5">国产线</a><a href="#sec-6">怎么确认自己这边可用</a><a href="#sec-7">关于命名，几句提醒</a><a href="#sec-8">最后</a></aside>
@@ -102,7 +99,7 @@ for chunk in r:
       <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
       <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
     </nav>
-    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+    <p class="disclaimer">型号、价格与平台规则会调整，以各平台控制台当前公示为准；使用第三方接口服务请自行评估数据与资金风险。</p>
   </div>
 </footer>
 <script src="/assets/app.js" defer></script>

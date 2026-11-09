@@ -45,8 +45,6 @@
 <div class="article-body">
 <h1>AI 编程用的中转站：长上下文反复发，账单主要看缓存</h1>
 <div class="meta-line"><span class="tag">billing</span><span>2026-11-09</span><span class="dot">·</span><span>AI编程中转站推荐</span></div>
-<div class="article-lead">2026 年搜「Claude Code 中转站推荐」「AI 编程 API 便宜」「编程模型 缓存命中」「Cline / Cursor 用哪个中转」的人，多半已经被账单教育过一次了。聊天场景一个月几十块，换成编程工具，一周就能跑掉同样的钱。</div>
-
 <p>原因不神秘。AI 编程工具每次请求都带着一整套上下文：系统提示词、项目结构、打开的文件内容、最近几轮修改、工具 schema、lint 结果。一个中等规模的重构任务，单轮输入两三万 token 很正常，连着跑几十轮就是几十万。而用户看到的只有屏幕上那几行代码。</p>
 <h2 id="sec-1">钱花在哪一侧</h2>
 <p>编程场景的输入 / 输出比例和聊天完全反过来。聊天的钱主要花在输出，编程七八成花在输入，而且这些输入<strong>大部分是重复的</strong> —— 同一份 README、同一段系统提示、同一批文件内容，每轮原样再发一次。</p>
@@ -76,10 +74,8 @@
 <p>三处都改完，第二周账单回到预估区间，输出质量没变化。全程没换平台，也没谈折扣。</p>
 <h2 id="sec-6">收尾</h2>
 <p>AI 编程场景里，选平台的重要性排在上下文管理后面。先把缓存、超时、重试、型号分档这四件事理顺，再去比谁家倍率低 —— 顺序反过来，省下来的钱很快会被重试和缓存失效吃回去。</p>
-<p>（缓存字段命名、命中规则和计价方式各家实现不同，以平台当前文档和后台实际显示为准。）</p>
 <div class="cta"><strong>继续看：</strong><a href="/topics/billing/">计费与成本</a> ·
-<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
-型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a></div>
 <section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/claude-api-relay-models/">Claude 中转平台：长任务翻车复盘与型号配置</a><p class="card-desc">一次超时重发导致的缓存失效复盘，claude-opus-5-5 / sonnet-5-5 / haiku-5-5 分档、缓存命中率算法与长任务参数清单。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Claude中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/token-billing-reconcile/">API 中转站 Token 扣费对不上：四类原因排查</a><p class="card-desc">从一条 request_id 开始，按正常消耗漏算、协议口径、网关 bug、真实动手脚四层排查，附 5 分钟顺序表与换平台信号。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">token扣费对不上</span></div></article><article class="card"><a class="card-title" href="/articles/coding-tools-api-relay/">Claude Code 与 Cursor 接入中转 API：环境变量配置</a><p class="card-desc">Anthropic 与 OpenAI 兼容两种协议入口、settings.json、VS Code 扩展、cc-switch 本地路由、报错速查与长任务参数。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">Claude Code中转API</span></div></article><article class="card"><a class="card-title" href="/articles/api-relay-pricing-ratio/">API 中转站倍率是什么意思：计费口径与对账</a><p class="card-desc">两层换算拆开讲，倍率按方向 / 模型 / 分组 / 时段的差异、综合单价公式、四类搜索意图与可填的比价工作表。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">API中转站倍率</span></div></article></div></section>
 </div>
 <aside class="toc"><strong>本文目录</strong><a href="#sec-1">钱花在哪一侧</a><a href="#sec-2">怎么验平台有没有真按缓存价结算</a><a href="#sec-3">编程场景对中转平台的额外要求</a><a href="#sec-4">型号怎么配</a><a href="#sec-5">一次真实的成本复盘</a><a href="#sec-6">收尾</a></aside>
@@ -91,7 +87,7 @@
       <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
       <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
     </nav>
-    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+    <p class="disclaimer">型号、价格与平台规则会调整，以各平台控制台当前公示为准；使用第三方接口服务请自行评估数据与资金风险。</p>
   </div>
 </footer>
 <script src="/assets/app.js" defer></script>

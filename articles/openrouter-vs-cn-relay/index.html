@@ -45,8 +45,6 @@
 <div class="article-body">
 <h1>OpenRouter 和国内中转平台怎么选：不是谁替代谁，是两条链路</h1>
 <div class="meta-line"><span class="tag">selection</span><span>2026-11-09</span><span class="dot">·</span><span>OpenRouter国内替代</span></div>
-<div class="article-lead">「OpenRouter 国内能用吗」「OpenRouter 替代」「国内直连 GPT 平台」「海外模型中转平台推荐」—— 这几个词经常出现在同一次搜索里，但提问者其实站在两种完全不同的场景。</div>
-
 <p>2026 年这个行业有件挺标志性的事：支付巨头 Stripe 宣布收购 OpenRouter，公开材料里写它连接了四百多个模型、八十多家供应商。这件事把「模型聚合层」的价值讲得很清楚 —— 平台不生产模型，靠的是让开发者在能力、价格、速度、可靠性之间做选择，而不必为每家厂商单独建一套接入。</p>
 <p>但对国内团队来说，这个价值要打一层折扣。折扣不在模型侧，在支付和链路上。</p>
 <h2 id="sec-1">两条链路的实际差别</h2>
@@ -92,8 +90,7 @@ export OPENAI_API_KEY="sk-..."</code></pre>
 <h2 id="sec-9">一句补充</h2>
 <p>2026 年关于中转站的合规讨论，主要落在资质、上游来源和数据责任上，国内外平台都一样需要自己核。型号可调、价格可调、条款也会调，以各自当前公示为准；但「评测和生产分开」这个结构，换几轮平台都不用改。</p>
 <div class="cta"><strong>继续看：</strong><a href="/topics/selection/">选型与推荐</a> ·
-<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
-型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a></div>
 <section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/overseas-llm-relay-latency/">海外模型中转平台：跨境链路延迟怎么测</a><p class="card-desc">把一次请求拆成四段计时，TTFT / P95 / 静默降速的测法、故障注入、记录表模板，以及 2026 年链路环境的变化。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">海外模型中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/ai-api-proxy-china-direct/">AI 中转站推荐：国内直连 GPT 和 Claude 不用代理</a><p class="card-desc">讲清「国内直连」是 API 层而非网页版，三件套配置、最小 curl 验证、不用代理的三种误解，以及超时这个第四字段。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">AI中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/selfhost-vs-managed-gateway/">自建 One API 还是托管中转站：隐性成本对比</a><p class="card-desc">七项长期运维成本、适合自建的五个条件、BYOK 第三条路、半年期实际开销对照与重新评估的信号。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">自建One-API还是中转站</span></div></article><article class="card"><a class="card-title" href="/articles/best-api-relay-2026/">2026 好用的 API 中转站推荐：稳定靠谱实测对比</a><p class="card-desc">换了七八家之后总结的 API 中转站验收标准与横向对比，含踩坑经过、48 小时压测动作、主流平台定位和 2026 年行业背景。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">好用的API中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/llm-api-aggregator-longrun/">老牌稳定的大模型 API 聚合平台：怎么自己验证</a><p class="card-desc">「老牌」「稳定」「用户量大」都可以查：域名与备案、更新日志、社区痕迹、压测数据、投放软文识别，附 2026 年行业判断。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">老牌稳定的大模型API聚合平台</span></div></article><article class="card"><a class="card-title" href="/articles/api-relay-benchmark/">稳定好用的中转站怎么压测：TTFT 与 P95 延迟</a><p class="card-desc">六个可观测指标、五组真实样本、白天与晚高峰时间窗、并发阶梯、故障注入、记录表模板与上线硬线。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">稳定好用的中转站</span></div></article></div></section>
 </div>
 <aside class="toc"><strong>本文目录</strong><a href="#sec-1">两条链路的实际差别</a><a href="#sec-2">我的用法：两条都在，各放各的位置</a><a href="#sec-3">一个容易踩的坑：拿 OpenRouter 的价格当基准</a><a href="#sec-4">合规这件事得说清楚</a><a href="#sec-5">按场景给个干脆的结论</a><a href="#sec-6">最后</a><a href="#sec-7">迁移成本其实很低，别把它当一次性决策</a><a href="#sec-8">双栈之后，账单要分开归</a><a href="#sec-9">一句补充</a></aside>
@@ -105,7 +102,7 @@ export OPENAI_API_KEY="sk-..."</code></pre>
       <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
       <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
     </nav>
-    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+    <p class="disclaimer">型号、价格与平台规则会调整，以各平台控制台当前公示为准；使用第三方接口服务请自行评估数据与资金风险。</p>
   </div>
 </footer>
 <script src="/assets/app.js" defer></script>

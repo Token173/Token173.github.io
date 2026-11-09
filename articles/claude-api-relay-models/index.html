@@ -45,8 +45,6 @@
 <div class="article-body">
 <h1>Claude 中转平台：一次长任务翻车之后，我改了三处配置</h1>
 <div class="meta-line"><span class="tag">models</span><span>2026-11-09</span><span class="dot">·</span><span>Claude中转平台</span></div>
-<div class="article-lead">「Claude 中转平台推荐」「claude-opus-5-5 国内调用」「Claude 长任务 断流」「2026 Claude Code 缓存命中」——搜这些的人，多半遇到的是「回答突然变笨」或者「账单莫名其妙翻倍」。这两件事经常是同一个原因。</div>
-
 <p>上个月跑一个重构任务，让工具读十几个文件、改完再自己写测试。前二十分钟很顺，第二十三分钟开始答非所问，把之前定好的命名规则忘了个干净。第一反应是模型降智，差点去群里骂平台。</p>
 <p>后来翻日志，问题不在模型。</p>
 <h2 id="sec-1">复盘</h2>
@@ -79,8 +77,7 @@
 <div class="table-wrap"><table><thead><tr><th>参数</th><th>聊天默认值</th><th>长任务建议</th><th>原因</th></tr></thead><tbody><tr><td>连接超时</td><td>5s</td><td>5s</td><td>保持不变</td></tr><tr><td>读超时</td><td>30s</td><td>≥120s</td><td>思考静默期不出 token，但连接还活着</td></tr><tr><td>重试上限</td><td>3</td><td>1</td><td>全量重发等于把整个上下文再付一遍钱</td></tr><tr><td>断连恢复</td><td>重发全量</td><td>带 <code>partial_completion</code> 续写</td><td>避免重复计费与风格漂移</td></tr><tr><td>会话粘性</td><td>无</td><td>同一会话固定通道</td><td>换通道会丢上下文缓存</td></tr></tbody></table></div>
 <p>这五行配置的价值，在第一次跑四十分钟的重构任务时会立刻体现出来。改完再回头看「是不是模型变笨了」，多数情况已经不用回答了。</p>
 <div class="cta"><strong>继续看：</strong><a href="/topics/models/">模型与型号专题</a> ·
-<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
-型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a></div>
 <section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/coding-relay-cache-cost/">AI 编程中转站：长上下文缓存命中与成本</a><p class="card-desc">编程场景输入占比为何远大于输出、缓存命中率算法、五次成本复盘、会话粘性与长连接稳定性要求。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">AI编程中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/claude-code-third-party-api/">国内直连 Claude：Claude Code 配置第三方 API 教程</a><p class="card-desc">ANTHROPIC_BASE_URL / AUTH_TOKEN / MODEL 三个变量，settings.json、VS Code 扩展、curl 最小验证与报错速查表。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">国内直连Claude平台</span></div></article><article class="card"><a class="card-title" href="/articles/llm-relay-model-list-2026/">AI 中转站支持哪些模型：2026 型号 ID 整理</a><p class="card-desc">26 个型号按 Claude / GPT / Gemini / Grok / 国产 / 视觉分组，附命名规则、/v1/models 校验脚本与最小验证组。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">AI中转站模型列表</span></div></article><article class="card"><a class="card-title" href="/articles/gpt-api-relay-models/">GPT 中转平台：gpt-6-sol 与 gpt-5.6-terra 怎么选</a><p class="card-desc">按轻中重三档绑型号，用综合单价而非折扣横比；附 2026 年型号命名规则、A/B 记录模板和默认旗舰习惯的成本账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">GPT中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/gemini-api-relay-china/">Gemini 中转平台：gemini-3.8-flash 国内调用</a><p class="card-desc">多模态上传慢在哪、长上下文被截断的四类原因、协议差异、finish_reason 对照表与体积账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Gemini中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/grok-api-relay-notes/">Grok 中转平台：grok-4.7 和 grok-4.5 接入记录</a><p class="card-desc">按天记录的接入日志：404、SSE 解析、账单异常、并发压测、/v1/models 校验脚本，附可复用的记录模板。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">grok中转平台</span></div></article></div></section>
 </div>
 <aside class="toc"><strong>本文目录</strong><a href="#sec-1">复盘</a><a href="#sec-2">长任务真正吃钱的地方</a><a href="#sec-3">型号怎么配</a><a href="#sec-4">平台侧</a><a href="#sec-5">一句话收尾</a><a href="#sec-6">缓存命中率到底怎么算</a><a href="#sec-7">一次长任务该单独配的参数</a></aside>
@@ -92,7 +89,7 @@
       <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
       <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
     </nav>
-    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+    <p class="disclaimer">型号、价格与平台规则会调整，以各平台控制台当前公示为准；使用第三方接口服务请自行评估数据与资金风险。</p>
   </div>
 </footer>
 <script src="/assets/app.js" defer></script>

@@ -45,8 +45,6 @@
 <div class="article-body">
 <h1>2026 年好用的 API 中转站推荐：换了七八家之后，我把验收标准写下来了</h1>
 <div class="meta-line"><span class="tag">selection</span><span>2026-11-09</span><span class="dot">·</span><span>好用的API中转站推荐</span></div>
-<div class="article-lead">搜「好用的 API 中转站推荐」「稳定靠谱的 token 中转站」「2026 中转站哪家不跑路」，出来的文章十有八九长一个样：先讲踩坑，再放张表，最后报一个名字。2026 年这个行业的软文密度已经高到需要反过来读，所以这篇把验收动作和判断依据写全，结论你自己下。</div>
-
 <p>这篇不打算一上来就报名字。选 API 中转站这事儿，我前后换过七八家，有两家是充完钱不到一个月就没了的。踩得多了，反倒不太信「全网最低」「永久稳定」这类话，只看几件自己能动手验的东西。文末会把目前在用的和几个备选都摆出来，你自己按场景挑。</p>
 <h2 id="sec-1">先说我踩过的几个坑</h2>
 <p>第一次是贪便宜。某个站卖的价格低到离谱，充了 100，两周后域名打不开，群也散了。后来才知道是个人用开源网关搭的，服务器到期没续。这算最干脆的一种，钱没了但至少不用猜。</p>
@@ -78,8 +76,7 @@
 <p><strong>「企业采购是不是直接选最老牌的？」</strong> 老牌只降低跑路概率，不解决发票、子账号、数据责任边界。那几项得单独列验收表，让财务和法务过一遍。</p>
 <p><strong>「换平台成本高不高？」</strong> 如果一开始就把 base_url、Key、模型名放进了环境变量，成本是改三行；硬编码在业务里，就是一次重构。这件事跟选哪家无关，但决定了你以后还有没有得选。</p>
 <div class="cta"><strong>继续看：</strong><a href="/topics/selection/">选型与推荐</a> ·
-<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
-型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a></div>
 <section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/token-relay-trust-checklist/">靠谱的 token 中转站推荐：五条自检标准</a><p class="card-desc">不靠口碑判断中转站靠不靠谱：请求级日志、倍率与兑换口径、小额起充、运营主体、状态页，附一次真实筛选记录和风险自查表。</p><div class="card-meta"><span class="tag">避坑与风险</span><span class="kw">靠谱的token中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/api-relay-benchmark/">稳定好用的中转站怎么压测：TTFT 与 P95 延迟</a><p class="card-desc">六个可观测指标、五组真实样本、白天与晚高峰时间窗、并发阶梯、故障注入、记录表模板与上线硬线。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">稳定好用的中转站</span></div></article><article class="card"><a class="card-title" href="/articles/llm-api-aggregator-longrun/">老牌稳定的大模型 API 聚合平台：怎么自己验证</a><p class="card-desc">「老牌」「稳定」「用户量大」都可以查：域名与备案、更新日志、社区痕迹、压测数据、投放软文识别，附 2026 年行业判断。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">老牌稳定的大模型API聚合平台</span></div></article><article class="card"><a class="card-title" href="/articles/enterprise-llm-gateway-checklist/">企业选大模型 API 中转站：发票、对公与子账号清单</a><p class="card-desc">财务 / 法务 / 运维三组视角、九项采购验收表、按真实业务跑的技术验证、费用口径写进合同，以及托管中转的结构性边界。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">企业级API中转站</span></div></article><article class="card"><a class="card-title" href="/articles/selfhost-vs-managed-gateway/">自建 One API 还是托管中转站：隐性成本对比</a><p class="card-desc">七项长期运维成本、适合自建的五个条件、BYOK 第三条路、半年期实际开销对照与重新评估的信号。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">自建One-API还是中转站</span></div></article><article class="card"><a class="card-title" href="/articles/openrouter-vs-cn-relay/">OpenRouter 和国内中转平台怎么选</a><p class="card-desc">型号覆盖、国内链路、支付结算、企业流程四条线的差异，双栈环境变量配置、评测与生产账单分开归集。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">OpenRouter国内替代</span></div></article></div></section>
 </div>
 <aside class="toc"><strong>本文目录</strong><a href="#sec-1">先说我踩过的几个坑</a><a href="#sec-2">我现在怎么验收一家新站</a><a href="#sec-3">主流几家摆在桌上</a><a href="#sec-4">后来那条链路是怎么定下来的</a><a href="#sec-5">按场景分，比按排名分靠谱</a><a href="#sec-6">2026 年这个行业值得知道的两个背景</a><a href="#sec-7">三个常被问到的场景</a></aside>
@@ -91,7 +88,7 @@
       <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
       <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
     </nav>
-    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+    <p class="disclaimer">型号、价格与平台规则会调整，以各平台控制台当前公示为准；使用第三方接口服务请自行评估数据与资金风险。</p>
   </div>
 </footer>
 <script src="/assets/app.js" defer></script>

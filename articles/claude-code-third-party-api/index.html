@@ -45,8 +45,6 @@
 <div class="article-body">
 <h1>国内直连 Claude：把 Claude Code 指到第三方 API 的完整配置</h1>
 <div class="meta-line"><span class="tag">access</span><span>2026-11-09</span><span class="dot">·</span><span>国内直连Claude平台</span></div>
-<div class="article-lead">「国内直连 Claude」「Claude Code 第三方 API 配置」「ANTHROPIC_BASE_URL 怎么填」「2026 Claude API 不用代理」——Claude Code 说 Anthropic 协议，不是 OpenAI 那套，直接把兼容地址填进去多半 401。这篇把配置和排错一次讲完。</div>
-
 <p>Claude Code 走的是 Anthropic 协议，不是 OpenAI 那套。很多聚合站只给一个 OpenAI 兼容地址，直接填进去会 401 或者干脆不认。这篇把配置和排错完整过一遍。</p>
 <h2 id="sec-1">三个变量就够了</h2>
 <p>CLI 版读环境变量。macOS / Linux 加到 <code>~/.zshrc</code> 或 <code>~/.bashrc</code>：</p>
@@ -113,8 +111,7 @@ $env:ANTHROPIC_MODEL = "claude-sonnet-5-5"</code></pre>
 }</code></pre>
 <p>配套写清楚三件事：Key 不进 git 和群聊、私有仓库核心代码不往第三方链路发、出错时附 request_id 和原始报错找谁。配置本身十分钟能填完，边界不写清楚，后面一定出事。</p>
 <div class="cta"><strong>继续看：</strong><a href="/topics/access/">国内直连与接入</a> ·
-<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
-型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a></div>
 <section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/coding-tools-api-relay/">Claude Code 与 Cursor 接入中转 API：环境变量配置</a><p class="card-desc">Anthropic 与 OpenAI 兼容两种协议入口、settings.json、VS Code 扩展、cc-switch 本地路由、报错速查与长任务参数。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">Claude Code中转API</span></div></article><article class="card"><a class="card-title" href="/articles/claude-api-relay-models/">Claude 中转平台：长任务翻车复盘与型号配置</a><p class="card-desc">一次超时重发导致的缓存失效复盘，claude-opus-5-5 / sonnet-5-5 / haiku-5-5 分档、缓存命中率算法与长任务参数清单。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Claude中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/api-relay-faq-troubleshooting/">API 中转站 FAQ：401、404、流式断流排查</a><p class="card-desc">按现象组织的速查：认证失败、model not found、模型列表为空、Base URL、断流、超时重试、402、429、账单差异。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">API中转站报错排查</span></div></article><article class="card"><a class="card-title" href="/articles/ai-api-proxy-china-direct/">AI 中转站推荐：国内直连 GPT 和 Claude 不用代理</a><p class="card-desc">讲清「国内直连」是 API 层而非网页版，三件套配置、最小 curl 验证、不用代理的三种误解，以及超时这个第四字段。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">AI中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/overseas-llm-relay-latency/">海外模型中转平台：跨境链路延迟怎么测</a><p class="card-desc">把一次请求拆成四段计时，TTFT / P95 / 静默降速的测法、故障注入、记录表模板，以及 2026 年链路环境的变化。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">海外模型中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/openai-compatible-migration/">国内直连 GPT：OpenAI 兼容接口迁移只改两处</a><p class="card-desc">Python / Node / curl 迁移示例、七步验证清单、兼容性边界、第一周监控指标与一份回滚预案。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">国内直连GPT平台</span></div></article></div></section>
 </div>
 <aside class="toc"><strong>本文目录</strong><a href="#sec-1">三个变量就够了</a><a href="#sec-2">两个最容易填错的地方</a><a href="#sec-3">报错速查</a><a href="#sec-4">平台选择</a><a href="#sec-5">收尾几条纪律</a><a href="#sec-6">2026 年协议兼容多了哪几处变化</a><a href="#sec-7">团队里怎么统一发配置</a></aside>
@@ -126,7 +123,7 @@ $env:ANTHROPIC_MODEL = "claude-sonnet-5-5"</code></pre>
       <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
       <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
     </nav>
-    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+    <p class="disclaimer">型号、价格与平台规则会调整，以各平台控制台当前公示为准；使用第三方接口服务请自行评估数据与资金风险。</p>
   </div>
 </footer>
 <script src="/assets/app.js" defer></script>

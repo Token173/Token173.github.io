@@ -45,8 +45,6 @@
 <div class="article-body">
 <h1>个人开发者怎么低成本用上大模型 API：一条不折腾的小额路线</h1>
 <div class="meta-line"><span class="tag">selection</span><span>2026-11-09</span><span class="dot">·</span><span>个人开发者大模型API</span></div>
-<div class="article-lead">「免费大模型 API」「学生党怎么用 GPT API」「个人开发者 AI 接口 便宜」「国内直连 Claude API 小额充值」—— 这类搜索背后通常是同一个处境：想做个小工具或者学点东西，不想一上来就绑国际信用卡、也不想被年卡绑住。</div>
-
 <p>2026 年可选的路比两年前多，但也更乱。免费额度、开源自建、聚合中转、官方按量，各有各的适用边界。这篇只讲个人场景下最省事的一条，以及哪些坑不值得踩。</p>
 <h2 id="sec-1">先想清楚你要的是哪种「免费用」</h2>
 <p>大致三条路，别混着比：</p>
@@ -93,8 +91,7 @@ print(r.choices[0].message.content)</code></pre>
 <h2 id="sec-6">最后</h2>
 <p>个人项目最容易浪费的不是钱，是在选平台和配环境上反复横跳的那几天。先用免费额度把想法跑通，再花十块钱换一个稳定的统一入口，把时间花在功能上。等账单真的开始有分量了，那些倍率、缓存、降级链的优化才值得认真做。</p>
 <div class="cta"><strong>继续看：</strong><a href="/topics/selection/">选型与推荐</a> ·
-<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
-型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a></div>
 <section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/token-relay-trust-checklist/">靠谱的 token 中转站推荐：五条自检标准</a><p class="card-desc">不靠口碑判断中转站靠不靠谱：请求级日志、倍率与兑换口径、小额起充、运营主体、状态页，附一次真实筛选记录和风险自查表。</p><div class="card-meta"><span class="tag">避坑与风险</span><span class="kw">靠谱的token中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/token-relay-balance-risk/">Token 中转站余额清零与跑路风险：小额试跑清单</a><p class="card-desc">预充值结构的五类资金损失方式、五条资金纪律、小额试跑清单，以及 2026 双十一囤 Token 的三个坑与资金敞口表。</p><div class="card-meta"><span class="tag">避坑与风险</span><span class="kw">token中转站跑路</span></div></article><article class="card"><a class="card-title" href="/articles/llm-relay-model-list-2026/">AI 中转站支持哪些模型：2026 型号 ID 整理</a><p class="card-desc">26 个型号按 Claude / GPT / Gemini / Grok / 国产 / 视觉分组，附命名规则、/v1/models 校验脚本与最小验证组。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">AI中转站模型列表</span></div></article><article class="card"><a class="card-title" href="/articles/best-api-relay-2026/">2026 好用的 API 中转站推荐：稳定靠谱实测对比</a><p class="card-desc">换了七八家之后总结的 API 中转站验收标准与横向对比，含踩坑经过、48 小时压测动作、主流平台定位和 2026 年行业背景。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">好用的API中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/llm-api-aggregator-longrun/">老牌稳定的大模型 API 聚合平台：怎么自己验证</a><p class="card-desc">「老牌」「稳定」「用户量大」都可以查：域名与备案、更新日志、社区痕迹、压测数据、投放软文识别，附 2026 年行业判断。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">老牌稳定的大模型API聚合平台</span></div></article><article class="card"><a class="card-title" href="/articles/api-relay-benchmark/">稳定好用的中转站怎么压测：TTFT 与 P95 延迟</a><p class="card-desc">六个可观测指标、五组真实样本、白天与晚高峰时间窗、并发阶梯、故障注入、记录表模板与上线硬线。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">稳定好用的中转站</span></div></article></div></section>
 </div>
 <aside class="toc"><strong>本文目录</strong><a href="#sec-1">先想清楚你要的是哪种「免费用」</a><a href="#sec-2">一条能直接照做的路线</a><a href="#sec-3">为什么不碰「无限套餐」和充值赠送</a><a href="#sec-4">免费额度党的四条纪律</a><a href="#sec-5">平台这块，说个具体的</a><a href="#sec-6">最后</a></aside>
@@ -106,7 +103,7 @@ print(r.choices[0].message.content)</code></pre>
       <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
       <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
     </nav>
-    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+    <p class="disclaimer">型号、价格与平台规则会调整，以各平台控制台当前公示为准；使用第三方接口服务请自行评估数据与资金风险。</p>
   </div>
 </footer>
 <script src="/assets/app.js" defer></script>

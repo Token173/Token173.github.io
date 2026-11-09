@@ -1,7 +1,5 @@
 # Claude Code 和 Cursor 接中转 API：一套配置管住所有编程工具
 
-> 「Claude Code 第三方 API 配置」「Cursor 自定义模型 中转站」「ANTHROPIC_BASE_URL 怎么填」「AI 编程 中转站推荐」—— 2026 年这类问题特别多，根源是 AI 编程工具吃 token 的速度远超聊天场景，一个中等规模的重构任务就能烧掉十万以上 token，大家都在找更省、更稳的接入方式。
-
 麻烦不在接口本身，在工具太杂。Claude Code 说 Anthropic 协议，Cursor 说 OpenAI 兼容，Codex CLI 又是自己的一套配置文件，Cherry Studio、Cline、TRAE 各有各的填写入口。每个工具里塞一把 Key，换平台时挨个改，还容易漏。
 
 ## 先分清两种协议入口

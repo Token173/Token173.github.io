@@ -45,8 +45,6 @@
 <div class="article-body">
 <h1>Seedance 视频生成 API 中转：异步任务、轮询和那些不看文档想不到的坑</h1>
 <div class="meta-line"><span class="tag">models</span><span>2026-11-09</span><span class="dot">·</span><span>Seedance视频生成API</span></div>
-<div class="article-lead">「Seedance 2.0 API 怎么接」「AI 视频生成 接口 国内直连」「doubao-seedance-fast 调用」「视频模型中转站」—— 搜这些的人大多已经把文本模型接顺了，想在同一套系统里加视频能力，结果发现完全不是一回事。</div>
-
 <p>2026 年上半年视频模型迭代得很猛，四模态输入、原生音画同步、镜头延长这些能力陆续进了 API。但真正把视频接进生产流程的团队，卡住的地方往往很朴素：任务提交成功了，然后不知道该多久去查一次；查到 finished，下载链接已经过期；或者客户端等不及超时重试，一次创意生成扣了两次钱。</p>
 <h2 id="sec-1">先接受一个前提：视频不是请求-响应</h2>
 <p>文本模型是同步或流式，一次 HTTP 连接里把结果拿回来。视频生成是长耗时任务，标准形态是：</p>
@@ -107,8 +105,7 @@ else:
 <ul><li class="task">任务表有 <code>task_id</code>、业务单号、状态、提交时间、耗时、扣费、错误详情</li><li class="task">提交带幂等键，或超时后先查再重试</li><li class="task">轮询指数退避 + 总超时，超时保留 ID</li><li class="task">结果自动转存自有存储，不依赖临时 URL</li><li class="task">失败原因完整落日志</li><li class="task">视频任务单独的 Key 和额度上限，避免失控烧钱</li><li class="task">用固定 20 条分镜跑通全流程，再放量</li><li class="task">模型 ID 从 <code>/v1/models</code> 拉取并校验</li></ul>
 <p>视频能力接进来，工作量一大半在任务编排上，模型调用反而只占几行。把状态机和幂等先写扎实，后面换任何型号、换任何平台，这套骨架都能复用。</p>
 <div class="cta"><strong>继续看：</strong><a href="/topics/models/">模型与型号专题</a> ·
-<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
-型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a></div>
 <section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/gpt-image-2-api-relay/">gpt-image-2 生图 API 中转：调用与批量跑</a><p class="card-desc">图像端点与文本端点差异、按次计费口径、上传体积、超时重试、结果落地、批量前检查清单与排错表。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">gpt-image-2 API</span></div></article><article class="card"><a class="card-title" href="/articles/llm-relay-model-list-2026/">AI 中转站支持哪些模型：2026 型号 ID 整理</a><p class="card-desc">26 个型号按 Claude / GPT / Gemini / Grok / 国产 / 视觉分组，附命名规则、/v1/models 校验脚本与最小验证组。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">AI中转站模型列表</span></div></article><article class="card"><a class="card-title" href="/articles/one-key-multi-model-api/">第三方 API 巨模平台：一个 Key 调用多模型</a><p class="card-desc">聚合层实际做的四件事——鉴权、协议适配、调度、计量；附多模态流水线配置示例与调度、计费两道工序的拆解。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">第三方API巨模平台</span></div></article><article class="card"><a class="card-title" href="/articles/gpt-api-relay-models/">GPT 中转平台：gpt-6-sol 与 gpt-5.6-terra 怎么选</a><p class="card-desc">按轻中重三档绑型号，用综合单价而非折扣横比；附 2026 年型号命名规则、A/B 记录模板和默认旗舰习惯的成本账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">GPT中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/claude-api-relay-models/">Claude 中转平台：长任务翻车复盘与型号配置</a><p class="card-desc">一次超时重发导致的缓存失效复盘，claude-opus-5-5 / sonnet-5-5 / haiku-5-5 分档、缓存命中率算法与长任务参数清单。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Claude中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/gemini-api-relay-china/">Gemini 中转平台：gemini-3.8-flash 国内调用</a><p class="card-desc">多模态上传慢在哪、长上下文被截断的四类原因、协议差异、finish_reason 对照表与体积账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Gemini中转平台</span></div></article></div></section>
 </div>
 <aside class="toc"><strong>本文目录</strong><a href="#sec-1">先接受一个前提：视频不是请求-响应</a><a href="#sec-2">三个最容易出事的地方</a><a href="#sec-3">计费口径也要重新算</a><a href="#sec-4">素材上传的体积问题</a><a href="#sec-5">和文本模型放在同一个入口的好处</a><a href="#sec-6">上线前的检查清单</a></aside>
@@ -120,7 +117,7 @@ else:
       <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
       <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
     </nav>
-    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+    <p class="disclaimer">型号、价格与平台规则会调整，以各平台控制台当前公示为准；使用第三方接口服务请自行评估数据与资金风险。</p>
   </div>
 </footer>
 <script src="/assets/app.js" defer></script>

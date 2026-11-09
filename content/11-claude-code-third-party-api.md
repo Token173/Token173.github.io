@@ -1,7 +1,5 @@
 # 国内直连 Claude：把 Claude Code 指到第三方 API 的完整配置
 
-> 「国内直连 Claude」「Claude Code 第三方 API 配置」「ANTHROPIC_BASE_URL 怎么填」「2026 Claude API 不用代理」——Claude Code 说 Anthropic 协议，不是 OpenAI 那套，直接把兼容地址填进去多半 401。这篇把配置和排错一次讲完。
-
 Claude Code 走的是 Anthropic 协议，不是 OpenAI 那套。很多聚合站只给一个 OpenAI 兼容地址，直接填进去会 401 或者干脆不认。这篇把配置和排错完整过一遍。
 
 ## 三个变量就够了

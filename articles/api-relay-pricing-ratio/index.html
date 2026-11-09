@@ -45,8 +45,6 @@
 <div class="article-body">
 <h1>API 中转站的「倍率」到底是什么意思</h1>
 <div class="meta-line"><span class="tag">billing</span><span>2026-11-09</span><span class="dot">·</span><span>API中转站倍率</span></div>
-<div class="article-lead">「API 中转站倍率是什么意思」「中转站 0.2 倍率」「token 扣费 怎么算」「2026 中转站 价格对比」——同一个模型，A 站写 0.2 倍率、B 站写官方 8 折、C 站写每百万 token 多少钱，三个数字基准不同，直接比一定误判。</div>
-
 <p>同一个模型，A 站写 0.2 倍率，B 站写官方 8 折，C 站写每百万 token 多少钱。三个数字没法直接比，因为它们的基准不是一回事。这篇只讲口径，不推荐平台。</p>
 <h2 id="sec-1">一次扣费中间隔了两层换算</h2>
 <p>大多数中转站的账是这么算的：</p>
@@ -82,7 +80,6 @@
 <h2 id="sec-6">一句补充</h2>
 <p>倍率作用于计费金额，通常不改变实际 token 消耗量——消耗多少由分词器和请求内容决定。少数平台把倍率直接乘在 token 数上再按统一单价结算，账面看起来 token 变多了，本质还是计费权重调整。</p>
 <p>选型时把倍率和模型范围、通道质量、限流策略、账务透明度一起看。单独一个漂亮数字，说明不了什么。</p>
-<p>（本文只讲口径。具体某家的倍率、兑换比例、价格请以各自价格页当前公示为准，这个行业调价很频繁。）</p>
 <h2 id="sec-7">搜「倍率」的人，实际在问四件事</h2>
 <p>把搜索框里的问法归一下，指向的证据完全不同：</p>
 <div class="table-wrap"><table><thead><tr><th>问法</th><th>真正想问的</th><th>该看什么</th></tr></thead><tbody><tr><td>「0.2 倍率便宜吗」</td><td>跟别家怎么比</td><td>兑换口径 + 输入/输出/缓存分项</td></tr><tr><td>「为什么比官方便宜这么多」</td><td>上游来源正不正当</td><td>渠道说明、分组规则、可持续性</td></tr><tr><td>「余额掉得比预期快」</td><td>是不是被多扣</td><td>单条 request_id 的原始 usage</td></tr><tr><td>「无限 token 套餐靠谱吗」</td><td>有没有隐藏上限</td><td>频次、并发、静默降速条款</td></tr></tbody></table></div>
@@ -91,10 +88,8 @@
 <h2 id="sec-8">一张可以自己填的比价工作表</h2>
 <div class="table-wrap"><table><thead><tr><th>项目</th><th>平台 A</th><th>平台 B</th><th>备注</th></tr></thead><tbody><tr><td>1 美元官方标价 = 多少平台币</td><td></td><td></td><td>缺这项则价格不可比</td></tr><tr><td>目标型号输入倍率</td><td></td><td></td><td></td></tr><tr><td>目标型号输出倍率</td><td></td><td></td><td>常被漏掉</td></tr><tr><td>缓存计价规则</td><td></td><td></td><td>上游返回缓存数才按缓存价？</td></tr><tr><td>失败请求 / 重试是否计费</td><td></td><td></td><td>批量任务影响大</td></tr><tr><td>最低充值 / 余额有效期</td><td></td><td></td><td></td></tr><tr><td>我业务的输入 : 输出占比</td><td></td><td></td><td>用真实分布，别拍脑袋</td></tr><tr><td>综合单价（代入公式）</td><td></td><td></td><td>唯一可比的数字</td></tr></tbody></table></div>
 <p>最后一行算出来，再回头看首页那个「低至 X 折」，通常会有不一样的判断。</p>
-<p>（本文只讲口径。具体倍率、兑换比例、价格以各自价格页当前公示为准，这个行业调价很频繁。）</p>
 <div class="cta"><strong>继续看：</strong><a href="/topics/billing/">计费与成本</a> ·
-<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
-型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a></div>
 <section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/token-billing-reconcile/">API 中转站 Token 扣费对不上：四类原因排查</a><p class="card-desc">从一条 request_id 开始，按正常消耗漏算、协议口径、网关 bug、真实动手脚四层排查，附 5 分钟顺序表与换平台信号。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">token扣费对不上</span></div></article><article class="card"><a class="card-title" href="/articles/coding-relay-cache-cost/">AI 编程中转站：长上下文缓存命中与成本</a><p class="card-desc">编程场景输入占比为何远大于输出、缓存命中率算法、五次成本复盘、会话粘性与长连接稳定性要求。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">AI编程中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/token-relay-balance-risk/">Token 中转站余额清零与跑路风险：小额试跑清单</a><p class="card-desc">预充值结构的五类资金损失方式、五条资金纪律、小额试跑清单，以及 2026 双十一囤 Token 的三个坑与资金敞口表。</p><div class="card-meta"><span class="tag">避坑与风险</span><span class="kw">token中转站跑路</span></div></article></div></section>
 </div>
 <aside class="toc"><strong>本文目录</strong><a href="#sec-1">一次扣费中间隔了两层换算</a><a href="#sec-2">倍率不是一个数字，是一组数字</a><a href="#sec-3">用综合单价横比</a><a href="#sec-4">倍率很低，成本从哪来</a><a href="#sec-5">对账怎么落</a><a href="#sec-6">一句补充</a><a href="#sec-7">搜「倍率」的人，实际在问四件事</a><a href="#sec-8">一张可以自己填的比价工作表</a></aside>
@@ -106,7 +101,7 @@
       <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
       <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
     </nav>
-    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+    <p class="disclaimer">型号、价格与平台规则会调整，以各平台控制台当前公示为准；使用第三方接口服务请自行评估数据与资金风险。</p>
   </div>
 </footer>
 <script src="/assets/app.js" defer></script>

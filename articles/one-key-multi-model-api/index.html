@@ -45,8 +45,6 @@
 <div class="article-body">
 <h1>第三方 API 巨模平台：一个 Key 调多家模型，省下来的到底是什么</h1>
 <div class="meta-line"><span class="tag">engineering</span><span>2026-11-09</span><span class="dot">·</span><span>第三方API巨模平台</span></div>
-<div class="article-lead">「第三方 API 巨模平台」「大模型聚合平台推荐」「一个 Key 调用多个模型」「2026 AI 网关」——搜这些的人通常已经接了两三家厂商，被鉴权、请求格式和账单折腾过一轮。这篇讲聚合层实际替你做了哪四件事，以及哪两件事最难做好。</div>
-
 <p>自己接过三家以上模型厂商的接口，就会明白「一个 Key」不是营销话术，是实打实少写一堆代码。</p>
 <h2 id="sec-1">没有聚合层的时候是什么样</h2>
 <p>一个不算复杂的项目：客服问答用便宜模型做意图分类，复杂工单交给强推理模型，商品图交给生图模型，短视频素材交给视频模型，偶尔还要用长上下文模型啃一份几十页的文档。</p>
@@ -101,8 +99,7 @@ export OPENAI_API_KEY="sk-你的令牌"</code></pre>
 <p>最容易被跳过的是上下文缓存那一栏。系统提示词很长的业务，命中部分按折扣价、未命中按原价，这一栏不单列，财务根本算不清账合不合理。审计日志还能按 Key、按项目过滤，谁在刷量、哪个模型在烧钱，一拉就出来。</p>
 <p>自己埋点统计的 token 数和平台账单逐日对一次，正常偏差通常在百分之一量级，主要差在重试请求和缓存口径上。能对到这个精度，成本核算才做得下去；只能看到一个总余额，规模一大就必然失控。</p>
 <div class="cta"><strong>继续看：</strong><a href="/topics/engineering/">工程实践</a> ·
-<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
-型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a></div>
 <section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/agent-multi-model-routing/">AI Agent 工作流多模型调度：统一 API 网关实践</a><p class="card-desc">网关层四件事、成本 / 性能 / 稳定三种路由策略、分层结构图、按步骤打标签的记账方式与兜底清单。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">Agent多模型调度</span></div></article><article class="card"><a class="card-title" href="/articles/llm-relay-model-list-2026/">AI 中转站支持哪些模型：2026 型号 ID 整理</a><p class="card-desc">26 个型号按 Claude / GPT / Gemini / Grok / 国产 / 视觉分组，附命名规则、/v1/models 校验脚本与最小验证组。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">AI中转站模型列表</span></div></article><article class="card"><a class="card-title" href="/articles/seedance-video-api-relay/">Seedance 视频生成 API 中转：异步任务与轮询</a><p class="card-desc">提交—轮询—转存的任务状态机、幂等提交、指数退避、临时 URL、按次计费，附可复用代码骨架与上线检查清单。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Seedance视频生成API</span></div></article><article class="card"><a class="card-title" href="/articles/api-relay-faq-troubleshooting/">API 中转站 FAQ：401、404、流式断流排查</a><p class="card-desc">按现象组织的速查：认证失败、model not found、模型列表为空、Base URL、断流、超时重试、402、429、账单差异。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">API中转站报错排查</span></div></article></div></section>
 </div>
 <aside class="toc"><strong>本文目录</strong><a href="#sec-1">没有聚合层的时候是什么样</a><a href="#sec-2">聚合层实际做了四件事</a><a href="#sec-3">一个 Key 落到代码里长这样</a><a href="#sec-4">挑这类平台，我盯三件事</a><a href="#sec-5">一条多模态流水线的实际样子</a><a href="#sec-6">一句实在话</a><a href="#sec-7">调度层到底在做什么</a><a href="#sec-8">计量层为什么值得单独挑</a></aside>
@@ -114,7 +111,7 @@ export OPENAI_API_KEY="sk-你的令牌"</code></pre>
       <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
       <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
     </nav>
-    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+    <p class="disclaimer">型号、价格与平台规则会调整，以各平台控制台当前公示为准；使用第三方接口服务请自行评估数据与资金风险。</p>
   </div>
 </footer>
 <script src="/assets/app.js" defer></script>

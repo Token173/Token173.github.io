@@ -45,8 +45,6 @@
 <div class="article-body">
 <h1>AI 中转站避坑：模型降智、掺水、共享密钥池，问题出在哪一层</h1>
 <div class="meta-line"><span class="tag">risk</span><span>2026-11-09</span><span class="dot">·</span><span>AI中转站避坑</span></div>
-<div class="article-lead">「AI 中转站避坑」「中转站 模型降智」「纯血原版 是真的吗」「2026 token 中转 跑路」——这类词今年搜得很多，背景是媒体和监管对账号池、模型掺水、数据留存的讨论变多了。这篇按「问题出在哪一层」拆，不做平台点名。</div>
-
 <p>先摆一个前提：中转站不是模型，它是一层转发网关。同一层既能做协议适配、多线路调度、明细计费，也能做模型替换、路由降级、共享额度分发。技术上是中性的，差别在运营方怎么用。</p>
 <p>下面几类问题，是这一层里最常出现的。</p>
 <h2 id="sec-1">一、共享密钥池，封号是连带的</h2>
@@ -80,8 +78,7 @@
 <div class="table-wrap"><table><thead><tr><th>风险</th><th>可观察信号</th><th>自己能做的动作</th></tr></thead><tbody><tr><td>共享密钥池</td><td>晚高峰成功率下滑、集中 429、答复总说「上游波动」</td><td>压测晚高峰，问清分组和并发上限</td></tr><tr><td>模型掺水</td><td>固定样本回答变短、格式不稳、工具调用失败率上升</td><td>定期重跑带唯一答案的样本</td></tr><tr><td>计费黑盒</td><td>只有总消耗、倍率与兑换口径缺一项</td><td>要请求级 usage，拿不到就换</td></tr><tr><td>数据留存</td><td>隐私政策含糊、无日志保留说明</td><td>敏感内容不进公共链路</td></tr><tr><td>资金敞口</td><td>最低充值高、只推年卡、退款规则缺失</td><td>按周小额充值，留凭证</td></tr><tr><td>单点依赖</td><td>只有一个 Key、没有备用配置</td><td>备用通道写进环境变量，定期演练切换</td></tr></tbody></table></div>
 <p>最后一行的「定期演练」最常被跳过。备用通道配好半年没切过，真出事时往往发现 Key 早就过期了 —— 那就等于没有备用。</p>
 <div class="cta"><strong>继续看：</strong><a href="/topics/risk/">避坑与风险</a> ·
-<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
-型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a></div>
 <section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/token-relay-trust-checklist/">靠谱的 token 中转站推荐：五条自检标准</a><p class="card-desc">不靠口碑判断中转站靠不靠谱：请求级日志、倍率与兑换口径、小额起充、运营主体、状态页，附一次真实筛选记录和风险自查表。</p><div class="card-meta"><span class="tag">避坑与风险</span><span class="kw">靠谱的token中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/token-relay-balance-risk/">Token 中转站余额清零与跑路风险：小额试跑清单</a><p class="card-desc">预充值结构的五类资金损失方式、五条资金纪律、小额试跑清单，以及 2026 双十一囤 Token 的三个坑与资金敞口表。</p><div class="card-meta"><span class="tag">避坑与风险</span><span class="kw">token中转站跑路</span></div></article><article class="card"><a class="card-title" href="/articles/token-billing-reconcile/">API 中转站 Token 扣费对不上：四类原因排查</a><p class="card-desc">从一条 request_id 开始，按正常消耗漏算、协议口径、网关 bug、真实动手脚四层排查，附 5 分钟顺序表与换平台信号。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">token扣费对不上</span></div></article></div></section>
 </div>
 <aside class="toc"><strong>本文目录</strong><a href="#sec-1">一、共享密钥池，封号是连带的</a><a href="#sec-2">二、模型掺水与降智</a><a href="#sec-3">三、计费黑盒</a><a href="#sec-4">四、数据经过第三方</a><a href="#sec-5">五、几条能减少损失的实操</a><a href="#sec-6">关于选平台</a><a href="#sec-7">2026 年的行业背景，值得自己读一遍</a><a href="#sec-8">一张风险自查表</a></aside>
@@ -93,7 +90,7 @@
       <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
       <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
     </nav>
-    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+    <p class="disclaimer">型号、价格与平台规则会调整，以各平台控制台当前公示为准；使用第三方接口服务请自行评估数据与资金风险。</p>
   </div>
 </footer>
 <script src="/assets/app.js" defer></script>

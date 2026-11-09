@@ -64,7 +64,6 @@ th{background:var(--bg-soft);font-weight:600;white-space:nowrap}
 tr:last-child td{border-bottom:0}
 .article-layout{display:grid;grid-template-columns:minmax(0,1fr) 232px;gap:46px;align-items:start}
 .article-body{min-width:0;font-size:15.5px}
-.article-lead{font-size:16.5px;color:#3b4654;background:var(--bg-soft);border-radius:var(--radius);padding:18px 20px;margin-bottom:26px}
 .toc{position:sticky;top:86px;font-size:13.5px;border-left:1px solid var(--line);padding-left:16px;max-height:calc(100vh - 110px);overflow:auto}
 .toc strong{display:block;font-size:12px;letter-spacing:.08em;color:var(--muted);margin-bottom:10px;text-transform:uppercase}
 .toc a{display:block;color:var(--muted);padding:4px 0;line-height:1.5}
