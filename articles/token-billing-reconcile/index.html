@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API 中转站 Token 扣费对不上：四类原因排查</title>
+<meta name="description" content="从一条 request_id 开始，按正常消耗漏算、协议口径、网关 bug、真实动手脚四层排查，附 5 分钟顺序表与换平台信号。">
+<meta name="keywords" content="token扣费对不上, 中转站偷量, 账单对不上, usage字段, Token173, token173.net">
+<meta name="author" content="Token173">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://token173.github.io/articles/token-billing-reconcile/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Token173 API 中转笔记">
+<meta property="og:title" content="API 中转站 Token 扣费对不上：四类原因排查">
+<meta property="og:description" content="从一条 request_id 开始，按正常消耗漏算、协议口径、网关 bug、真实动手脚四层排查，附 5 分钟顺序表与换平台信号。">
+<meta property="og:url" content="https://token173.github.io/articles/token-billing-reconcile/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="API 中转站 Token 扣费对不上：四类原因排查">
+<meta name="twitter:description" content="从一条 request_id 开始，按正常消耗漏算、协议口径、网关 bug、真实动手脚四层排查，附 5 分钟顺序表与换平台信号。">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316509b'/%3E%3Ctext x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "API 中转站 Token 扣费对不上：从一条 request_id 开始，四类原因按顺序排查", "description": "从一条 request_id 开始，按正常消耗漏算、协议口径、网关 bug、真实动手脚四层排查，附 5 分钟顺序表与换平台信号。", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "inLanguage": "zh-CN", "keywords": "token扣费对不上, 中转站偷量, 账单对不上, usage字段", "author": {"@type": "Organization", "name": "Token173"}, "publisher": {"@type": "Organization", "name": "Token173", "url": "https://token173.net/"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://token173.github.io/articles/token-billing-reconcile/"}, "articleSection": "计费与成本"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://token173.github.io/"}, {"@type": "ListItem", "position": 2, "name": "计费与成本", "item": "https://token173.github.io/topics/billing/"}, {"@type": "ListItem", "position": 3, "name": "API 中转站 Token 扣费对不上：从一条 request_id 开始，四类原因按顺序排查", "item": "https://token173.github.io/articles/token-billing-reconcile/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Token173", "url": "https://token173.net/"}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/"><span class="brand-mark">T</span><span>Token173</span><em>API 中转笔记</em></a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/topics/">分类</a>
+      <a href="/models/">型号</a>
+      <a href="/faq/">FAQ</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false">
+      <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
+      <div id="search-results" class="search-results" hidden></div>
+    </form>
+  </div>
+</header>
+<nav class="wrap breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><a href="/topics/billing/">计费与成本</a></li><li aria-current="page">API 中转站 Token 扣费对不上：从一条 request_id 开始，四类原因按顺序排查</li></ol></nav>
+<main id="main" class="wrap"><div class="article-layout">
+<div class="article-body">
+<h1>API 中转站 Token 扣费对不上：从一条 request_id 开始，四类原因按顺序排查</h1>
+<div class="meta-line"><span class="tag">billing</span><span>2026-11-09</span><span class="dot">·</span><span>token扣费对不上</span></div>
+<div class="article-lead">经常有人搜「中转站偷量了吗」「余额掉得比预期快」「API 中转 账单对不上」「token 消耗 忽然变多」。这几个问法看着不同，落到排查上其实是同一件事：把一条具体请求的账拆开，看差在哪一层。</div>
+
+<p>去年年底我们有个批量摘要的任务，月底对账发现比预估高了三成多。群里第一反应是平台偷量，有人已经准备换站了。后来花了大概二十分钟，把一条样本请求从客户端到上游捋了一遍，问题出在自己这边的重试逻辑上。钱不多，但这事之后我们把排查顺序固定下来了，后来又用过好几次。</p>
+<p>先说结论：扣费对不上，八成不是「有人改数字」。按正常消耗被漏算 → 协议口径不一致 → 技术性漏记或多记 → 真的有人动手脚，这个顺序走，别一上来就怀疑平台。跳步只会把简单问题复杂化。</p>
+<h2 id="sec-1">第 0 分钟：别看汇总账单</h2>
+<p>汇总页是最没用的东西。它把几百次请求的差异平均掉了，看不出任何模式。</p>
+<p>第一步永远是从用量明细里锁定<strong>一条</strong>请求，记下四样：</p>
+<ul><li>request_id（或者日志里能唯一定位的标识）</li><li>时间，精确到秒</li><li>模型名和分组</li><li>后台显示的扣费金额</li></ul>
+<p>我那次是在 <a href="https://token173.net">token173.net</a> 的调用日志里挑的样本 —— 那个后台把每条请求的 usage 单独展开，能直接把 <code>prompt_tokens</code>、<code>completion_tokens</code> 和缓存字段拷出来。这一步其实就筛掉了一批平台：如果面板只给「本次消耗 0.37」，连原始字段都不给，后面四步根本没法做，只能靠猜。选型时把「能不能导出请求级 usage」放在价格前面，理由就在这儿。</p>
+<h2 id="sec-2">第 1 类：不是扣错了，是计费范围比你想的大</h2>
+<p>最常见的一类。你以为计费的是「我打的那句话」，实际输入侧至少还包括：</p>
+<ul><li>系统提示词，以及网关层可能注入的角色指令、格式约束</li><li>多轮对话携带的全部历史，<code>messages</code> 数组是每轮整包发过去的</li><li>JSON 结构符号、换行、空格</li><li>图片 base64 编码后的膨胀（大约多三分之一）</li><li>工具调用的 schema 定义，复杂 Agent 里这一块能占几千 token</li><li>RAG 场景塞进来的检索片段</li></ul>
+<p>输出侧也容易被低估。推理模型的内部思考 token 前端不显示，账单照算；多轮越聊越长，消耗是累积的，不是每轮独立。</p>
+<p><strong>5 秒判断</strong>：把那条请求完整发给模型的 <code>messages</code> 原样拿出来序列化，别只看你自己写的那一句。带上 system 和历史之后本地重算，差距明显缩小就结束了。</p>
+<p>我们那次的差异有一半来自这里 —— 摘要任务每条都带了一段两千字的产品说明当 system prompt，估成本时完全忘了算它。</p>
+<h2 id="sec-3">第 2 类：协议口径不一致，两边都没错</h2>
+<p>这一层最隐蔽，因为双方数据都是对的，只是说的不是同一个「输入」。</p>
+<p>Anthropic 的 <code>/v1/messages</code> 里，<code>input_tokens</code> 只统计<strong>未命中缓存的新增输入</strong>；OpenAI 的 <code>prompt_tokens</code> 是本次请求的<strong>总输入（含缓存）</strong>。聚合网关同时对接两种协议时，统计面板上的 token 数就可能一边偏少、一边「对得上」，而实际计费没问题。</p>
+<p>流式请求还多一层：<code>usage</code> 要等完整输出结束才返回最终统计。网络中途断开，有的平台只对已生成部分计费，有的预扣全额再退，还有的干脆记 0。同一个断开动作，三种账面表现。</p>
+<p><strong>5 秒判断</strong>：不要比「总 token」。把 <code>prompt_tokens</code>、<code>completion_tokens</code>、<code>cache_read_tokens</code>（或对应字段）拆开，逐项对网关面板和上游返回的 usage。差距集中在缓存字段，基本是口径问题。</p>
+<p>顺带一个能立刻做的检查：冷调用和热调用各跑十次，看扣费是不是真有差别。有些面板报告了缓存命中，冷热却扣一样的钱 —— 那这个字段只是展示，没进结算。这属于该换平台的信号，不是继续调参数的问题。</p>
+<h2 id="sec-4">第 3 类：网关 bug 造成的漏记或多记</h2>
+<p>开源网关的 issue 区里能翻到真实案例，两类方向相反：</p>
+<p>一类是流式解析在 <code>message_start</code> 阶段上游已经上报了输出 token，代码却只从后续 <code>message_delta</code> 读取；流在 delta 之前结束，已观测到的输出用量被记成 0，漏计费。</p>
+<p>另一类是客户端断连后 scanner 提前停止读取上游，上游其实已经完整生成并全额计费，网关侧没读到最后的 usage 事件，账单记录偏低或缺失。</p>
+<p>2026 年这类问题在 New API、Sub2API 一系的二开项目里被反复提过，不算新鲜事。</p>
+<p><strong>5 秒判断</strong>：查日志里流式请求的 <code>end_reason</code>。如果大量出现 <code>client_gone</code>、<code>timeout</code>、EOF，而你又开了自动重试，先别怀疑中转 —— 先确认是不是自己的客户端在中断后反复发新请求，而中断前那一笔的输出已经被上游计费了。</p>
+<p>我们那次剩下的差异就在这儿：读超时 30 秒，长摘要超时断开，重试发了第二次，两次都完整生成、都计了费。改读超时、给重试设上限之后，第二周账单就回到预估区间了。</p>
+<h2 id="sec-5">第 4 类：确实有人在数字上做手脚</h2>
+<p>排完前三类还系统性对不上，才轮到这一层。</p>
+<p>直接改 usage 数值是最低级的。更常见的是压低缓存命中率 —— 少命中一成，有效成本就上去了，而 token 总数看着完全正常，用「号池波动、轮询切换」就能解释过去。还有注入无用提示词抬高输入消耗的，账单上几乎看不出来。行业调查里也提过月卡、日卡不标 token 额度，请求次数和 token 分开算，实际扣减远高于真实调用量。</p>
+<p><strong>5 秒判断</strong>：找一条短 prompt，用本地 tokenizer（tiktoken 之类）对完整输入预计算，和账单里的 <code>prompt_tokens</code> 比。接近就没灌水；显著高出本地结果，才往这个方向查。注意本地估算本身有误差（工具 schema、图片、模型专属分词规则），看的是差距量级，不是完全一致。</p>
+<h2 id="sec-6">5 分钟排查顺序，别跳步</h2>
+<div class="table-wrap"><table><thead><tr><th>时间</th><th>动作</th><th>判断依据</th></tr></thead><tbody><tr><td>0–1 min</td><td>锁定一条请求，记 request_id / 时间 / 模型</td><td>不看汇总</td></tr><tr><td>1–2 min</td><td>拷出原始 usage，字段全拆</td><td>面板不给字段就到此为止</td></tr><tr><td>2–3 min</td><td>序列化完整 messages，本地重算输入侧</td><td>差 &lt;10% 正常波动，&gt;20% 进下一层</td></tr><tr><td>3–4 min</td><td>查前后 10 秒是否重复请求、end_reason</td><td><code>client_gone</code> / <code>timeout</code> 要加回重试成本</td></tr><tr><td>4–5 min</td><td>比对冷热调用的缓存字段与扣费</td><td>报告命中却不按缓存价，换平台</td></tr></tbody></table></div>
+<h2 id="sec-7">什么时候不是中转站的问题</h2>
+<p>多轮历史累积、推理长度自然波动、同一句话两次调用因上下文不同 token 不同、客户端超时重试、本地 tokenizer 与模型分词规则有差异 —— 这些换平台也不会消失，得改调用方式。</p>
+<p>反过来，下面几条同时出现，就该进入换不换的决策了：拆完字段、扣掉重试、本地重算仍对不上；差距是持续性的而非单次异常；集中在输入侧或缓存字段；平台给不出原始 usage 和请求级日志；解释永远停在「上游就这样」，拿不出可验证的数据。</p>
+<h2 id="sec-8">一句实话</h2>
+<p>对账这件事，最怕的不是差那几毛钱，是差得不明不白。选平台时「能不能查一条请求的完整 usage」比「便宜几折」重要得多 —— 能查，五分钟定位；不能查，只能换一家重跑一遍，然后继续不知道。</p>
+<p>（各家字段命名和计费规则会随版本调整，具体以自己后台当前显示的为准。这篇写的是排查方法，不是任何一家的账单说明。）</p>
+<div class="cta"><strong>继续看：</strong><a href="/topics/billing/">计费与成本</a> ·
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
+型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/api-relay-pricing-ratio/">API 中转站倍率是什么意思：计费口径与对账</a><p class="card-desc">两层换算拆开讲，倍率按方向 / 模型 / 分组 / 时段的差异、综合单价公式、四类搜索意图与可填的比价工作表。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">API中转站倍率</span></div></article><article class="card"><a class="card-title" href="/articles/coding-relay-cache-cost/">AI 编程中转站：长上下文缓存命中与成本</a><p class="card-desc">编程场景输入占比为何远大于输出、缓存命中率算法、五次成本复盘、会话粘性与长连接稳定性要求。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">AI编程中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/api-relay-faq-troubleshooting/">API 中转站 FAQ：401、404、流式断流排查</a><p class="card-desc">按现象组织的速查：认证失败、model not found、模型列表为空、Base URL、断流、超时重试、402、429、账单差异。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">API中转站报错排查</span></div></article></div></section>
+</div>
+<aside class="toc"><strong>本文目录</strong><a href="#sec-1">第 0 分钟：别看汇总账单</a><a href="#sec-2">第 1 类：不是扣错了，是计费范围比你想的大</a><a href="#sec-3">第 2 类：协议口径不一致，两边都没错</a><a href="#sec-4">第 3 类：网关 bug 造成的漏记或多记</a><a href="#sec-5">第 4 类：确实有人在数字上做手脚</a><a href="#sec-6">5 分钟排查顺序，别跳步</a><a href="#sec-7">什么时候不是中转站的问题</a><a href="#sec-8">一句实话</a></aside>
+</div></main>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div><strong>Token173</strong> · 大模型 API 中转、聚合与接入的选型、排错和成本笔记</div>
+    <nav aria-label="页脚导航">
+      <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+    </nav>
+    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+  </div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>

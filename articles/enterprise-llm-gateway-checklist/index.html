@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>企业选大模型 API 中转站：发票、对公与子账号清单</title>
+<meta name="description" content="财务 / 法务 / 运维三组视角、九项采购验收表、按真实业务跑的技术验证、费用口径写进合同，以及托管中转的结构性边界。">
+<meta name="keywords" content="企业级API中转站, 中转站开发票, 对公结算, 子账号管理, Token173, token173.net">
+<meta name="author" content="Token173">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://token173.github.io/articles/enterprise-llm-gateway-checklist/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Token173 API 中转笔记">
+<meta property="og:title" content="企业选大模型 API 中转站：发票、对公与子账号清单">
+<meta property="og:description" content="财务 / 法务 / 运维三组视角、九项采购验收表、按真实业务跑的技术验证、费用口径写进合同，以及托管中转的结构性边界。">
+<meta property="og:url" content="https://token173.github.io/articles/enterprise-llm-gateway-checklist/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="企业选大模型 API 中转站：发票、对公与子账号清单">
+<meta name="twitter:description" content="财务 / 法务 / 运维三组视角、九项采购验收表、按真实业务跑的技术验证、费用口径写进合同，以及托管中转的结构性边界。">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316509b'/%3E%3Ctext x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "企业选大模型 API 中转站：技术能调通，不代表采购能过", "description": "财务 / 法务 / 运维三组视角、九项采购验收表、按真实业务跑的技术验证、费用口径写进合同，以及托管中转的结构性边界。", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "inLanguage": "zh-CN", "keywords": "企业级API中转站, 中转站开发票, 对公结算, 子账号管理", "author": {"@type": "Organization", "name": "Token173"}, "publisher": {"@type": "Organization", "name": "Token173", "url": "https://token173.net/"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://token173.github.io/articles/enterprise-llm-gateway-checklist/"}, "articleSection": "选型与推荐"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://token173.github.io/"}, {"@type": "ListItem", "position": 2, "name": "选型与推荐", "item": "https://token173.github.io/topics/selection/"}, {"@type": "ListItem", "position": 3, "name": "企业选大模型 API 中转站：技术能调通，不代表采购能过", "item": "https://token173.github.io/articles/enterprise-llm-gateway-checklist/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Token173", "url": "https://token173.net/"}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/"><span class="brand-mark">T</span><span>Token173</span><em>API 中转笔记</em></a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/topics/">分类</a>
+      <a href="/models/">型号</a>
+      <a href="/faq/">FAQ</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false">
+      <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
+      <div id="search-results" class="search-results" hidden></div>
+    </form>
+  </div>
+</header>
+<nav class="wrap breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><a href="/topics/selection/">选型与推荐</a></li><li aria-current="page">企业选大模型 API 中转站：技术能调通，不代表采购能过</li></ol></nav>
+<main id="main" class="wrap"><div class="article-layout">
+<div class="article-body">
+<h1>企业选大模型 API 中转站：技术能调通，不代表采购能过</h1>
+<div class="meta-line"><span class="tag">selection</span><span>2026-11-09</span><span class="dot">·</span><span>企业级API中转站</span></div>
+<div class="article-lead">「企业级的 API 中转站」「支持开票的大模型中转平台」「对公结算 AI 网关」「团队共用 API Key 怎么管」—— 2026 年这类搜索明显多了。问的人多半不是开发者，是被财务和法务问住了的技术负责人。</div>
+
+<p>个人用中转站，判断标准很简单：能调通、别太贵、别跑路。企业用是另一回事。接口返回 200 只完成了一小步，后面还压着付款主体、发票类型、数据责任边界、密钥权限、费用归属、故障时的追责路径。这几样过不了，技术再顺也上不了生产。</p>
+<p>我参与过几次这类评审，常见的结果是：开发那边两周就跑通了 Demo，采购流程卡了一个半月。所以后来我们把顺序反过来 —— 先把非技术项列成表，技术测试照着表跑，一次收齐证据。</p>
+<h2 id="sec-1">三个角色关心的事完全不一样</h2>
+<p><strong>财务</strong>问的是：钱打给谁、能不能开增值税专用发票、抬头和主体对不对得上、月度账单能不能导出、按项目能不能分摊、余额能不能退、退款周期多久。个人微信充值、个人抬头发票，进不了公司账。</p>
+<p><strong>法务 / 安全</strong>问的是：运营主体是谁、有没有 ICP 备案、请求内容有没有留存、留存多久、谁能看、是否用于训练、数据是否出境、能不能签数据处理协议、出事故时责任怎么划。2026 年国家相关部门和媒体就 AI 中转站发过多次风险提示，涉及资质、账号池、数据出境，法务现在基本都会主动问到。</p>
+<p><strong>运维 / 研发</strong>问的是：SLA 怎么约定、故障有没有通告、能不能按 request_id 追溯、密钥能不能按环境隔离、有没有子账号和额度上限、限流返回是否明确、型号下架会不会提前通知。</p>
+<p>一张验收表要同时能回答这三组问题。只准备压测报告，评审会上一定被问回来。</p>
+<h2 id="sec-2">采购验收清单（可直接抄进 Excel）</h2>
+<div class="table-wrap"><table><thead><tr><th>类别</th><th>核验项</th><th>要留的证据</th><th>一票否决线</th></tr></thead><tbody><tr><td>主体</td><td>公司名、ICP 备案、域名注册时间</td><td>备案截图、营业执照</td><td>页面查不到运营主体</td></tr><tr><td>结算</td><td>对公账户、支付宝/微信企业支付</td><td>付款回单、订单号</td><td>只支持个人收款码</td></tr><tr><td>发票</td><td>普票 / 专票、开票周期、抬头</td><td>样票、开票流程说明</td><td>无法开票或只能开个人</td></tr><tr><td>合同</td><td>服务条款、SLA、数据处理约定</td><td>双方盖章文本</td><td>只有网页用户协议</td></tr><tr><td>账务</td><td>主账户 / 子账号、额度划拨、明细导出</td><td>导出样例 CSV</td><td>只有汇总余额</td></tr><tr><td>权限</td><td>按项目建 Key、额度上限、IP 白名单、单独停用</td><td>后台截图</td><td>全员共用一个 Key</td></tr><tr><td>可观测</td><td>request_id、usage 字段、错误码、路由信息</td><td>单条请求原始日志</td><td>只回「服务异常」</td></tr><tr><td>数据</td><td>日志留存期、脱敏、是否用于训练</td><td>隐私政策条款</td><td>条款含糊或缺失</td></tr><tr><td>连续性</td><td>故障通告、备用通道、余额与退款规则</td><td>历史公告、条款截图</td><td>无客服通道</td></tr></tbody></table></div>
+<p>第 7 项最容易被低估。生产环境出故障时，「能按 request_id 定位到哪条上游通道」和「客服说上游波动请稍后重试」，是两种完全不同的运维成本。</p>
+<h2 id="sec-3">技术验证要按真实业务跑</h2>
+<p>别用 Demo。挑一条现有业务流程串起技术和采购：</p>
+<ol><li>由开发按 OpenAI 兼容格式接入，验证返回；</li><li>用固定样本跑 48 小时，覆盖晚高峰，记录成功率与 P95 耗时；</li><li>按部门建两个子账号，各自设额度上限，验证超额行为是拒绝还是降级；</li><li>导出账单，让财务按自己的口径核一遍，确认能对应到项目和模型；</li><li>故意触发一次 401、一次 404、一次限流，看错误结构能不能进自家监控系统；</li><li>把上面所有输出归档，作为采购附件。</li></ol>
+<p>第 4 步建议一定让财务本人参与，不要技术代核。他们对「这笔钱能不能入账」的判断，跟我们不一样。</p>
+<h2 id="sec-4">关于费用口径，写进合同才算数</h2>
+<p>价格页的折扣、倍率、兑换比例会调，这在行业里太常见了。签约前把业务实际在用的型号清单和对应单价固化到书面确认里，写进合同的内容才作数。同时明确四件事：失败请求是否计费、重试是否另算、缓存命中怎么计价、余额低于多少会限并发。</p>
+<p>批量任务里这四项能把预算拉偏一大截，事后追着销售问是问不回来的。</p>
+<h2 id="sec-5">托管中转的结构性边界</h2>
+<p>不管选哪家，有一件事得在评审会上讲清楚：请求内容会完整经过第三方服务器。合同原文、客户资料、私有源码、个人信息这类数据，不该走公共托管中转，涉及出境的还要单独做合规评估。</p>
+<p>比较稳的架构是分层：敏感业务走官方 API 或能签约、可审计、数据责任边界明确的方案；一般性的内容生成、内部工具、原型验证走托管聚合。这不是不信任某一家平台，是这类服务的结构决定的。</p>
+<h2 id="sec-6">我们最后怎么测的</h2>
+<p>候选留了三家，其中一家是 <a href="https://token173.net">Token173</a>，理由是它的控制台把文本、图像、视频型号收在同一个 Key 下，子账号和调用明细这两块刚好对得上表里第 6、7 项，做第 3、4 步验证时不用另外搭一层代理。另外两家分别作为海外型号调研和国产模型方向的对照。</p>
+<p>没有直接定，三家各跑完同一套样本，账单导出后让财务各核一遍，再回头谈合同。这个过程比看「企业级」「99.99% SLA」这类宣传词慢，但材料是齐的，法务和财务签字时不用反复补证据。</p>
+<h2 id="sec-7">收尾</h2>
+<p>企业选这类平台，真正的分水岭不是「模型全不全」，是「出事之后能不能说清楚」—— 钱花在哪、谁调用的、数据经过谁、故障责任归谁。把这四句话能答上来，选型基本就结束了。</p>
+<p>（资质、发票类型、SLA 口径各家会变，以平台当前公示条款和双方签署的文本为准。）</p>
+<div class="cta"><strong>继续看：</strong><a href="/topics/selection/">选型与推荐</a> ·
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
+型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/token-relay-trust-checklist/">靠谱的 token 中转站推荐：五条自检标准</a><p class="card-desc">不靠口碑判断中转站靠不靠谱：请求级日志、倍率与兑换口径、小额起充、运营主体、状态页，附一次真实筛选记录和风险自查表。</p><div class="card-meta"><span class="tag">避坑与风险</span><span class="kw">靠谱的token中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/selfhost-vs-managed-gateway/">自建 One API 还是托管中转站：隐性成本对比</a><p class="card-desc">七项长期运维成本、适合自建的五个条件、BYOK 第三条路、半年期实际开销对照与重新评估的信号。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">自建One-API还是中转站</span></div></article><article class="card"><a class="card-title" href="/articles/llm-api-aggregator-longrun/">老牌稳定的大模型 API 聚合平台：怎么自己验证</a><p class="card-desc">「老牌」「稳定」「用户量大」都可以查：域名与备案、更新日志、社区痕迹、压测数据、投放软文识别，附 2026 年行业判断。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">老牌稳定的大模型API聚合平台</span></div></article><article class="card"><a class="card-title" href="/articles/best-api-relay-2026/">2026 好用的 API 中转站推荐：稳定靠谱实测对比</a><p class="card-desc">换了七八家之后总结的 API 中转站验收标准与横向对比，含踩坑经过、48 小时压测动作、主流平台定位和 2026 年行业背景。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">好用的API中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/api-relay-benchmark/">稳定好用的中转站怎么压测：TTFT 与 P95 延迟</a><p class="card-desc">六个可观测指标、五组真实样本、白天与晚高峰时间窗、并发阶梯、故障注入、记录表模板与上线硬线。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">稳定好用的中转站</span></div></article><article class="card"><a class="card-title" href="/articles/openrouter-vs-cn-relay/">OpenRouter 和国内中转平台怎么选</a><p class="card-desc">型号覆盖、国内链路、支付结算、企业流程四条线的差异，双栈环境变量配置、评测与生产账单分开归集。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">OpenRouter国内替代</span></div></article></div></section>
+</div>
+<aside class="toc"><strong>本文目录</strong><a href="#sec-1">三个角色关心的事完全不一样</a><a href="#sec-2">采购验收清单（可直接抄进 Excel）</a><a href="#sec-3">技术验证要按真实业务跑</a><a href="#sec-4">关于费用口径，写进合同才算数</a><a href="#sec-5">托管中转的结构性边界</a><a href="#sec-6">我们最后怎么测的</a><a href="#sec-7">收尾</a></aside>
+</div></main>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div><strong>Token173</strong> · 大模型 API 中转、聚合与接入的选型、排错和成本笔记</div>
+    <nav aria-label="页脚导航">
+      <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+    </nav>
+    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+  </div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>

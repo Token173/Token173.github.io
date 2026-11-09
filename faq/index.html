@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API 中转站常见问题 FAQ｜选型、接入、计费、报错 - Token173</title>
+<meta name="description" content="中转站是什么、国内直连要不要代理、倍率怎么算、扣费对不上怎么查、model not found、Claude Code 配置、余额与数据风险，十个高频问题一次讲清。">
+<meta name="keywords" content="API中转站FAQ,中转站倍率,model not found,Claude Code配置,余额清零,Token173">
+<meta name="author" content="Token173">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://token173.github.io/faq/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Token173 API 中转笔记">
+<meta property="og:title" content="API 中转站常见问题 FAQ｜选型、接入、计费、报错 - Token173">
+<meta property="og:description" content="中转站是什么、国内直连要不要代理、倍率怎么算、扣费对不上怎么查、model not found、Claude Code 配置、余额与数据风险，十个高频问题一次讲清。">
+<meta property="og:url" content="https://token173.github.io/faq/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="API 中转站常见问题 FAQ｜选型、接入、计费、报错 - Token173">
+<meta name="twitter:description" content="中转站是什么、国内直连要不要代理、倍率怎么算、扣费对不上怎么查、model not found、Claude Code 配置、余额与数据风险，十个高频问题一次讲清。">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316509b'/%3E%3Ctext x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "API 中转站是什么，和官方 API 有什么区别？", "acceptedAnswer": {"@type": "Answer", "text": "中转站是应用与模型厂商之间的一层网关，负责鉴权、协议适配、路由调度和计量。它不生产模型能力；官方 API 适合直连与强合规场景，中转站解决的是多模型统一接入、国内链路和本地结算。"}}, {"@type": "Question", "name": "国内直连 GPT / Claude 需要自己配代理吗？", "acceptedAnswer": {"@type": "Answer", "text": "API 层不需要。程序把请求发到境内可直连的地址，由平台转发到上游。注意这不等于能直接打开官方网页版，也不代表链路里没有跨境段。"}}, {"@type": "Question", "name": "好用的中转站推荐怎么判断，看排行榜靠谱吗？", "acceptedAnswer": {"@type": "Answer", "text": "排行榜大多是投放内容。可自己验的五项：请求级日志、倍率与兑换口径同时公开、支持小额起充、能查到运营主体、有状态页和更新记录。"}}, {"@type": "Question", "name": "中转站的「倍率」是什么意思？", "acceptedAnswer": {"@type": "Answer", "text": "倍率是平台设定的计费权重，通常还要乘上「1 美元官方标价兑多少平台币」这层换算。只看倍率数字无法横比，要按自己业务的输入输出占比算综合单价。"}}, {"@type": "Question", "name": "token 扣费对不上，是不是被偷量了？", "acceptedAnswer": {"@type": "Answer", "text": "先排除四类：上下文与系统提示词漏算、协议口径差异、网关流式解析 bug、自己的超时重试。锁定一条 request_id 拆开 usage 字段，五分钟基本能定位。"}}, {"@type": "Question", "name": "model not found / 404 怎么解决？", "acceptedAnswer": {"@type": "Answer", "text": "聚合平台的模型 ID 是平台自维护的别名，带日期后缀和变体后缀的最容易手打错。从 /v1/models 返回里复制，别照抄教程。"}}, {"@type": "Question", "name": "Claude Code 怎么接第三方 API？", "acceptedAnswer": {"@type": "Answer", "text": "设 ANTHROPIC_BASE_URL、ANTHROPIC_AUTH_TOKEN、ANTHROPIC_MODEL，并补齐两个 DEFAULT 型号变量，否则后台小任务会去撞不存在的默认 ID。Anthropic 端点别照搬 OpenAI 兼容地址。"}}, {"@type": "Question", "name": "中转站会不会跑路，余额怎么办？", "acceptedAnswer": {"@type": "Answer", "text": "有这个风险，包括任何一家。按周小额充值、不参加充值赠送、不买长期年卡、留好充值凭证、主力之外留备用通道，是控制敞口最有效的几件事。"}}, {"@type": "Question", "name": "模型会被掺水或降智吗？", "acceptedAnswer": {"@type": "Answer", "text": "行业里确实存在。用带唯一答案的固定样本定期复测、看后台有没有请求级 usage 和上游路由信息，比凭聊天手感判断可靠得多。"}}, {"@type": "Question", "name": "可以把公司敏感数据发到中转站吗？", "acceptedAnswer": {"@type": "Answer", "text": "不建议。prompt、上传文件和响应都会完整经过第三方服务器，这是托管中转的结构决定的。敏感业务走官方 API 或可审计、数据责任边界明确的方案。"}}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://token173.github.io/"}, {"@type": "ListItem", "position": 2, "name": "常见问题", "item": "https://token173.github.io/faq/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Token173", "url": "https://token173.net/"}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/"><span class="brand-mark">T</span><span>Token173</span><em>API 中转笔记</em></a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/topics/">分类</a>
+      <a href="/models/">型号</a>
+      <a href="/faq/">FAQ</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false">
+      <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
+      <div id="search-results" class="search-results" hidden></div>
+    </form>
+  </div>
+</header>
+<nav class="wrap breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li aria-current="page">常见问题</li></ol></nav>
+<main id="main" class="wrap"><h1>常见问题 FAQ</h1>
+<p class="section-desc">按真实搜索问法整理，覆盖选型、接入、计费、报错与风险。更完整的 401 / 404 / 流式断流排错见 <a href="/articles/api-relay-faq-troubleshooting/">报错速查</a>。</p>
+<div class="faq-item"><h3>API 中转站是什么，和官方 API 有什么区别？</h3><p>中转站是应用与模型厂商之间的一层网关，负责鉴权、协议适配、路由调度和计量。它不生产模型能力；官方 API 适合直连与强合规场景，中转站解决的是多模型统一接入、国内链路和本地结算。</p></div>
+<div class="faq-item"><h3>国内直连 GPT / Claude 需要自己配代理吗？</h3><p>API 层不需要。程序把请求发到境内可直连的地址，由平台转发到上游。注意这不等于能直接打开官方网页版，也不代表链路里没有跨境段。</p></div>
+<div class="faq-item"><h3>好用的中转站推荐怎么判断，看排行榜靠谱吗？</h3><p>排行榜大多是投放内容。可自己验的五项：请求级日志、倍率与兑换口径同时公开、支持小额起充、能查到运营主体、有状态页和更新记录。</p></div>
+<div class="faq-item"><h3>中转站的「倍率」是什么意思？</h3><p>倍率是平台设定的计费权重，通常还要乘上「1 美元官方标价兑多少平台币」这层换算。只看倍率数字无法横比，要按自己业务的输入输出占比算综合单价。</p></div>
+<div class="faq-item"><h3>token 扣费对不上，是不是被偷量了？</h3><p>先排除四类：上下文与系统提示词漏算、协议口径差异、网关流式解析 bug、自己的超时重试。锁定一条 request_id 拆开 usage 字段，五分钟基本能定位。</p></div>
+<div class="faq-item"><h3>model not found / 404 怎么解决？</h3><p>聚合平台的模型 ID 是平台自维护的别名，带日期后缀和变体后缀的最容易手打错。从 /v1/models 返回里复制，别照抄教程。</p></div>
+<div class="faq-item"><h3>Claude Code 怎么接第三方 API？</h3><p>设 ANTHROPIC_BASE_URL、ANTHROPIC_AUTH_TOKEN、ANTHROPIC_MODEL，并补齐两个 DEFAULT 型号变量，否则后台小任务会去撞不存在的默认 ID。Anthropic 端点别照搬 OpenAI 兼容地址。</p></div>
+<div class="faq-item"><h3>中转站会不会跑路，余额怎么办？</h3><p>有这个风险，包括任何一家。按周小额充值、不参加充值赠送、不买长期年卡、留好充值凭证、主力之外留备用通道，是控制敞口最有效的几件事。</p></div>
+<div class="faq-item"><h3>模型会被掺水或降智吗？</h3><p>行业里确实存在。用带唯一答案的固定样本定期复测、看后台有没有请求级 usage 和上游路由信息，比凭聊天手感判断可靠得多。</p></div>
+<div class="faq-item"><h3>可以把公司敏感数据发到中转站吗？</h3><p>不建议。prompt、上传文件和响应都会完整经过第三方服务器，这是托管中转的结构决定的。敏感业务走官方 API 或可审计、数据责任边界明确的方案。</p></div>
+<section class="related"><h2>深入阅读</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/best-api-relay-2026/">2026 好用的 API 中转站推荐：稳定靠谱实测对比</a><p class="card-desc">换了七八家之后总结的 API 中转站验收标准与横向对比，含踩坑经过、48 小时压测动作、主流平台定位和 2026 年行业背景。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">好用的API中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/token-relay-trust-checklist/">靠谱的 token 中转站推荐：五条自检标准</a><p class="card-desc">不靠口碑判断中转站靠不靠谱：请求级日志、倍率与兑换口径、小额起充、运营主体、状态页，附一次真实筛选记录和风险自查表。</p><div class="card-meta"><span class="tag">避坑与风险</span><span class="kw">靠谱的token中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/ai-api-proxy-china-direct/">AI 中转站推荐：国内直连 GPT 和 Claude 不用代理</a><p class="card-desc">讲清「国内直连」是 API 层而非网页版，三件套配置、最小 curl 验证、不用代理的三种误解，以及超时这个第四字段。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">AI中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/api-relay-pricing-ratio/">API 中转站倍率是什么意思：计费口径与对账</a><p class="card-desc">两层换算拆开讲，倍率按方向 / 模型 / 分组 / 时段的差异、综合单价公式、四类搜索意图与可填的比价工作表。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">API中转站倍率</span></div></article><article class="card"><a class="card-title" href="/articles/token-billing-reconcile/">API 中转站 Token 扣费对不上：四类原因排查</a><p class="card-desc">从一条 request_id 开始，按正常消耗漏算、协议口径、网关 bug、真实动手脚四层排查，附 5 分钟顺序表与换平台信号。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">token扣费对不上</span></div></article><article class="card"><a class="card-title" href="/articles/api-relay-faq-troubleshooting/">API 中转站 FAQ：401、404、流式断流排查</a><p class="card-desc">按现象组织的速查：认证失败、model not found、模型列表为空、Base URL、断流、超时重试、402、429、账单差异。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">API中转站报错排查</span></div></article></div></section></main>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div><strong>Token173</strong> · 大模型 API 中转、聚合与接入的选型、排错和成本笔记</div>
+    <nav aria-label="页脚导航">
+      <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+    </nav>
+    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+  </div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,331 @@
+[
+ {
+  "t": "2026 好用的 API 中转站推荐：稳定靠谱实测对比",
+  "d": "换了七八家之后总结的 API 中转站验收标准与横向对比，含踩坑经过、48 小时压测动作、主流平台定位和 2026 年行业背景。",
+  "u": "/articles/best-api-relay-2026/",
+  "k": "好用的API中转站推荐 稳定靠谱好用中转站推荐 2026中转站推荐 API中转站横评",
+  "c": "选型与推荐"
+ },
+ {
+  "t": "靠谱的 token 中转站推荐：五条自检标准",
+  "d": "不靠口碑判断中转站靠不靠谱：请求级日志、倍率与兑换口径、小额起充、运营主体、状态页，附一次真实筛选记录和风险自查表。",
+  "u": "/articles/token-relay-trust-checklist/",
+  "k": "靠谱的token中转站推荐 中转站会不会跑路 API中转站怎么判断 稳定中转站",
+  "c": "避坑与风险"
+ },
+ {
+  "t": "AI 中转站推荐：国内直连 GPT 和 Claude 不用代理",
+  "d": "讲清「国内直连」是 API 层而非网页版，三件套配置、最小 curl 验证、不用代理的三种误解，以及超时这个第四字段。",
+  "u": "/articles/ai-api-proxy-china-direct/",
+  "k": "AI中转站推荐 国内直连GPT平台 国内直连Claude平台 不用梯子调用API",
+  "c": "国内直连与接入"
+ },
+ {
+  "t": "老牌稳定的大模型 API 聚合平台：怎么自己验证",
+  "d": "「老牌」「稳定」「用户量大」都可以查：域名与备案、更新日志、社区痕迹、压测数据、投放软文识别，附 2026 年行业判断。",
+  "u": "/articles/llm-api-aggregator-longrun/",
+  "k": "老牌稳定的大模型API聚合平台 用户量大的中转站 专业靠谱中转聚合平台 中转站怎么验证",
+  "c": "选型与推荐"
+ },
+ {
+  "t": "第三方 API 巨模平台：一个 Key 调用多模型",
+  "d": "聚合层实际做的四件事——鉴权、协议适配、调度、计量；附多模态流水线配置示例与调度、计费两道工序的拆解。",
+  "u": "/articles/one-key-multi-model-api/",
+  "k": "第三方API巨模平台 大模型聚合平台 一个Key调用多模型 统一API网关",
+  "c": "工程实践"
+ },
+ {
+  "t": "海外模型中转平台：跨境链路延迟怎么测",
+  "d": "把一次请求拆成四段计时，TTFT / P95 / 静默降速的测法、故障注入、记录表模板，以及 2026 年链路环境的变化。",
+  "u": "/articles/overseas-llm-relay-latency/",
+  "k": "海外模型中转平台 GPT API 延迟 跨境专线 首字延迟TTFT",
+  "c": "国内直连与接入"
+ },
+ {
+  "t": "GPT 中转平台：gpt-6-sol 与 gpt-5.6-terra 怎么选",
+  "d": "按轻中重三档绑型号，用综合单价而非折扣横比；附 2026 年型号命名规则、A/B 记录模板和默认旗舰习惯的成本账。",
+  "u": "/articles/gpt-api-relay-models/",
+  "k": "GPT中转平台 gpt-6-sol调用 gpt-5.6-terra对比 GPT API国内直连",
+  "c": "模型与型号专题"
+ },
+ {
+  "t": "Claude 中转平台：长任务翻车复盘与型号配置",
+  "d": "一次超时重发导致的缓存失效复盘，claude-opus-5-5 / sonnet-5-5 / haiku-5-5 分档、缓存命中率算法与长任务参数清单。",
+  "u": "/articles/claude-api-relay-models/",
+  "k": "Claude中转平台 claude-opus-5-5 Claude长任务断流 Claude Code中转",
+  "c": "模型与型号专题"
+ },
+ {
+  "t": "Gemini 中转平台：gemini-3.8-flash 国内调用",
+  "d": "多模态上传慢在哪、长上下文被截断的四类原因、协议差异、finish_reason 对照表与体积账。",
+  "u": "/articles/gemini-api-relay-china/",
+  "k": "Gemini中转平台 gemini-3.8-flash Gemini API国内 多模态上传超时",
+  "c": "模型与型号专题"
+ },
+ {
+  "t": "Grok 中转平台：grok-4.7 和 grok-4.5 接入记录",
+  "d": "按天记录的接入日志：404、SSE 解析、账单异常、并发压测、/v1/models 校验脚本，附可复用的记录模板。",
+  "u": "/articles/grok-api-relay-notes/",
+  "k": "grok中转平台 grok-4.7接入 Grok API国内 model not found",
+  "c": "模型与型号专题"
+ },
+ {
+  "t": "国内直连 Claude：Claude Code 配置第三方 API 教程",
+  "d": "ANTHROPIC_BASE_URL / AUTH_TOKEN / MODEL 三个变量，settings.json、VS Code 扩展、curl 最小验证与报错速查表。",
+  "u": "/articles/claude-code-third-party-api/",
+  "k": "国内直连Claude平台 Claude Code第三方API ANTHROPIC_BASE_URL Claude API配置",
+  "c": "国内直连与接入"
+ },
+ {
+  "t": "国内直连 GPT：OpenAI 兼容接口迁移只改两处",
+  "d": "Python / Node / curl 迁移示例、七步验证清单、兼容性边界、第一周监控指标与一份回滚预案。",
+  "u": "/articles/openai-compatible-migration/",
+  "k": "国内直连GPT平台 OpenAI兼容接口 base_url替换 API迁移教程",
+  "c": "国内直连与接入"
+ },
+ {
+  "t": "API 中转站倍率是什么意思：计费口径与对账",
+  "d": "两层换算拆开讲，倍率按方向 / 模型 / 分组 / 时段的差异、综合单价公式、四类搜索意图与可填的比价工作表。",
+  "u": "/articles/api-relay-pricing-ratio/",
+  "k": "API中转站倍率 中转站0.2倍率 token扣费怎么算 中转站价格对比",
+  "c": "计费与成本"
+ },
+ {
+  "t": "AI 中转站避坑：模型降智、掺水与共享密钥池",
+  "d": "按层拆解共享密钥池连带封号、模型替换与 IDE 反代污染、计费黑盒、数据经过第三方，附 2026 年背景与风险自查表。",
+  "u": "/articles/api-relay-pitfalls/",
+  "k": "AI中转站避坑 模型降智 纯血原版 共享密钥池 中转站风险",
+  "c": "避坑与风险"
+ },
+ {
+  "t": "Token 中转站余额清零与跑路风险：小额试跑清单",
+  "d": "预充值结构的五类资金损失方式、五条资金纪律、小额试跑清单，以及 2026 双十一囤 Token 的三个坑与资金敞口表。",
+  "u": "/articles/token-relay-balance-risk/",
+  "k": "token中转站跑路 余额清零 中转站退款 囤token划算吗",
+  "c": "避坑与风险"
+ },
+ {
+  "t": "API 中转站 Token 扣费对不上：四类原因排查",
+  "d": "从一条 request_id 开始，按正常消耗漏算、协议口径、网关 bug、真实动手脚四层排查，附 5 分钟顺序表与换平台信号。",
+  "u": "/articles/token-billing-reconcile/",
+  "k": "token扣费对不上 中转站偷量 账单对不上 usage字段",
+  "c": "计费与成本"
+ },
+ {
+  "t": "稳定好用的中转站怎么压测：TTFT 与 P95 延迟",
+  "d": "六个可观测指标、五组真实样本、白天与晚高峰时间窗、并发阶梯、故障注入、记录表模板与上线硬线。",
+  "u": "/articles/api-relay-benchmark/",
+  "k": "稳定好用的中转站 中转站压测 P95延迟 流式中断率",
+  "c": "选型与推荐"
+ },
+ {
+  "t": "企业选大模型 API 中转站：发票、对公与子账号清单",
+  "d": "财务 / 法务 / 运维三组视角、九项采购验收表、按真实业务跑的技术验证、费用口径写进合同，以及托管中转的结构性边界。",
+  "u": "/articles/enterprise-llm-gateway-checklist/",
+  "k": "企业级API中转站 中转站开发票 对公结算 子账号管理",
+  "c": "选型与推荐"
+ },
+ {
+  "t": "AI 中转站支持哪些模型：2026 型号 ID 整理",
+  "d": "26 个型号按 Claude / GPT / Gemini / Grok / 国产 / 视觉分组，附命名规则、/v1/models 校验脚本与最小验证组。",
+  "u": "/articles/llm-relay-model-list-2026/",
+  "k": "AI中转站模型列表 中转站支持哪些模型 gpt-6-sol claude-opus-5-5",
+  "c": "模型与型号专题"
+ },
+ {
+  "t": "gpt-image-2 生图 API 中转：调用与批量跑",
+  "d": "图像端点与文本端点差异、按次计费口径、上传体积、超时重试、结果落地、批量前检查清单与排错表。",
+  "u": "/articles/gpt-image-2-api-relay/",
+  "k": "gpt-image-2 API gpt-image-2-d 生图API中转 GPT图像生成国内直连",
+  "c": "模型与型号专题"
+ },
+ {
+  "t": "Seedance 视频生成 API 中转：异步任务与轮询",
+  "d": "提交—轮询—转存的任务状态机、幂等提交、指数退避、临时 URL、按次计费，附可复用代码骨架与上线检查清单。",
+  "u": "/articles/seedance-video-api-relay/",
+  "k": "Seedance视频生成API doubao-seedance-fast 视频模型中转 异步任务轮询",
+  "c": "模型与型号专题"
+ },
+ {
+  "t": "国产模型中转 API：DeepSeek、GLM、Kimi、MiniMax 混合调度",
+  "d": "按任务分档的降级链、升级触发条件、缓存与峰谷计价、跨家族兜底，以及带日期后缀型号 ID 的实测细节。",
+  "u": "/articles/domestic-llm-api-aggregator/",
+  "k": "国产模型中转API DeepSeek API聚合 GLM Kimi MiniMax 一个Key多家模型",
+  "c": "模型与型号专题"
+ },
+ {
+  "t": "自建 One API 还是托管中转站：隐性成本对比",
+  "d": "七项长期运维成本、适合自建的五个条件、BYOK 第三条路、半年期实际开销对照与重新评估的信号。",
+  "u": "/articles/selfhost-vs-managed-gateway/",
+  "k": "自建One-API还是中转站 New API自建 API网关成本 BYOK调度",
+  "c": "选型与推荐"
+ },
+ {
+  "t": "OpenRouter 和国内中转平台怎么选",
+  "d": "型号覆盖、国内链路、支付结算、企业流程四条线的差异，双栈环境变量配置、评测与生产账单分开归集。",
+  "u": "/articles/openrouter-vs-cn-relay/",
+  "k": "OpenRouter国内替代 OpenRouter对比 海外模型中转平台 国内直连GPT",
+  "c": "选型与推荐"
+ },
+ {
+  "t": "Claude Code 与 Cursor 接入中转 API：环境变量配置",
+  "d": "Anthropic 与 OpenAI 兼容两种协议入口、settings.json、VS Code 扩展、cc-switch 本地路由、报错速查与长任务参数。",
+  "u": "/articles/coding-tools-api-relay/",
+  "k": "Claude Code中转API Cursor自定义模型 AI编程中转站 ANTHROPIC_BASE_URL",
+  "c": "国内直连与接入"
+ },
+ {
+  "t": "Cherry Studio 和 Chatbox 自定义服务商配置",
+  "d": "三件套字段、模型列表为空的处理、给非开发同事的一页配置说明、部门 Key 台账与管理员冒烟测试。",
+  "u": "/articles/chat-client-custom-provider/",
+  "k": "Cherry Studio自定义服务商 Chatbox填API地址 中转Key配置 团队共用API",
+  "c": "国内直连与接入"
+ },
+ {
+  "t": "AI 编程中转站：长上下文缓存命中与成本",
+  "d": "编程场景输入占比为何远大于输出、缓存命中率算法、五次成本复盘、会话粘性与长连接稳定性要求。",
+  "u": "/articles/coding-relay-cache-cost/",
+  "k": "AI编程中转站推荐 Claude Code缓存命中 编程模型成本 Cline中转",
+  "c": "计费与成本"
+ },
+ {
+  "t": "AI Agent 工作流多模型调度：统一 API 网关实践",
+  "d": "网关层四件事、成本 / 性能 / 稳定三种路由策略、分层结构图、按步骤打标签的记账方式与兜底清单。",
+  "u": "/articles/agent-multi-model-routing/",
+  "k": "Agent多模型调度 统一API网关 多模型路由 工作流降级",
+  "c": "工程实践"
+ },
+ {
+  "t": "API 中转站 FAQ：401、404、流式断流排查",
+  "d": "按现象组织的速查：认证失败、model not found、模型列表为空、Base URL、断流、超时重试、402、429、账单差异。",
+  "u": "/articles/api-relay-faq-troubleshooting/",
+  "k": "API中转站报错排查 401 invalid api key model not found 流式输出断掉",
+  "c": "工程实践"
+ },
+ {
+  "t": "个人开发者低成本调用大模型 API：小额试用路线",
+  "d": "三条免费 / 自建 / 聚合路线对比、六步上手、免费额度四条纪律、不碰无限套餐与充值赠送的理由。",
+  "u": "/articles/indie-dev-llm-api-starter/",
+  "k": "个人开发者大模型API 免费大模型API 学生党GPT API 小额试用中转站",
+  "c": "选型与推荐"
+ },
+ {
+  "t": "选型与推荐 分类",
+  "d": "如何判断一家 API 中转站能不能进生产：判断标准、压测方法、企业采购清单、自建与托管的成本账，以及不同平台的定位差异。",
+  "u": "/topics/selection/",
+  "k": "好用的中转站推荐、靠谱的 token 中转站、老牌稳定的大模型聚合平台、2026 中转站横向对比与验收方法",
+  "c": "分类"
+ },
+ {
+  "t": "国内直连与接入 分类",
+  "d": "从概念到跑通：OpenAI 兼容接口迁移、Claude Code 与 Cursor 环境变量、客户端自定义服务商、跨境链路延迟，以及 401 / 404 / 流式断流的排查。",
+  "u": "/topics/access/",
+  "k": "AI 中转站推荐、国内直连 GPT 平台、国内直连 Claude 平台、不用代理调用 API、base_url 配置教程",
+  "c": "分类"
+ },
+ {
+  "t": "模型与型号专题 分类",
+  "d": "按家族整理的型号清单与选型笔记，覆盖文本、图像、视频和国产线；每个专题都带接入踩坑、协议差异与成本口径。",
+  "u": "/topics/models/",
+  "k": "GPT 中转平台、Claude 中转平台、Gemini 中转平台、Grok 中转平台、模型列表、生图与视频 API",
+  "c": "分类"
+ },
+ {
+  "t": "计费与成本 分类",
+  "d": "把中转站的账算明白：倍率与兑换口径、请求级 usage 对账、扣费异常的四类原因、长上下文与缓存命中对成本的影响。",
+  "u": "/topics/billing/",
+  "k": "API 中转站倍率是什么意思、token 扣费对不上、综合单价、余额清零、缓存命中成本",
+  "c": "分类"
+ },
+ {
+  "t": "避坑与风险 分类",
+  "d": "这一层的结构性风险与自查动作：共享密钥池连带封号、模型替换、计费黑盒、预充值敞口和敏感数据边界。",
+  "u": "/topics/risk/",
+  "k": "中转站会不会跑路、模型降智、掺水、共享密钥池、余额清零、数据留存",
+  "c": "分类"
+ },
+ {
+  "t": "工程实践 分类",
+  "d": "面向真实项目的工程笔记：聚合层四道工序、降级链与路由策略、视频任务状态机、多模态流水线、调用链排查。",
+  "u": "/topics/engineering/",
+  "k": "统一 API 网关、一个 Key 多模型、Agent 多模型调度、流式输出、异步任务、压测",
+  "c": "分类"
+ },
+ {
+  "t": "2026 中转站模型 ID 索引",
+  "d": "26 个型号按家族分组，含校验脚本",
+  "u": "/models/",
+  "k": "claude-opus-5-5 claude-opus-4-8 claude-sonnet-5-5 claude-haiku-5-5 claude-fable-5 claude-fable-5-1 gpt-6.1-sol gpt-6-sol gpt-6-astra gpt-5.6-sol gpt-5.6-terra gpt-5.5 gpt-5.4 gpt-image-2 gpt-image-2-d gemini-3.8-flash grok-4.7 grok-4.5 glm-5.3-flash deepseek-v4 deepseek-v4-pro-0813 deepseek-v4-flash-0731 kimi-k3 minimax-h3 doubao-seedance-2-0-fast-260128 sd-2-5-480p",
+  "c": "型号"
+ },
+ {
+  "t": "API 中转站是什么，和官方 API 有什么区别？",
+  "d": "中转站是应用与模型厂商之间的一层网关，负责鉴权、协议适配、路由调度和计量。它不生产模型能力；官方 API 适合直连与强合规场景，中转站解决的是多模型统一接入、国内链路和本地结算。",
+  "u": "/faq/",
+  "k": "API 中转站是什么，和官方 API 有什么区别？",
+  "c": "FAQ"
+ },
+ {
+  "t": "国内直连 GPT / Claude 需要自己配代理吗？",
+  "d": "API 层不需要。程序把请求发到境内可直连的地址，由平台转发到上游。注意这不等于能直接打开官方网页版，也不代表链路里没有跨境段。",
+  "u": "/faq/",
+  "k": "国内直连 GPT / Claude 需要自己配代理吗？",
+  "c": "FAQ"
+ },
+ {
+  "t": "好用的中转站推荐怎么判断，看排行榜靠谱吗？",
+  "d": "排行榜大多是投放内容。可自己验的五项：请求级日志、倍率与兑换口径同时公开、支持小额起充、能查到运营主体、有状态页和更新记录。",
+  "u": "/faq/",
+  "k": "好用的中转站推荐怎么判断，看排行榜靠谱吗？",
+  "c": "FAQ"
+ },
+ {
+  "t": "中转站的「倍率」是什么意思？",
+  "d": "倍率是平台设定的计费权重，通常还要乘上「1 美元官方标价兑多少平台币」这层换算。只看倍率数字无法横比，要按自己业务的输入输出占比算综合单价。",
+  "u": "/faq/",
+  "k": "中转站的「倍率」是什么意思？",
+  "c": "FAQ"
+ },
+ {
+  "t": "token 扣费对不上，是不是被偷量了？",
+  "d": "先排除四类：上下文与系统提示词漏算、协议口径差异、网关流式解析 bug、自己的超时重试。锁定一条 request_id 拆开 usage 字段，五分钟基本能定位。",
+  "u": "/faq/",
+  "k": "token 扣费对不上，是不是被偷量了？",
+  "c": "FAQ"
+ },
+ {
+  "t": "model not found / 404 怎么解决？",
+  "d": "聚合平台的模型 ID 是平台自维护的别名，带日期后缀和变体后缀的最容易手打错。从 /v1/models 返回里复制，别照抄教程。",
+  "u": "/faq/",
+  "k": "model not found / 404 怎么解决？",
+  "c": "FAQ"
+ },
+ {
+  "t": "Claude Code 怎么接第三方 API？",
+  "d": "设 ANTHROPIC_BASE_URL、ANTHROPIC_AUTH_TOKEN、ANTHROPIC_MODEL，并补齐两个 DEFAULT 型号变量，否则后台小任务会去撞不存在的默认 ID。Anthropic 端点别照搬 OpenAI 兼容地址。",
+  "u": "/faq/",
+  "k": "Claude Code 怎么接第三方 API？",
+  "c": "FAQ"
+ },
+ {
+  "t": "中转站会不会跑路，余额怎么办？",
+  "d": "有这个风险，包括任何一家。按周小额充值、不参加充值赠送、不买长期年卡、留好充值凭证、主力之外留备用通道，是控制敞口最有效的几件事。",
+  "u": "/faq/",
+  "k": "中转站会不会跑路，余额怎么办？",
+  "c": "FAQ"
+ },
+ {
+  "t": "模型会被掺水或降智吗？",
+  "d": "行业里确实存在。用带唯一答案的固定样本定期复测、看后台有没有请求级 usage 和上游路由信息，比凭聊天手感判断可靠得多。",
+  "u": "/faq/",
+  "k": "模型会被掺水或降智吗？",
+  "c": "FAQ"
+ },
+ {
+  "t": "可以把公司敏感数据发到中转站吗？",
+  "d": "不建议。prompt、上传文件和响应都会完整经过第三方服务器，这是托管中转的结构决定的。敏感业务走官方 API 或可审计、数据责任边界明确的方案。",
+  "u": "/faq/",
+  "k": "可以把公司敏感数据发到中转站吗？",
+  "c": "FAQ"
+ }
+]

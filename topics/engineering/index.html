@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>工程实践｜API 中转教程与选型笔记 - Token173</title>
+<meta name="description" content="面向真实项目的工程笔记：聚合层四道工序、降级链与路由策略、视频任务状态机、多模态流水线、调用链排查。">
+<meta name="keywords" content="统一 API 网关,一个 Key 多模型,Agent 多模型调度,流式输出,异步任务,压测,Token173">
+<meta name="author" content="Token173">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://token173.github.io/topics/engineering/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Token173 API 中转笔记">
+<meta property="og:title" content="工程实践｜API 中转教程与选型笔记 - Token173">
+<meta property="og:description" content="面向真实项目的工程笔记：聚合层四道工序、降级链与路由策略、视频任务状态机、多模态流水线、调用链排查。">
+<meta property="og:url" content="https://token173.github.io/topics/engineering/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="工程实践｜API 中转教程与选型笔记 - Token173">
+<meta name="twitter:description" content="面向真实项目的工程笔记：聚合层四道工序、降级链与路由策略、视频任务状态机、多模态流水线、调用链排查。">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316509b'/%3E%3Ctext x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://token173.github.io/"}, {"@type": "ListItem", "position": 2, "name": "分类", "item": "https://token173.github.io/topics/"}, {"@type": "ListItem", "position": 3, "name": "工程实践", "item": "https://token173.github.io/topics/engineering/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Token173", "url": "https://token173.net/"}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/"><span class="brand-mark">T</span><span>Token173</span><em>API 中转笔记</em></a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/topics/">分类</a>
+      <a href="/models/">型号</a>
+      <a href="/faq/">FAQ</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false">
+      <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
+      <div id="search-results" class="search-results" hidden></div>
+    </form>
+  </div>
+</header>
+<nav class="wrap breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><a href="/topics/">分类</a></li><li aria-current="page">工程实践</li></ol></nav>
+<main id="main" class="wrap"><h1>工程实践 · 3 篇</h1>
+<p class="section-desc">面向真实项目的工程笔记：聚合层四道工序、降级链与路由策略、视频任务状态机、多模态流水线、调用链排查。</p>
+<div class="hero-kws"><span class="pill">统一 API 网关</span><span class="pill">一个 Key 多模型</span><span class="pill">Agent 多模型调度</span><span class="pill">流式输出</span><span class="pill">异步任务</span><span class="pill">压测</span></div>
+<div class="section"><div class="grid"><article class="card"><a class="card-title" href="/articles/one-key-multi-model-api/">第三方 API 巨模平台：一个 Key 调用多模型</a><p class="card-desc">聚合层实际做的四件事——鉴权、协议适配、调度、计量；附多模态流水线配置示例与调度、计费两道工序的拆解。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">第三方API巨模平台</span></div></article><article class="card"><a class="card-title" href="/articles/agent-multi-model-routing/">AI Agent 工作流多模型调度：统一 API 网关实践</a><p class="card-desc">网关层四件事、成本 / 性能 / 稳定三种路由策略、分层结构图、按步骤打标签的记账方式与兜底清单。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">Agent多模型调度</span></div></article><article class="card"><a class="card-title" href="/articles/api-relay-faq-troubleshooting/">API 中转站 FAQ：401、404、流式断流排查</a><p class="card-desc">按现象组织的速查：认证失败、model not found、模型列表为空、Base URL、断流、超时重试、402、429、账单差异。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">API中转站报错排查</span></div></article></div></div></main>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div><strong>Token173</strong> · 大模型 API 中转、聚合与接入的选型、排错和成本笔记</div>
+    <nav aria-label="页脚导航">
+      <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+    </nav>
+    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+  </div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>

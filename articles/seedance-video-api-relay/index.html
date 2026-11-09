@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seedance 视频生成 API 中转：异步任务与轮询</title>
+<meta name="description" content="提交—轮询—转存的任务状态机、幂等提交、指数退避、临时 URL、按次计费，附可复用代码骨架与上线检查清单。">
+<meta name="keywords" content="Seedance视频生成API, doubao-seedance-fast, 视频模型中转, 异步任务轮询, Token173, token173.net">
+<meta name="author" content="Token173">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://token173.github.io/articles/seedance-video-api-relay/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Token173 API 中转笔记">
+<meta property="og:title" content="Seedance 视频生成 API 中转：异步任务与轮询">
+<meta property="og:description" content="提交—轮询—转存的任务状态机、幂等提交、指数退避、临时 URL、按次计费，附可复用代码骨架与上线检查清单。">
+<meta property="og:url" content="https://token173.github.io/articles/seedance-video-api-relay/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Seedance 视频生成 API 中转：异步任务与轮询">
+<meta name="twitter:description" content="提交—轮询—转存的任务状态机、幂等提交、指数退避、临时 URL、按次计费，附可复用代码骨架与上线检查清单。">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316509b'/%3E%3Ctext x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Seedance 视频生成 API 中转：异步任务、轮询和那些不看文档想不到的坑", "description": "提交—轮询—转存的任务状态机、幂等提交、指数退避、临时 URL、按次计费，附可复用代码骨架与上线检查清单。", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "inLanguage": "zh-CN", "keywords": "Seedance视频生成API, doubao-seedance-fast, 视频模型中转, 异步任务轮询", "author": {"@type": "Organization", "name": "Token173"}, "publisher": {"@type": "Organization", "name": "Token173", "url": "https://token173.net/"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://token173.github.io/articles/seedance-video-api-relay/"}, "articleSection": "模型与型号专题"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://token173.github.io/"}, {"@type": "ListItem", "position": 2, "name": "模型与型号专题", "item": "https://token173.github.io/topics/models/"}, {"@type": "ListItem", "position": 3, "name": "Seedance 视频生成 API 中转：异步任务、轮询和那些不看文档想不到的坑", "item": "https://token173.github.io/articles/seedance-video-api-relay/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Token173", "url": "https://token173.net/"}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/"><span class="brand-mark">T</span><span>Token173</span><em>API 中转笔记</em></a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/topics/">分类</a>
+      <a href="/models/">型号</a>
+      <a href="/faq/">FAQ</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false">
+      <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
+      <div id="search-results" class="search-results" hidden></div>
+    </form>
+  </div>
+</header>
+<nav class="wrap breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><a href="/topics/models/">模型与型号专题</a></li><li aria-current="page">Seedance 视频生成 API 中转：异步任务、轮询和那些不看文档想不到的坑</li></ol></nav>
+<main id="main" class="wrap"><div class="article-layout">
+<div class="article-body">
+<h1>Seedance 视频生成 API 中转：异步任务、轮询和那些不看文档想不到的坑</h1>
+<div class="meta-line"><span class="tag">models</span><span>2026-11-09</span><span class="dot">·</span><span>Seedance视频生成API</span></div>
+<div class="article-lead">「Seedance 2.0 API 怎么接」「AI 视频生成 接口 国内直连」「doubao-seedance-fast 调用」「视频模型中转站」—— 搜这些的人大多已经把文本模型接顺了，想在同一套系统里加视频能力，结果发现完全不是一回事。</div>
+
+<p>2026 年上半年视频模型迭代得很猛，四模态输入、原生音画同步、镜头延长这些能力陆续进了 API。但真正把视频接进生产流程的团队，卡住的地方往往很朴素：任务提交成功了，然后不知道该多久去查一次；查到 finished，下载链接已经过期；或者客户端等不及超时重试，一次创意生成扣了两次钱。</p>
+<h2 id="sec-1">先接受一个前提：视频不是请求-响应</h2>
+<p>文本模型是同步或流式，一次 HTTP 连接里把结果拿回来。视频生成是长耗时任务，标准形态是：</p>
+<pre><code>① POST 提交任务  →  返回 task_id
+② 轮询 GET 状态  →  pending / running / succeeded / failed
+③ 成功后取结果 URL
+④ 转存到自己的存储</code></pre>
+<p>这意味着你的系统里要多个东西：任务表、状态机、重试与幂等、超时上限、结果落盘、失败告警。只写一个 <code>requests.post</code> 然后 <code>.json()</code> 的，一定会在第一次长任务上翻车。</p>
+<p>一个最小可跑的骨架：</p>
+<pre><code class="language-python">import os, time, requests
+
+BASE = os.environ["RELAY_BASE_URL"].rstrip("/")
+KEY  = os.environ["RELAY_API_KEY"]
+H    = {"Authorization": f"Bearer {KEY}", "Content-Type": "application/json"}
+
+# 提交
+r = requests.post(
+    f"{BASE}/v1/video/generations",
+    headers=H,
+    json={
+        "model": "doubao-seedance-2-0-fast-260128",
+        "prompt": "特写，雨后的柏油路面反射霓虹，镜头缓慢前推",
+        "duration": 5,
+        "resolution": "480p",
+    },
+    timeout=30,
+)
+r.raise_for_status()
+task_id = r.json()["id"]
+
+# 轮询：指数退避 + 总超时，别每秒打一次
+deadline = time.time() + 900
+delay = 3
+while time.time() &lt; deadline:
+    s = requests.get(f"{BASE}/v1/video/tasks/{task_id}", headers=H, timeout=15).json()
+    if s["status"] in ("succeeded", "failed"):
+        break
+    time.sleep(delay)
+    delay = min(delay * 1.5, 20)
+else:
+    raise TimeoutError(f"task {task_id} 超时，保留 ID 供人工核查")</code></pre>
+<p>端点和字段名各家聚合平台不一样，上面是形态示意。接之前一定先看文档里的任务提交地址、状态枚举和结果字段，别照抄。</p>
+<h2 id="sec-2">三个最容易出事的地方</h2>
+<p><strong>一、提交超时 ≠ 任务失败。</strong> 网络抖动导致 POST 没收到响应，任务可能已经在下游排队了。这时候盲目重试，就是两个任务两份钱。稳妥做法是提交时带一个业务侧幂等键（如果平台支持），或者超时后先按业务单号查一次任务列表，确认没创建成功再重试。</p>
+<p><strong>二、轮询别太密。</strong> 视频生成几十秒到几分钟，每秒查一次会把状态接口的配额吃光，还容易被限流。指数退避起步 3 秒、上限 20 秒比较合适，同时设一个总超时（比如 15 分钟）。超时后不要删任务，把 task_id 留住，人工核查或者异步补查，因为下游很可能还在跑。</p>
+<p><strong>三、结果 URL 是临时的。</strong> 拿到 <code>succeeded</code> 之后第一件事是把文件转存到自己的对象存储，别把平台返回的链接直接写进业务数据库。我见过上线一周后整批素材 403 的，重跑一遍的钱比当初多得多。</p>
+<h2 id="sec-3">计费口径也要重新算</h2>
+<p>视频通常按次、按时长、按分辨率档位计，不是按 token。<code>sd-2-5-480p</code> 这种 ID 里的 <code>480p</code> 就是档位信息，换到 720p / 1080p 是另一档价格。</p>
+<p>提前确认四件事：失败任务是否计费、同一任务轮询是否计费、超时但下游已生成的怎么结、参考素材（首帧图、音频、参考视频）上传是否单独算。批量生产里这四项能把预算拉偏很多。</p>
+<p>还有一点：视频任务的失败原因常常在任务详情里，不在提交响应里。轮询拿到 <code>failed</code> 后要把 <code>error</code> 字段完整落日志，别只记一句「生成失败」，否则下周复盘时完全不知道是内容策略、参数还是上游波动。</p>
+<h2 id="sec-4">素材上传的体积问题</h2>
+<p>四模态输入意味着可能同时传图、传参考视频、传音频。base64 编码膨胀约三分之一，几十 MB 的请求体很容易撞上网关的 <code>client_max_body_size</code> 或上传超时。能传 URL 就传 URL；必须传文件时，先确认平台有没有提供独立的上传端点。</p>
+<p><code>doubao-seedance-2-0-fast-260128</code> 这个 ID 带日期后缀，手打极易错。我从 <code>/v1/models</code> 返回里复制，并且在部署脚本里加了一次 ID 存在性校验 —— 视频任务一次成本不低，因为拼错一个字符白跑一轮不划算。</p>
+<h2 id="sec-5">和文本模型放在同一个入口的好处</h2>
+<p>这条流水线我是在 <a href="https://token173.net">token173.net</a> 上跑的：先用文本模型把分镜描述扩写、再交给 <code>doubao-seedance-2-0-fast-260128</code> 生成、最后用轻量模型批量写标题和标签。三段共用一个 Key、一套鉴权和一份账单，不用为视频单独开账号、单独对账。控制台里文本、<code>gpt-image-2</code> 那类图像型号和视频型号归在一起，切换时只改 model 字符串，这点对做多模态工作流的人比单价更实在。</p>
+<p>需要说明，长耗时任务的通道稳定性比峰值速度重要。国内直连省掉了自己折腾跨境链路的麻烦，但超时、重试、幂等这些还是得业务侧自己做，平台不会替你兜。</p>
+<h2 id="sec-6">上线前的检查清单</h2>
+<ul><li class="task">任务表有 <code>task_id</code>、业务单号、状态、提交时间、耗时、扣费、错误详情</li><li class="task">提交带幂等键，或超时后先查再重试</li><li class="task">轮询指数退避 + 总超时，超时保留 ID</li><li class="task">结果自动转存自有存储，不依赖临时 URL</li><li class="task">失败原因完整落日志</li><li class="task">视频任务单独的 Key 和额度上限，避免失控烧钱</li><li class="task">用固定 20 条分镜跑通全流程，再放量</li><li class="task">模型 ID 从 <code>/v1/models</code> 拉取并校验</li></ul>
+<p>视频能力接进来，工作量一大半在任务编排上，模型调用反而只占几行。把状态机和幂等先写扎实，后面换任何型号、换任何平台，这套骨架都能复用。</p>
+<div class="cta"><strong>继续看：</strong><a href="/topics/models/">模型与型号专题</a> ·
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
+型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/gpt-image-2-api-relay/">gpt-image-2 生图 API 中转：调用与批量跑</a><p class="card-desc">图像端点与文本端点差异、按次计费口径、上传体积、超时重试、结果落地、批量前检查清单与排错表。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">gpt-image-2 API</span></div></article><article class="card"><a class="card-title" href="/articles/llm-relay-model-list-2026/">AI 中转站支持哪些模型：2026 型号 ID 整理</a><p class="card-desc">26 个型号按 Claude / GPT / Gemini / Grok / 国产 / 视觉分组，附命名规则、/v1/models 校验脚本与最小验证组。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">AI中转站模型列表</span></div></article><article class="card"><a class="card-title" href="/articles/one-key-multi-model-api/">第三方 API 巨模平台：一个 Key 调用多模型</a><p class="card-desc">聚合层实际做的四件事——鉴权、协议适配、调度、计量；附多模态流水线配置示例与调度、计费两道工序的拆解。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">第三方API巨模平台</span></div></article><article class="card"><a class="card-title" href="/articles/gpt-api-relay-models/">GPT 中转平台：gpt-6-sol 与 gpt-5.6-terra 怎么选</a><p class="card-desc">按轻中重三档绑型号，用综合单价而非折扣横比；附 2026 年型号命名规则、A/B 记录模板和默认旗舰习惯的成本账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">GPT中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/claude-api-relay-models/">Claude 中转平台：长任务翻车复盘与型号配置</a><p class="card-desc">一次超时重发导致的缓存失效复盘，claude-opus-5-5 / sonnet-5-5 / haiku-5-5 分档、缓存命中率算法与长任务参数清单。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Claude中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/gemini-api-relay-china/">Gemini 中转平台：gemini-3.8-flash 国内调用</a><p class="card-desc">多模态上传慢在哪、长上下文被截断的四类原因、协议差异、finish_reason 对照表与体积账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Gemini中转平台</span></div></article></div></section>
+</div>
+<aside class="toc"><strong>本文目录</strong><a href="#sec-1">先接受一个前提：视频不是请求-响应</a><a href="#sec-2">三个最容易出事的地方</a><a href="#sec-3">计费口径也要重新算</a><a href="#sec-4">素材上传的体积问题</a><a href="#sec-5">和文本模型放在同一个入口的好处</a><a href="#sec-6">上线前的检查清单</a></aside>
+</div></main>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div><strong>Token173</strong> · 大模型 API 中转、聚合与接入的选型、排错和成本笔记</div>
+    <nav aria-label="页脚导航">
+      <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+    </nav>
+    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+  </div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第三方 API 巨模平台：一个 Key 调用多模型</title>
+<meta name="description" content="聚合层实际做的四件事——鉴权、协议适配、调度、计量；附多模态流水线配置示例与调度、计费两道工序的拆解。">
+<meta name="keywords" content="第三方API巨模平台, 大模型聚合平台, 一个Key调用多模型, 统一API网关, Token173, token173.net">
+<meta name="author" content="Token173">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://token173.github.io/articles/one-key-multi-model-api/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Token173 API 中转笔记">
+<meta property="og:title" content="第三方 API 巨模平台：一个 Key 调用多模型">
+<meta property="og:description" content="聚合层实际做的四件事——鉴权、协议适配、调度、计量；附多模态流水线配置示例与调度、计费两道工序的拆解。">
+<meta property="og:url" content="https://token173.github.io/articles/one-key-multi-model-api/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第三方 API 巨模平台：一个 Key 调用多模型">
+<meta name="twitter:description" content="聚合层实际做的四件事——鉴权、协议适配、调度、计量；附多模态流水线配置示例与调度、计费两道工序的拆解。">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316509b'/%3E%3Ctext x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "第三方 API 巨模平台：一个 Key 调多家模型，省下来的到底是什么", "description": "聚合层实际做的四件事——鉴权、协议适配、调度、计量；附多模态流水线配置示例与调度、计费两道工序的拆解。", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "inLanguage": "zh-CN", "keywords": "第三方API巨模平台, 大模型聚合平台, 一个Key调用多模型, 统一API网关", "author": {"@type": "Organization", "name": "Token173"}, "publisher": {"@type": "Organization", "name": "Token173", "url": "https://token173.net/"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://token173.github.io/articles/one-key-multi-model-api/"}, "articleSection": "工程实践"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://token173.github.io/"}, {"@type": "ListItem", "position": 2, "name": "工程实践", "item": "https://token173.github.io/topics/engineering/"}, {"@type": "ListItem", "position": 3, "name": "第三方 API 巨模平台：一个 Key 调多家模型，省下来的到底是什么", "item": "https://token173.github.io/articles/one-key-multi-model-api/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Token173", "url": "https://token173.net/"}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/"><span class="brand-mark">T</span><span>Token173</span><em>API 中转笔记</em></a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/topics/">分类</a>
+      <a href="/models/">型号</a>
+      <a href="/faq/">FAQ</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false">
+      <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
+      <div id="search-results" class="search-results" hidden></div>
+    </form>
+  </div>
+</header>
+<nav class="wrap breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><a href="/topics/engineering/">工程实践</a></li><li aria-current="page">第三方 API 巨模平台：一个 Key 调多家模型，省下来的到底是什么</li></ol></nav>
+<main id="main" class="wrap"><div class="article-layout">
+<div class="article-body">
+<h1>第三方 API 巨模平台：一个 Key 调多家模型，省下来的到底是什么</h1>
+<div class="meta-line"><span class="tag">engineering</span><span>2026-11-09</span><span class="dot">·</span><span>第三方API巨模平台</span></div>
+<div class="article-lead">「第三方 API 巨模平台」「大模型聚合平台推荐」「一个 Key 调用多个模型」「2026 AI 网关」——搜这些的人通常已经接了两三家厂商，被鉴权、请求格式和账单折腾过一轮。这篇讲聚合层实际替你做了哪四件事，以及哪两件事最难做好。</div>
+
+<p>自己接过三家以上模型厂商的接口，就会明白「一个 Key」不是营销话术，是实打实少写一堆代码。</p>
+<h2 id="sec-1">没有聚合层的时候是什么样</h2>
+<p>一个不算复杂的项目：客服问答用便宜模型做意图分类，复杂工单交给强推理模型，商品图交给生图模型，短视频素材交给视频模型，偶尔还要用长上下文模型啃一份几十页的文档。</p>
+<p>直连各家要处理的东西：</p>
+<ul><li>鉴权不统一。OpenAI 系走 <code>Authorization: Bearer</code>，Anthropic 系走 <code>x-api-key</code>，Gemini 又是另一套 <code>x-goog-api-key</code> 加 <code>:generateContent</code> 路径。</li><li>请求体不一样。<code>messages</code>、<code>system</code> 的位置、<code>tools</code> 的结构、<code>max_tokens</code> 和 <code>max_completion_tokens</code> 的命名，每家都有自己的脾气。</li><li>流式格式不一样。SSE 的事件名、增量字段、usage 是最后单独回一帧还是嵌在 chunk 里，得分别写解析器。</li><li>错误码不一样。同样是限流，有的 429，有的 503，有的 200 里塞一个 error 对象。</li><li>计费口径不一样。输入输出分不分、缓存算不算、按次还是按 token、币种和结算周期。</li></ul>
+<p>把这些全封装一遍，代码能跑，但每加一家模型就要动一层。更麻烦的是运维：密钥散在五个地方，出问题时不知道是哪个上游，成本按部门根本归不下来。</p>
+<h2 id="sec-2">聚合层实际做了四件事</h2>
+<p>一次请求进去，中间层依次处理：</p>
+<p><strong>鉴权</strong>——把外部这一把 Key 换成内部的身份、额度、权限判断，上游真实密钥不下发。 <strong>协议适配</strong>——统一成一种对外格式，请求转给不同上游时再翻译回去，Claude Messages、Gemini 原生格式、图像和视频的异步任务都收进同一套入口。 <strong>调度</strong>——同型号多通道时按延迟、成功率、剩余配额选路；某条线路错误率超阈值就先摘掉，恢复了再慢慢放回流量。 <strong>计量</strong>——请求回来以后异步记账：输入、输出、缓存、命中模型、走了哪条通道、扣了多少。月底那张能导出的明细表，就是这一步攒出来的。</p>
+<p>四件事里，前两件自己搭开源网关也能做个七八成，真正拉开差距的是后两件。</p>
+<h2 id="sec-3">一个 Key 落到代码里长这样</h2>
+<pre><code class="language-python">from openai import OpenAI
+
+client = OpenAI(
+    api_key="sk-你的令牌",
+    base_url="https://token173.net/v1",
+)
+
+# 同一个 client，换 model 就是换厂商
+for model, task in [
+    ("gpt-6.1-sol", "把这段日志归成三类并说明理由"),
+    ("claude-sonnet-5-5", "审查这个 diff，指出边界条件问题"),
+    ("gemini-3.8-flash", "描述这张图里的表格结构"),
+]:
+    r = client.chat.completions.create(
+        model=model,
+        messages=[{"role": "user", "content": task}],
+    )
+    print(model, "-&gt;", r.choices[0].message.content[:80])</code></pre>
+<p>模型名是唯一的开关。鉴权、路由、日志、重试都在同一层，业务代码不需要知道后面接的是谁。</p>
+<p>图像和视频模型通常走另一套端点（<code>/v1/images/generations</code> 之类，视频多为异步提交 + 轮询），但 Key 和后台还是同一个，账单也归在一处。</p>
+<h2 id="sec-4">挑这类平台，我盯三件事</h2>
+<p><strong>型号是不是真在一个池子里。</strong> 有些站把不同家族拆成不同分组、不同倍率、不同 Key，名义上聚合，用起来还是三套。控制台里能不能一个 Key 切遍文本、图像、视频，是很容易验的。</p>
+<p><strong>协议兼容有没有偷工。</strong> 重点测三处：流式输出完不完整、工具调用能不能透传、超长上下文会不会被悄悄截断。这三处是「看起来都能用、上线才发现不对」的高发区。</p>
+<p><strong>后台颗粒度。</strong> 能不能按 Key、按项目、按模型导出明细，usage 字段拆不拆得开，失败请求和重试怎么计。查不到明细的聚合，等于把五本糊涂账合成了一本大糊涂账。</p>
+<h2 id="sec-5">一条多模态流水线的实际样子</h2>
+<p>上半年做的那条链是：文本模型扩写分镜 → <code>gpt-image-2</code> 出概念图 → <code>doubao-seedance-2-0-fast-260128</code> 生成素材 → 轻量模型批量写标题。四步，四个模型 ID，一次接入。</p>
+<p>收口之后配置长这样：</p>
+<pre><code class="language-bash">export OPENAI_BASE_URL="https://token173.net/v1"
+export OPENAI_API_KEY="sk-你的令牌"</code></pre>
+<p>四步共用这一对值，代码里只换 <code>model</code>。<a href="https://token173.net">Token173</a> 的控制台把文本、图像、视频型号按家族列在同一个 Key 下，这一步省掉的不是几行代码，是三套账号、三份账单和三种错误码。月底导出调用记录时，能按 <code>workflow_id</code> 把四步串起来对账，哪一步最贵一目了然。</p>
+<p>真正让我留下来的其实不是「型号多」，是前面说的后两道工序：某次生图通道波动，调度把请求切走了，业务侧只看到一次稍慢的响应；以及每条请求能拿到完整 usage，那次账单异常五分钟就定位到是自己的重试。鉴权和协议转换，自己搭个开源网关也能做个七八成，调度和计量才是分水岭。</p>
+<p>它同样是托管服务，prompt 和上传的参考图会经过第三方服务器，未发布的产品图、客户素材不往这条链上放。型号 ID 上下架很频繁，部署脚本里我加了一次 <code>/v1/models</code> 校验，比人工核对省事。</p>
+<h2 id="sec-6">一句实在话</h2>
+<p>聚合层的价值不在「便宜」，在把复杂度收敛到一个可管的地方。真到了团队规模，省下的不是那几毛钱差价，是排查故障时不用翻五套日志、财务问钱花在哪儿时能拉出一张表。</p>
+<h2 id="sec-7">调度层到底在做什么</h2>
+<p>同型号挂多条上游线路时，调度器一般按四个量打分：当前延迟、近期成功率、剩余配额、历史稳定性。某条通道错误率超过阈值，新请求先绕开；恢复了再慢慢把流量加回去，不是一把切回满负荷——后者容易把刚恢复的通道再打挂。</p>
+<p>落到日志里，就是一行 <code>route=channel_b, score=0.91</code> 之类的记录。看得到这行，出问题时才知道该问「这条通道怎么了」；看不到，就只能得到「上游波动」四个字。</p>
+<p>流式输出还有一层缓冲策略：把上游细碎的 SSE chunk 合并成稍大的再推给客户端，减少网络开销。合并得太粗，打字机效果会显得一顿一顿。有些平台后台能按业务类型调，这个开关在对话产品里挺值钱。</p>
+<h2 id="sec-8">计量层为什么值得单独挑</h2>
+<p>一次请求回来、响应送达，事情没完。异步侧还有一条计费任务，把输入 token、输出 token、命中模型、通道、扣费写进明细。月底那张能导出的表，就是这一步攒出来的。</p>
+<p>最容易被跳过的是上下文缓存那一栏。系统提示词很长的业务，命中部分按折扣价、未命中按原价，这一栏不单列，财务根本算不清账合不合理。审计日志还能按 Key、按项目过滤，谁在刷量、哪个模型在烧钱，一拉就出来。</p>
+<p>自己埋点统计的 token 数和平台账单逐日对一次，正常偏差通常在百分之一量级，主要差在重试请求和缓存口径上。能对到这个精度，成本核算才做得下去；只能看到一个总余额，规模一大就必然失控。</p>
+<div class="cta"><strong>继续看：</strong><a href="/topics/engineering/">工程实践</a> ·
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
+型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/agent-multi-model-routing/">AI Agent 工作流多模型调度：统一 API 网关实践</a><p class="card-desc">网关层四件事、成本 / 性能 / 稳定三种路由策略、分层结构图、按步骤打标签的记账方式与兜底清单。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">Agent多模型调度</span></div></article><article class="card"><a class="card-title" href="/articles/llm-relay-model-list-2026/">AI 中转站支持哪些模型：2026 型号 ID 整理</a><p class="card-desc">26 个型号按 Claude / GPT / Gemini / Grok / 国产 / 视觉分组，附命名规则、/v1/models 校验脚本与最小验证组。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">AI中转站模型列表</span></div></article><article class="card"><a class="card-title" href="/articles/seedance-video-api-relay/">Seedance 视频生成 API 中转：异步任务与轮询</a><p class="card-desc">提交—轮询—转存的任务状态机、幂等提交、指数退避、临时 URL、按次计费，附可复用代码骨架与上线检查清单。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Seedance视频生成API</span></div></article><article class="card"><a class="card-title" href="/articles/api-relay-faq-troubleshooting/">API 中转站 FAQ：401、404、流式断流排查</a><p class="card-desc">按现象组织的速查：认证失败、model not found、模型列表为空、Base URL、断流、超时重试、402、429、账单差异。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">API中转站报错排查</span></div></article></div></section>
+</div>
+<aside class="toc"><strong>本文目录</strong><a href="#sec-1">没有聚合层的时候是什么样</a><a href="#sec-2">聚合层实际做了四件事</a><a href="#sec-3">一个 Key 落到代码里长这样</a><a href="#sec-4">挑这类平台，我盯三件事</a><a href="#sec-5">一条多模态流水线的实际样子</a><a href="#sec-6">一句实在话</a><a href="#sec-7">调度层到底在做什么</a><a href="#sec-8">计量层为什么值得单独挑</a></aside>
+</div></main>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div><strong>Token173</strong> · 大模型 API 中转、聚合与接入的选型、排错和成本笔记</div>
+    <nav aria-label="页脚导航">
+      <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+    </nav>
+    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+  </div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>

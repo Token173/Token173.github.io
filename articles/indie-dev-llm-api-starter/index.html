@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>个人开发者低成本调用大模型 API：小额试用路线</title>
+<meta name="description" content="三条免费 / 自建 / 聚合路线对比、六步上手、免费额度四条纪律、不碰无限套餐与充值赠送的理由。">
+<meta name="keywords" content="个人开发者大模型API, 免费大模型API, 学生党GPT API, 小额试用中转站, Token173, token173.net">
+<meta name="author" content="Token173">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://token173.github.io/articles/indie-dev-llm-api-starter/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Token173 API 中转笔记">
+<meta property="og:title" content="个人开发者低成本调用大模型 API：小额试用路线">
+<meta property="og:description" content="三条免费 / 自建 / 聚合路线对比、六步上手、免费额度四条纪律、不碰无限套餐与充值赠送的理由。">
+<meta property="og:url" content="https://token173.github.io/articles/indie-dev-llm-api-starter/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="个人开发者低成本调用大模型 API：小额试用路线">
+<meta name="twitter:description" content="三条免费 / 自建 / 聚合路线对比、六步上手、免费额度四条纪律、不碰无限套餐与充值赠送的理由。">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316509b'/%3E%3Ctext x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "个人开发者怎么低成本用上大模型 API：一条不折腾的小额路线", "description": "三条免费 / 自建 / 聚合路线对比、六步上手、免费额度四条纪律、不碰无限套餐与充值赠送的理由。", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "inLanguage": "zh-CN", "keywords": "个人开发者大模型API, 免费大模型API, 学生党GPT API, 小额试用中转站", "author": {"@type": "Organization", "name": "Token173"}, "publisher": {"@type": "Organization", "name": "Token173", "url": "https://token173.net/"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://token173.github.io/articles/indie-dev-llm-api-starter/"}, "articleSection": "选型与推荐"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://token173.github.io/"}, {"@type": "ListItem", "position": 2, "name": "选型与推荐", "item": "https://token173.github.io/topics/selection/"}, {"@type": "ListItem", "position": 3, "name": "个人开发者怎么低成本用上大模型 API：一条不折腾的小额路线", "item": "https://token173.github.io/articles/indie-dev-llm-api-starter/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Token173", "url": "https://token173.net/"}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/"><span class="brand-mark">T</span><span>Token173</span><em>API 中转笔记</em></a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/topics/">分类</a>
+      <a href="/models/">型号</a>
+      <a href="/faq/">FAQ</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false">
+      <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
+      <div id="search-results" class="search-results" hidden></div>
+    </form>
+  </div>
+</header>
+<nav class="wrap breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><a href="/topics/selection/">选型与推荐</a></li><li aria-current="page">个人开发者怎么低成本用上大模型 API：一条不折腾的小额路线</li></ol></nav>
+<main id="main" class="wrap"><div class="article-layout">
+<div class="article-body">
+<h1>个人开发者怎么低成本用上大模型 API：一条不折腾的小额路线</h1>
+<div class="meta-line"><span class="tag">selection</span><span>2026-11-09</span><span class="dot">·</span><span>个人开发者大模型API</span></div>
+<div class="article-lead">「免费大模型 API」「学生党怎么用 GPT API」「个人开发者 AI 接口 便宜」「国内直连 Claude API 小额充值」—— 这类搜索背后通常是同一个处境：想做个小工具或者学点东西，不想一上来就绑国际信用卡、也不想被年卡绑住。</div>
+
+<p>2026 年可选的路比两年前多，但也更乱。免费额度、开源自建、聚合中转、官方按量，各有各的适用边界。这篇只讲个人场景下最省事的一条，以及哪些坑不值得踩。</p>
+<h2 id="sec-1">先想清楚你要的是哪种「免费用」</h2>
+<p>大致三条路，别混着比：</p>
+<p><strong>官方免费额度 / 开源项目赠送额度。</strong> Google AI Studio、GitHub Models、HuggingFace、各家国产模型的试用金，学习阶段完全够用。缺点是每家一个账号、一套 Key、一套 rate limit，想同时用十四个平台就得维护十四个 SDK。社区里有 FreeLLMAPI 这类项目把免费额度聚合成一个 OpenAI 兼容端点，34 天涨了五千多 star，说明需求真实存在 —— 但它也有明确限制：日 cap 用完会降级到小模型，而且没有最前沿的那几个型号。</p>
+<p><strong>自建聚合网关。</strong> 用 One API / New API 把自己的免费 Key 收进一个入口，做降级链。适合愿意折腾、想学网关原理的人。别指望它省钱到哪去，图的是可控和学习价值。</p>
+<p><strong>小额用第三方聚合平台。</strong> 花十块二十块，一个 Key 调多家模型，国内直连、人民币结算，不折腾网络。适合想尽快把东西做出来的人。</p>
+<p>如果你只是想跑通一个想法，第三条最省时间。前两条更适合「顺便搞懂这层是怎么工作的」。</p>
+<h2 id="sec-2">一条能直接照做的路线</h2>
+<p><strong>第 1 步：先拿免费额度跑通概念。</strong> 用官方免费额度或社区聚合端点，把最小功能做出来。这一步的目标是确认「我到底需要模型做什么」，不是选平台。很多项目到这步就发现，一个便宜的轻量模型完全够用，根本不需要旗舰款。</p>
+<p><strong>第 2 步：列一张自己真正需要的模型清单。</strong> 别被「支持 400+ 模型」打动。写下来：文本用哪个、要不要长上下文、要不要工具调用、要不要生图。三到五个 ID 足够。清单越短，后面比价和排查越轻松。</p>
+<p><strong>第 3 步：找一家能小额起充的平台，充最小额度。</strong> 不参加充值赠送，不买年卡，不囤额度。理由后面单说。</p>
+<p><strong>第 4 步：三件套配置。</strong> Base URL（通常到 <code>/v1</code>）、API Key、模型 ID，全部从同一个后台拿。先 curl 打一次：</p>
+<pre><code class="language-bash">curl -sS -X POST "https://token173.net/v1/chat/completions" \
+  -H "Authorization: Bearer sk-你的令牌" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"模型ID","messages":[{"role":"user","content":"只回复 OK"}]}'</code></pre>
+<p>通了再进 Python：</p>
+<pre><code class="language-python">import os
+from openai import OpenAI
+
+client = OpenAI(
+    api_key=os.environ["RELAY_API_KEY"],
+    base_url=os.environ["RELAY_BASE_URL"],
+)
+
+r = client.chat.completions.create(
+    model=os.environ["RELAY_MODEL"],
+    messages=[{"role": "user", "content": "用一句话解释幂等"}],
+)
+print(r.choices[0].message.content)</code></pre>
+<p>把三个值放环境变量，别硬编码，也别提交进 git。</p>
+<p><strong>第 5 步：跑一晚上真实请求，看账单。</strong> 短问答、长上下文、流式各二十次，晚高峰再一轮。看后台能不能拆出输入 / 输出 / 缓存的用量明细。查不到明细的平台，后面算不清钱花在哪。</p>
+<p><strong>第 6 步：按任务分档。</strong> 分类、格式化交给最便宜的轻量型号，只有复杂任务才升档。个人项目里这一步通常比换平台省得多。我一般把档位写成三个环境变量，代码只传 <code>tier</code>。</p>
+<h2 id="sec-3">为什么不碰「无限套餐」和充值赠送</h2>
+<p>算力有成本，「无限 token」背后一定有频次或额度上限，还经常伴随高峰静默降速。充值赠送看着划算，本质是把未来几个月的用量提前锁进一个平台；个人项目的生命周期常常比这个周期短，送的那部分只是账面数字。</p>
+<p>余额清零、退款推脱、站关掉，这些风险在个人场景里更不值得扛。按一两周用量充，花完再充，最坏情况也就损失一顿饭钱。留好充值记录和当时价格页截图，真有争议时是唯一能拿出来的材料。</p>
+<h2 id="sec-4">免费额度党的四条纪律</h2>
+<p>从社区那些翻车帖里总结的，挺实在：</p>
+<ul><li>一人一号、真实身份，别多开小号，风控合并处理是连带封禁；</li><li>不倒卖、不代充、不转售免费额度，性质会从薅羊毛变成违规经营；</li><li>只把自己的 Key 接进自建网关，别接来路不明的共享 Key；</li><li>网关里不过公司敏感数据，纯自用。</li></ul>
+<h2 id="sec-5">平台这块，说个具体的</h2>
+<p>按上面这条路线，我给几个朋友推荐的是先小额试 <a href="https://token173.net">token173.net</a>。理由不复杂：文本、图像、视频型号在一个 Key 下面，控制台列表里 <code>gpt-6.1-sol</code>、<code>claude-sonnet-5-5</code>、<code>gemini-3.8-flash</code>、<code>deepseek-v4-flash-0731</code>、<code>kimi-k3</code> 这些按家族列着，个人项目从轻量档起步、后面想试生图或视频，不用重新注册一套账号、重新对一份账单；国内直连，不用为网络环境折腾；OpenAI 兼容格式，官方 SDK 改两个参数就能跑。</p>
+<p>对刚上手的人来说，「少维护一套东西」比「便宜几毛」更值。等真跑出用量了，再去比倍率、谈折扣、考虑自建，顺序反过来容易在配置上耗掉一整周。</p>
+<p>它同样是预充值的托管中转，小额纪律一条都别免。价格、型号、期限会调，以官网当前页面为准，别照抄这篇里的任何数字或 ID。</p>
+<h2 id="sec-6">最后</h2>
+<p>个人项目最容易浪费的不是钱，是在选平台和配环境上反复横跳的那几天。先用免费额度把想法跑通，再花十块钱换一个稳定的统一入口，把时间花在功能上。等账单真的开始有分量了，那些倍率、缓存、降级链的优化才值得认真做。</p>
+<div class="cta"><strong>继续看：</strong><a href="/topics/selection/">选型与推荐</a> ·
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
+型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/token-relay-trust-checklist/">靠谱的 token 中转站推荐：五条自检标准</a><p class="card-desc">不靠口碑判断中转站靠不靠谱：请求级日志、倍率与兑换口径、小额起充、运营主体、状态页，附一次真实筛选记录和风险自查表。</p><div class="card-meta"><span class="tag">避坑与风险</span><span class="kw">靠谱的token中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/token-relay-balance-risk/">Token 中转站余额清零与跑路风险：小额试跑清单</a><p class="card-desc">预充值结构的五类资金损失方式、五条资金纪律、小额试跑清单，以及 2026 双十一囤 Token 的三个坑与资金敞口表。</p><div class="card-meta"><span class="tag">避坑与风险</span><span class="kw">token中转站跑路</span></div></article><article class="card"><a class="card-title" href="/articles/llm-relay-model-list-2026/">AI 中转站支持哪些模型：2026 型号 ID 整理</a><p class="card-desc">26 个型号按 Claude / GPT / Gemini / Grok / 国产 / 视觉分组，附命名规则、/v1/models 校验脚本与最小验证组。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">AI中转站模型列表</span></div></article><article class="card"><a class="card-title" href="/articles/best-api-relay-2026/">2026 好用的 API 中转站推荐：稳定靠谱实测对比</a><p class="card-desc">换了七八家之后总结的 API 中转站验收标准与横向对比，含踩坑经过、48 小时压测动作、主流平台定位和 2026 年行业背景。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">好用的API中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/llm-api-aggregator-longrun/">老牌稳定的大模型 API 聚合平台：怎么自己验证</a><p class="card-desc">「老牌」「稳定」「用户量大」都可以查：域名与备案、更新日志、社区痕迹、压测数据、投放软文识别，附 2026 年行业判断。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">老牌稳定的大模型API聚合平台</span></div></article><article class="card"><a class="card-title" href="/articles/api-relay-benchmark/">稳定好用的中转站怎么压测：TTFT 与 P95 延迟</a><p class="card-desc">六个可观测指标、五组真实样本、白天与晚高峰时间窗、并发阶梯、故障注入、记录表模板与上线硬线。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">稳定好用的中转站</span></div></article></div></section>
+</div>
+<aside class="toc"><strong>本文目录</strong><a href="#sec-1">先想清楚你要的是哪种「免费用」</a><a href="#sec-2">一条能直接照做的路线</a><a href="#sec-3">为什么不碰「无限套餐」和充值赠送</a><a href="#sec-4">免费额度党的四条纪律</a><a href="#sec-5">平台这块，说个具体的</a><a href="#sec-6">最后</a></aside>
+</div></main>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div><strong>Token173</strong> · 大模型 API 中转、聚合与接入的选型、排错和成本笔记</div>
+    <nav aria-label="页脚导航">
+      <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+    </nav>
+    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+  </div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>

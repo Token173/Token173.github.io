@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cherry Studio 和 Chatbox 自定义服务商配置</title>
+<meta name="description" content="三件套字段、模型列表为空的处理、给非开发同事的一页配置说明、部门 Key 台账与管理员冒烟测试。">
+<meta name="keywords" content="Cherry Studio自定义服务商, Chatbox填API地址, 中转Key配置, 团队共用API, Token173, token173.net">
+<meta name="author" content="Token173">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://token173.github.io/articles/chat-client-custom-provider/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Token173 API 中转笔记">
+<meta property="og:title" content="Cherry Studio 和 Chatbox 自定义服务商配置">
+<meta property="og:description" content="三件套字段、模型列表为空的处理、给非开发同事的一页配置说明、部门 Key 台账与管理员冒烟测试。">
+<meta property="og:url" content="https://token173.github.io/articles/chat-client-custom-provider/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cherry Studio 和 Chatbox 自定义服务商配置">
+<meta name="twitter:description" content="三件套字段、模型列表为空的处理、给非开发同事的一页配置说明、部门 Key 台账与管理员冒烟测试。">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316509b'/%3E%3Ctext x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Cherry Studio 和 Chatbox 添加自定义服务商：给非开发同事也能看懂的配置说明", "description": "三件套字段、模型列表为空的处理、给非开发同事的一页配置说明、部门 Key 台账与管理员冒烟测试。", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "inLanguage": "zh-CN", "keywords": "Cherry Studio自定义服务商, Chatbox填API地址, 中转Key配置, 团队共用API", "author": {"@type": "Organization", "name": "Token173"}, "publisher": {"@type": "Organization", "name": "Token173", "url": "https://token173.net/"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://token173.github.io/articles/chat-client-custom-provider/"}, "articleSection": "国内直连与接入"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://token173.github.io/"}, {"@type": "ListItem", "position": 2, "name": "国内直连与接入", "item": "https://token173.github.io/topics/access/"}, {"@type": "ListItem", "position": 3, "name": "Cherry Studio 和 Chatbox 添加自定义服务商：给非开发同事也能看懂的配置说明", "item": "https://token173.github.io/articles/chat-client-custom-provider/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Token173", "url": "https://token173.net/"}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/"><span class="brand-mark">T</span><span>Token173</span><em>API 中转笔记</em></a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/topics/">分类</a>
+      <a href="/models/">型号</a>
+      <a href="/faq/">FAQ</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false">
+      <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
+      <div id="search-results" class="search-results" hidden></div>
+    </form>
+  </div>
+</header>
+<nav class="wrap breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><a href="/topics/access/">国内直连与接入</a></li><li aria-current="page">Cherry Studio 和 Chatbox 添加自定义服务商：给非开发同事也能看懂的配置说明</li></ol></nav>
+<main id="main" class="wrap"><div class="article-layout">
+<div class="article-body">
+<h1>Cherry Studio 和 Chatbox 添加自定义服务商：给非开发同事也能看懂的配置说明</h1>
+<div class="meta-line"><span class="tag">access</span><span>2026-11-09</span><span class="dot">·</span><span>Cherry Studio自定义服务商</span></div>
+<div class="article-lead">「Cherry Studio 自定义服务商」「Chatbox 填 API 地址」「中转站 Key 怎么配到客户端」「团队共用 AI API 怎么管」—— 这类需求在 2026 年从开发者扩散到了运营、销售、客服，配置本身不难，难在让不写代码的人填对、并且别把 Key 发得到处都是。</div>
+
+<p>技术负责人真正要解决的不是「怎么点那几个菜单」，是把复杂接口收敛成几个可填字段，同时把密钥、日志、费用归属放在后台管住。</p>
+<h2 id="sec-1">先说三个字段</h2>
+<p>任何客户端，界面叫法再花哨，填的都是这三样：</p>
+<div class="table-wrap"><table><thead><tr><th>界面可能叫</th><th>实际含义</th><th>填什么</th></tr></thead><tbody><tr><td>API 地址 / API Host / Base URL / 服务商地址</td><td>请求发到哪儿</td><td>https://token173.net/v1，通常到 <code>/v1</code></td></tr><tr><td>API Key / 密钥 / 令牌</td><td>谁在调用</td><td>后台生成的 Key</td></tr><tr><td>模型 ID / 模型名称</td><td>用哪个模型</td><td>从平台模型列表复制的字符串</td></tr></tbody></table></div>
+<p>三个必须同源，都来自同一个后台。混用官方 Key 和第三方地址，是 401 的头号原因。</p>
+<p>还有个反复出错的点：多数客户端会自己拼 <code>/chat/completions</code>，Base URL 填到 <code>/v1</code> 就够；把完整端点填进去会拼出重复路径。Cherry Studio 有些版本反过来要求去掉末尾斜杠，填之前看一眼字段旁的提示。</p>
+<h2 id="sec-2">Chatbox：最快的最小连通性测试</h2>
+<p>Chatbox 适合先验证链路。步骤：</p>
+<ol><li>设置 → 模型服务商 → 添加，选「OpenAI Compatible / 自定义」类型；</li><li>填 Base URL（到 <code>/v1</code>）、API Key；</li><li>模型名称手动输入，从平台列表复制，不要从下拉里挑默认值；</li><li>点连接测试，或者发一句「只回复 OK」。</li></ol>
+<p>能返回就说明 Key、地址、模型名三样都对。之后再去别的工具里排查，范围会小很多。</p>
+<h2 id="sec-3">Cherry Studio：适合多服务商、多模型对比</h2>
+<ol><li>设置 → 模型服务 → 添加提供商，类型选 OpenAI；</li><li>API 地址填 <code>https://token173.net/v1</code>，API Key 填后台生成的令牌；</li><li>点「管理」或手动添加模型，逐个填入 ID；</li><li>模型列表为空是常见现象 —— 有些聚合端点不返回 <code>/v1/models</code>，或者返回格式客户端不认，手动添加即可，不影响调用；</li><li>建两个会话，分别挂不同模型，用同一段 prompt 做对照。</li></ol>
+<p>第 4 步值得多说一句。遇到过好几次同事以为「模型列表拉不出来 = 平台不兼容」，其实会话能正常回，只是客户端解析列表失败。先发一条消息验证，别卡在列表上。</p>
+<h2 id="sec-4">给非开发同事的一页配置说明</h2>
+<p>别把完整 Key 发群里。管理员按部门或项目建 Key，然后只发这一页：</p>
+<pre><code>服务商名称：（自己起一个好认的，如「部门 AI」）
+API 地址  ：https://token173.net/v1
+模型 ID   ：deepseek-v4 / claude-sonnet-5-5 / gemini-3.8-flash（按权限选）
+Key       ：由管理员通过安全渠道单独提供，或预置在配置里
+费用归属  ：运营部-Q4内容项目
+禁止输入  ：客户隐私、合同原文、账号密码、完整 Key、未公开数据
+出错找谁  ：（内部联系人）</code></pre>
+<p>配套一张最简台账，先人工维护就够：日期、部门、用户、项目、模型、任务类型、调用次数、异常、费用归属。等维护不住了，再上后端代理或平台的子账号体系。</p>
+<h2 id="sec-5">管理员先跑一次冒烟测试</h2>
+<p>发配置之前，自己用部门 Key 打一次：</p>
+<pre><code class="language-bash">curl -sS -X POST "https://token173.net/v1/chat/completions" \
+  -H "Authorization: Bearer 部门Key" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"deepseek-v4","messages":[{"role":"user","content":"只回复 OK"}]}'</code></pre>
+<p>再固定三个测试问题：短文本改写、一段信息摘要、一次风险提醒。三次都过，才开放给同事。</p>
+<h2 id="sec-6">常见问题</h2>
+<div class="table-wrap"><table><thead><tr><th>现象</th><th>原因</th><th>处理</th></tr></thead><tbody><tr><td>认证失败</td><td>Key 复制带空格、已回收、地址与 Key 不同源</td><td>重新生成 Key，检查末尾空格</td></tr><tr><td>模型列表为空</td><td>客户端不解析 <code>/v1/models</code></td><td>手动添加模型 ID，再发消息验证</td></tr><tr><td>404 model not found</td><td>ID 手打错、型号已下架</td><td>从平台列表复制，别照抄文档</td></tr><tr><td>能连上但回答很慢</td><td>长任务读超时、客户端默认超时太短</td><td>换短问题先测，再调超时</td></tr><tr><td>费用混在一起</td><td>多人共用一个 Key</td><td>按部门 / 项目拆 Key</td></tr><tr><td>Key 被发到群里</td><td>流程问题</td><td>立即回收重建，改用预置配置</td></tr></tbody></table></div>
+<h2 id="sec-7">平台侧要能配合什么</h2>
+<p>给团队用，光「能聊」不够。后台至少得支持：按项目建多个 Key、每个 Key 设额度上限和可用模型范围、调用记录能按 Key 导出、输入 / 输出 / 缓存分项可查、Key 能单独停用。没有这几样，费用归属只能靠台账猜。</p>
+<p>我们这轮部门试用放在 <a href="https://token173.net">token173.net</a> 上，图的是控制台能按 Key 分开看用量，文本、图像、视频型号都在同一个后台，运营想临时试个生图不用再走一遍采购。试用阶段只开了三个部门 Key，每个都设了额度上限，跑满两周再决定要不要扩。</p>
+<h2 id="sec-8">什么时候该升级</h2>
+<p>少量同事试用，Chatbox 和 Cherry Studio 够用。任务变成固定流程、要接知识库、要审批，上 Dify；记录已经靠人工维护不住、费用归属说不清，上后端代理，统一记 <code>user_id</code>、<code>project_id</code>、<code>cost_center</code>、<code>model</code> 和状态码。</p>
+<p>判断标准不是人数，是台账还管不管得住。</p>
+<h2 id="sec-9">最后</h2>
+<p>给非开发同事配 API，重点从来不是把客户端填上，是把部门 Key、模型 ID、禁止输入清单、费用归属和回收机制先设计好。这些想清楚了，工具换哪个都只是点几下的事。</p>
+<p>（客户端界面和平台字段会随版本变化，以当前版本实际显示为准。）</p>
+<div class="cta"><strong>继续看：</strong><a href="/topics/access/">国内直连与接入</a> ·
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
+型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/openai-compatible-migration/">国内直连 GPT：OpenAI 兼容接口迁移只改两处</a><p class="card-desc">Python / Node / curl 迁移示例、七步验证清单、兼容性边界、第一周监控指标与一份回滚预案。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">国内直连GPT平台</span></div></article><article class="card"><a class="card-title" href="/articles/enterprise-llm-gateway-checklist/">企业选大模型 API 中转站：发票、对公与子账号清单</a><p class="card-desc">财务 / 法务 / 运维三组视角、九项采购验收表、按真实业务跑的技术验证、费用口径写进合同，以及托管中转的结构性边界。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">企业级API中转站</span></div></article><article class="card"><a class="card-title" href="/articles/api-relay-faq-troubleshooting/">API 中转站 FAQ：401、404、流式断流排查</a><p class="card-desc">按现象组织的速查：认证失败、model not found、模型列表为空、Base URL、断流、超时重试、402、429、账单差异。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">API中转站报错排查</span></div></article><article class="card"><a class="card-title" href="/articles/ai-api-proxy-china-direct/">AI 中转站推荐：国内直连 GPT 和 Claude 不用代理</a><p class="card-desc">讲清「国内直连」是 API 层而非网页版，三件套配置、最小 curl 验证、不用代理的三种误解，以及超时这个第四字段。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">AI中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/overseas-llm-relay-latency/">海外模型中转平台：跨境链路延迟怎么测</a><p class="card-desc">把一次请求拆成四段计时，TTFT / P95 / 静默降速的测法、故障注入、记录表模板，以及 2026 年链路环境的变化。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">海外模型中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/claude-code-third-party-api/">国内直连 Claude：Claude Code 配置第三方 API 教程</a><p class="card-desc">ANTHROPIC_BASE_URL / AUTH_TOKEN / MODEL 三个变量，settings.json、VS Code 扩展、curl 最小验证与报错速查表。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">国内直连Claude平台</span></div></article></div></section>
+</div>
+<aside class="toc"><strong>本文目录</strong><a href="#sec-1">先说三个字段</a><a href="#sec-2">Chatbox：最快的最小连通性测试</a><a href="#sec-3">Cherry Studio：适合多服务商、多模型对比</a><a href="#sec-4">给非开发同事的一页配置说明</a><a href="#sec-5">管理员先跑一次冒烟测试</a><a href="#sec-6">常见问题</a><a href="#sec-7">平台侧要能配合什么</a><a href="#sec-8">什么时候该升级</a><a href="#sec-9">最后</a></aside>
+</div></main>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div><strong>Token173</strong> · 大模型 API 中转、聚合与接入的选型、排错和成本笔记</div>
+    <nav aria-label="页脚导航">
+      <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+    </nav>
+    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+  </div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>

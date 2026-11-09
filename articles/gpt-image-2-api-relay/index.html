@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gpt-image-2 生图 API 中转：调用与批量跑</title>
+<meta name="description" content="图像端点与文本端点差异、按次计费口径、上传体积、超时重试、结果落地、批量前检查清单与排错表。">
+<meta name="keywords" content="gpt-image-2 API, gpt-image-2-d, 生图API中转, GPT图像生成国内直连, Token173, token173.net">
+<meta name="author" content="Token173">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://token173.github.io/articles/gpt-image-2-api-relay/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Token173 API 中转笔记">
+<meta property="og:title" content="gpt-image-2 生图 API 中转：调用与批量跑">
+<meta property="og:description" content="图像端点与文本端点差异、按次计费口径、上传体积、超时重试、结果落地、批量前检查清单与排错表。">
+<meta property="og:url" content="https://token173.github.io/articles/gpt-image-2-api-relay/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="gpt-image-2 生图 API 中转：调用与批量跑">
+<meta name="twitter:description" content="图像端点与文本端点差异、按次计费口径、上传体积、超时重试、结果落地、批量前检查清单与排错表。">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316509b'/%3E%3Ctext x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "gpt-image-2 生图 API 中转：从调通到能批量跑，中间那几道坎", "description": "图像端点与文本端点差异、按次计费口径、上传体积、超时重试、结果落地、批量前检查清单与排错表。", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "inLanguage": "zh-CN", "keywords": "gpt-image-2 API, gpt-image-2-d, 生图API中转, GPT图像生成国内直连", "author": {"@type": "Organization", "name": "Token173"}, "publisher": {"@type": "Organization", "name": "Token173", "url": "https://token173.net/"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://token173.github.io/articles/gpt-image-2-api-relay/"}, "articleSection": "模型与型号专题"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://token173.github.io/"}, {"@type": "ListItem", "position": 2, "name": "模型与型号专题", "item": "https://token173.github.io/topics/models/"}, {"@type": "ListItem", "position": 3, "name": "gpt-image-2 生图 API 中转：从调通到能批量跑，中间那几道坎", "item": "https://token173.github.io/articles/gpt-image-2-api-relay/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Token173", "url": "https://token173.net/"}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/"><span class="brand-mark">T</span><span>Token173</span><em>API 中转笔记</em></a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/topics/">分类</a>
+      <a href="/models/">型号</a>
+      <a href="/faq/">FAQ</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false">
+      <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
+      <div id="search-results" class="search-results" hidden></div>
+    </form>
+  </div>
+</header>
+<nav class="wrap breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><a href="/topics/models/">模型与型号专题</a></li><li aria-current="page">gpt-image-2 生图 API 中转：从调通到能批量跑，中间那几道坎</li></ol></nav>
+<main id="main" class="wrap"><div class="article-layout">
+<div class="article-body">
+<h1>gpt-image-2 生图 API 中转：从调通到能批量跑，中间那几道坎</h1>
+<div class="meta-line"><span class="tag">models</span><span>2026-11-09</span><span class="dot">·</span><span>gpt-image-2 API</span></div>
+<div class="article-lead">「gpt-image-2 API 怎么调用」「生图模型中转站」「GPT 图像生成 国内直连」「gpt-image-2-d 和 gpt-image-2 区别」—— 这类搜索在 2026 年多了起来，原因不复杂：内容团队开始把生图并进自动化流程，不再是打开网页点几下。</div>
+
+<p>文本模型的接入经验，搬到图像上有一半不适用。端点不同、计费不同、返回不是流、任务是异步或长耗时、失败原因经常藏在请求体里。这篇把踩过的几道坎按顺序列出来。</p>
+<h2 id="sec-1">端点和文本模型不是一套</h2>
+<p>聊天补全走 <code>/v1/chat/completions</code>，图像生成通常走 <code>/v1/images/generations</code>。用 OpenAI SDK 的话：</p>
+<pre><code class="language-python">from openai import OpenAI
+
+client = OpenAI(
+    api_key="sk-你的令牌",
+    base_url="https://token173.net/v1",
+)
+
+r = client.images.generate(
+    model="gpt-image-2",
+    prompt="干净的浅色背景，一只陶瓷杯放在木桌上，柔和侧光，产品摄影",
+    size="1024x1024",
+    response_format="url",
+)
+print(r.data[0].url)</code></pre>
+<p>几个参数值得提前确认，因为各家聚合平台实现程度不同：</p>
+<ul><li><code>size</code>：支持的尺寸列表不一样，有的只收固定几档，传自定义尺寸直接 400。</li><li><code>response_format</code>：<code>url</code> 还是 <code>b64_json</code>。批量场景下 b64 会让响应体暴涨，也容易撞网关的响应大小限制。</li><li><code>n</code>：一次出几张，部分通道限 1。</li><li>图生图、多图合成这类能力一般走 <code>extra_body</code> 传图片，属于平台扩展，不是标准字段，得看文档。</li></ul>
+<p><code>gpt-image-2-d</code> 属于同族变体，具体差异（速度、尺寸、编辑能力）以控制台模型说明为准，别凭后缀猜。真要选，拿同一组 prompt 各跑十张，出图稳定性和单张耗时一比就清楚。</p>
+<h2 id="sec-2">计费逻辑和文本完全不同</h2>
+<p>文本按输入 / 输出 token 算，图像多数按次、按尺寸档位，甚至按质量档算。拿「每百万 token 多少钱」去估生图预算，一定错得离谱。</p>
+<p>要提前问清楚或自己测出来的：</p>
+<ol><li>失败请求计不计费（生成被内容策略拦下、超时、参数错误）。</li><li>一次 <code>n=4</code> 是按一次还是按四张计。</li><li>重试是否另算 —— 长耗时任务里客户端超时自动重试，最容易在这里翻倍。</li><li>图片 URL 的有效期，过了要不要重新生成或重新取。</li><li>用量明细里能不能把图像任务和文本任务分开导出。</li></ol>
+<p>第 5 项在做成本归集时特别实用。我一般把生图单独建一个 Key，月底导账单时不用再从一堆 chat 请求里挑。</p>
+<h2 id="sec-3">国内直连下的两个具体麻烦</h2>
+<p><strong>上传体积。</strong> 图生图要传原图，base64 编码后大约膨胀三分之一。中转节点、反向代理、上游网关任何一层有 <code>client_max_body_size</code> 或请求体超时，都会在前半段失败，而且错误经常是含糊的 413 或连接重置。能传 URL 就别传 base64，能压就压，但别把分辨率压到模型看不清参考细节。</p>
+<p><strong>等结果别用同步思维。</strong> 图像生成十几秒到几十秒很正常，视频更长。客户端读超时按文本聊天设的 30 秒，会把正常任务判成失败，然后触发重试 —— 上游那次其实已经生成完并计费了。图像任务的读超时单独放宽到 120 秒以上，重试上限设 1，并且在重试前先查一次任务状态。</p>
+<h2 id="sec-4">一次典型的排错顺序</h2>
+<div class="table-wrap"><table><thead><tr><th>现象</th><th>先查什么</th></tr></thead><tbody><tr><td>404 model not found</td><td>从 <code>/v1/models</code> 复制 ID，<code>gpt-image-2-d</code> 这类变体最容易手打错</td></tr><tr><td>400 invalid size / parameter</td><td>尺寸档位、<code>response_format</code>、平台是否支持该扩展字段</td></tr><tr><td>413 / 连接重置</td><td>请求体大小、图片 base64、代理层限制</td></tr><tr><td>超时但账单已扣</td><td>客户端读超时、自动重试、任务是否已提交成功</td></tr><tr><td>返回 URL 打不开</td><td>URL 有效期、是否需要带鉴权、对象存储域名是否可达</td></tr><tr><td>出图质量不稳定</td><td>固定 prompt 跑十张，看是模型波动还是被路由到了不同通道</td></tr></tbody></table></div>
+<p>最后一条容易被忽略：同一个模型 ID 后面可能挂了多条上游线路，质量不一致时，看后台调用记录里有没有通道信息，比反复调 prompt 有用。</p>
+<h2 id="sec-5">批量跑之前先做这几件事</h2>
+<ul><li>固定一组 20 条 prompt，覆盖中文、英文、含品牌词、含人物、含文字排版，跑通再放量。</li><li>并发从 2 起步，往上加时盯 429 和排队行为，别一上来开 50。</li><li>生成结果落自己的对象存储，不要依赖平台返回的临时 URL 做长期资产。</li><li>单建 Key、单设额度上限，生图任务失控时烧钱比文本快得多。</li><li>记录每条任务的 request_id、prompt、尺寸、耗时、扣费，后面核对和质量复盘都要用。</li></ul>
+<h2 id="sec-6">平台这块</h2>
+<p>我这轮是在 <a href="https://token173.net">token173.net</a> 上跑的，主要是它的控制台把 <code>gpt-image-2</code>、<code>gpt-image-2-d</code> 和文本型号归在同一个 Key 下，做「先用文本模型把 prompt 润色、再交给生图、最后用文本模型批量写图注」这条链时，不用在两套账号之间倒来倒去，账单也在一起。国内直连，人民币结算。</p>
+<p>它同样是托管中转，上传的参考图和生成结果都会经过第三方服务器。涉及未发布产品图、客户素材、含个人信息的图片，别走公共链路，这条边界跟用哪家无关。</p>
+<h2 id="sec-7">收尾</h2>
+<p>生图接入的技术难点从来不在那条 <code>images.generate</code>，在超时、重试、体积、计费口径和结果落地。把这五样理顺，剩下的就是老老实实跑样本。型号 ID、尺寸档位和价格会调，接之前拉一次 <code>/v1/models</code>，再看价格页当前口径。</p>
+<div class="cta"><strong>继续看：</strong><a href="/topics/models/">模型与型号专题</a> ·
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
+型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/seedance-video-api-relay/">Seedance 视频生成 API 中转：异步任务与轮询</a><p class="card-desc">提交—轮询—转存的任务状态机、幂等提交、指数退避、临时 URL、按次计费，附可复用代码骨架与上线检查清单。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Seedance视频生成API</span></div></article><article class="card"><a class="card-title" href="/articles/llm-relay-model-list-2026/">AI 中转站支持哪些模型：2026 型号 ID 整理</a><p class="card-desc">26 个型号按 Claude / GPT / Gemini / Grok / 国产 / 视觉分组，附命名规则、/v1/models 校验脚本与最小验证组。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">AI中转站模型列表</span></div></article><article class="card"><a class="card-title" href="/articles/gemini-api-relay-china/">Gemini 中转平台：gemini-3.8-flash 国内调用</a><p class="card-desc">多模态上传慢在哪、长上下文被截断的四类原因、协议差异、finish_reason 对照表与体积账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Gemini中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/gpt-api-relay-models/">GPT 中转平台：gpt-6-sol 与 gpt-5.6-terra 怎么选</a><p class="card-desc">按轻中重三档绑型号，用综合单价而非折扣横比；附 2026 年型号命名规则、A/B 记录模板和默认旗舰习惯的成本账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">GPT中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/claude-api-relay-models/">Claude 中转平台：长任务翻车复盘与型号配置</a><p class="card-desc">一次超时重发导致的缓存失效复盘，claude-opus-5-5 / sonnet-5-5 / haiku-5-5 分档、缓存命中率算法与长任务参数清单。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Claude中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/grok-api-relay-notes/">Grok 中转平台：grok-4.7 和 grok-4.5 接入记录</a><p class="card-desc">按天记录的接入日志：404、SSE 解析、账单异常、并发压测、/v1/models 校验脚本，附可复用的记录模板。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">grok中转平台</span></div></article></div></section>
+</div>
+<aside class="toc"><strong>本文目录</strong><a href="#sec-1">端点和文本模型不是一套</a><a href="#sec-2">计费逻辑和文本完全不同</a><a href="#sec-3">国内直连下的两个具体麻烦</a><a href="#sec-4">一次典型的排错顺序</a><a href="#sec-5">批量跑之前先做这几件事</a><a href="#sec-6">平台这块</a><a href="#sec-7">收尾</a></aside>
+</div></main>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div><strong>Token173</strong> · 大模型 API 中转、聚合与接入的选型、排错和成本笔记</div>
+    <nav aria-label="页脚导航">
+      <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+    </nav>
+    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+  </div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>

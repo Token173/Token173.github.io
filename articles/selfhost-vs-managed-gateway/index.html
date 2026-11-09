@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>自建 One API 还是托管中转站：隐性成本对比</title>
+<meta name="description" content="七项长期运维成本、适合自建的五个条件、BYOK 第三条路、半年期实际开销对照与重新评估的信号。">
+<meta name="keywords" content="自建One-API还是中转站, New API自建, API网关成本, BYOK调度, Token173, token173.net">
+<meta name="author" content="Token173">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://token173.github.io/articles/selfhost-vs-managed-gateway/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Token173 API 中转笔记">
+<meta property="og:title" content="自建 One API 还是托管中转站：隐性成本对比">
+<meta property="og:description" content="七项长期运维成本、适合自建的五个条件、BYOK 第三条路、半年期实际开销对照与重新评估的信号。">
+<meta property="og:url" content="https://token173.github.io/articles/selfhost-vs-managed-gateway/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自建 One API 还是托管中转站：隐性成本对比">
+<meta name="twitter:description" content="七项长期运维成本、适合自建的五个条件、BYOK 第三条路、半年期实际开销对照与重新评估的信号。">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316509b'/%3E%3Ctext x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "自建 One API / New API 还是用托管中转站：算完隐性成本再说", "description": "七项长期运维成本、适合自建的五个条件、BYOK 第三条路、半年期实际开销对照与重新评估的信号。", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "inLanguage": "zh-CN", "keywords": "自建One-API还是中转站, New API自建, API网关成本, BYOK调度", "author": {"@type": "Organization", "name": "Token173"}, "publisher": {"@type": "Organization", "name": "Token173", "url": "https://token173.net/"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://token173.github.io/articles/selfhost-vs-managed-gateway/"}, "articleSection": "选型与推荐"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://token173.github.io/"}, {"@type": "ListItem", "position": 2, "name": "选型与推荐", "item": "https://token173.github.io/topics/selection/"}, {"@type": "ListItem", "position": 3, "name": "自建 One API / New API 还是用托管中转站：算完隐性成本再说", "item": "https://token173.github.io/articles/selfhost-vs-managed-gateway/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Token173", "url": "https://token173.net/"}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/"><span class="brand-mark">T</span><span>Token173</span><em>API 中转笔记</em></a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/topics/">分类</a>
+      <a href="/models/">型号</a>
+      <a href="/faq/">FAQ</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false">
+      <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
+      <div id="search-results" class="search-results" hidden></div>
+    </form>
+  </div>
+</header>
+<nav class="wrap breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><a href="/topics/selection/">选型与推荐</a></li><li aria-current="page">自建 One API / New API 还是用托管中转站：算完隐性成本再说</li></ol></nav>
+<main id="main" class="wrap"><div class="article-layout">
+<div class="article-body">
+<h1>自建 One API / New API 还是用托管中转站：算完隐性成本再说</h1>
+<div class="meta-line"><span class="tag">selection</span><span>2026-11-09</span><span class="dot">·</span><span>自建One-API还是中转站</span></div>
+<div class="article-lead">「自己搭中转站省钱吗」「One API 部署教程」「New API 和托管中转站区别」「自建网关 还是 买 API」—— 这个问题在 2026 年的答案，和 2024 年不太一样了。</div>
+
+<p>技术上，自建的门槛已经低到几乎没有。One API 是这一系的源头，Go 写的单可执行文件，Docker 一行命令；New API 是最活跃的分支，补了多协议、支付、路由和更细的计费；Sub2API 偏向订阅额度分发；再往上还有 LiteLLM 这类企业网关。半小时能起一套，界面、渠道管理、令牌管理、用量统计全都有。</p>
+<p>但「能部署」和「能长期跑」是两回事。我见过不少团队为了省一笔接口差价自建，三个月后默默迁回托管。</p>
+<h2 id="sec-1">显性成本 vs 隐性成本</h2>
+<p>显性的那部分很好算：一台云主机、一个域名、证书、上游 API 的成本。看起来确实比托管便宜。</p>
+<p>隐性成本在项目跑起来之后才浮现：</p>
+<div class="table-wrap"><table><thead><tr><th>项目</th><th>具体要做什么</th><th>频率</th></tr></thead><tbody><tr><td>上游资源</td><td>找渠道、采购、轮换、被封后补号</td><td>持续</td></tr><tr><td>风控</td><td>并发特征、请求指纹、异常调用监控</td><td>持续</td></tr><tr><td>网关维护</td><td>版本升级、数据库迁移、兼容新模型协议</td><td>每月</td></tr><tr><td>计费正确性</td><td>usage 解析、流式断连、缓存口径、对账</td><td>每次上游变动</td></tr><tr><td>可用性</td><td>多节点、健康检查、故障切换、告警</td><td>持续</td></tr><tr><td>安全</td><td>管理面板暴露面、弱口令、Key 泄露、日志脱敏</td><td>持续</td></tr><tr><td>账务</td><td>充值对账、退款、发票、子账号权限</td><td>每笔</td></tr></tbody></table></div>
+<p>最后两行最容易被低估。有安全团队做过全网测绘，One API / New API / LiteLLM 这类后台暴露在公网的资产量非常大，其中大量是默认端口、默认配置、没改过的管理面板。上游 Key 存在后台里，一旦被打穿，官方账单几分钟就能跑出一大笔。这不是吓唬人，是「拉起即用」这种部署方式的自然结果。</p>
+<p>还有计费。流式请求在 <code>message_delta</code> 之前断开、客户端断连导致 scanner 提前停止读取上游、缓存字段口径不一致 —— 这些 bug 在开源网关的 issue 区里都能翻到。自建意味着这些账要自己核，自己修。</p>
+<h2 id="sec-2">什么时候自建是对的</h2>
+<p>不是不能自建，是得满足条件：</p>
+<ul><li>有明确的合规或数据边界要求，请求不能出自己的网络；</li><li>有专职运维，能扛升级、监控、告警、故障切换；</li><li>上游资源稳定，是正规采购而不是靠不断换号续命；</li><li>调用量足够大，摊得平人力成本；</li><li>需要定制计费、路由、审计逻辑，托管产品满足不了。</li></ul>
+<p>符合三条以上，自建才划算。只符合「想省点接口费」这一条，多半会在第二个月开始后悔。</p>
+<p>还有个折中方案挺实用：核心敏感业务走自建或专线，一般性的内容生成、内部工具、原型验证走托管聚合。两套并存，按数据敏感度分流，比二选一现实。</p>
+<h2 id="sec-3">什么时候托管更合适</h2>
+<p>小团队、需求变化快、要频繁试新模型、没有专人运维 —— 这几种情况托管优势明显。模型上新不用自己适配协议，通道挂了有人切，账单和日志现成，出问题至少有个能问的地方。</p>
+<p>代价也说清楚：请求经过第三方，数据边界不在自己手里；上游供给依赖平台，稳定性是阶段性的；价格和倍率会调；平台本身有经营风险。这些不会因为「选了一家口碑好的」就消失。</p>
+<p>我现在大部分项目走的是托管。选型时把「能不能导出请求级 usage」「能不能按项目建 Key 设额度」「限流是不是返回明确错误码」放在价格前面 —— 这几样恰好是自建时最费人力去维护的部分。手上这轮跑的是 <a href="https://token173.net">token173.net</a>，主要图的是文本、图像、视频型号在一个 Key 下，账单和调用日志归在一处，不用自己再搭一层代理去收日志。真遇到敏感数据的链路，另走别的方案，不混在一起。</p>
+<h2 id="sec-4">一张可以直接填的决策表</h2>
+<div class="table-wrap"><table><thead><tr><th>判断项</th><th>自建</th><th>托管</th></tr></thead><tbody><tr><td>数据必须不出内网</td><td>✔</td><td>✘</td></tr><tr><td>有专职运维</td><td>需要</td><td>不需要</td></tr><tr><td>上游渠道稳定可采购</td><td>需要</td><td>平台负责</td></tr><tr><td>需要定制计费 / 路由</td><td>✔</td><td>有限</td></tr><tr><td>快速试新模型</td><td>要自己适配</td><td>✔</td></tr><tr><td>初始投入</td><td>低（部署）／高（长期）</td><td>几乎为零</td></tr><tr><td>故障责任</td><td>自己扛</td><td>平台承担一部分</td></tr><tr><td>业务量小、需求常变</td><td>不划算</td><td>✔</td></tr></tbody></table></div>
+<h2 id="sec-5">别忽略第三条路</h2>
+<p>BYOK 调度网关：上游密钥是你自己以真实身份注册的，网关只做统一协议、路由和用量统计，不做额度转售。数据链路相对可控，责任边界比公共托管清楚，运维量又比完整自建小。对企业里「不能用公共中转、又不想从零造轮子」的场景，这条往往比前两条都合适。</p>
+<h2 id="sec-6">最后</h2>
+<p>自建省下的是明面上的差价，多出来的是长期的人力、风险和责任。2026 年开源网关已经足够成熟，成熟到「部署」这件事不再构成门槛 —— 真正的门槛在部署之后那半年。把那半年的账算进去，再决定要不要自己搭。</p>
+<h2 id="sec-7">一份半年期的实际开销对照</h2>
+<p>抽象说「人力成本」没感觉，把去年一个小项目的账摊开更直观。团队三个人，日均调用量不算大，自建那套跑在一台 4C8G 云主机上。</p>
+<div class="table-wrap"><table><thead><tr><th>项目</th><th>自建（半年）</th><th>托管（半年）</th></tr></thead><tbody><tr><td>云主机 + 域名 + 证书</td><td>固定支出</td><td>0</td></tr><tr><td>部署与初始化</td><td>约 2 人日</td><td>约 0.5 人日</td></tr><tr><td>上游渠道维护</td><td>每月若干次，含两次补号</td><td>0</td></tr><tr><td>版本升级 / 迁移</td><td>3 次，其中 1 次数据库结构变更</td><td>0</td></tr><tr><td>计费口径排查</td><td>2 次，各约半天</td><td>1 次，靠后台明细</td></tr><tr><td>故障响应</td><td>自己值班</td><td>平台侧承担一部分</td></tr><tr><td>接口差价</td><td>省下一笔</td><td>支出</td></tr></tbody></table></div>
+<p>真正让天平倒向托管的不是最后那行差价，是中间那几行：版本升级时数据库结构变更，得找停机窗口；上游一批号被封，凌晨起来补；流式断连导致账目少记，花半天核对 issue 和日志。这些事单次都不大，但它们是<strong>持续</strong>的，而且永远发生在你正赶项目的时候。</p>
+<p>后来我们把这套网关留作 BYOK 调度层，只接自己实名注册的官方 Key，对外分发的那部分流量挪到了托管聚合。运维量降了大半，责任边界也清楚：核心链路自己管，一般流量交给平台。</p>
+<h2 id="sec-8">什么信号出现时，说明该重新算这笔账</h2>
+<ul><li>月调用量大到接口差价能覆盖一个专人的人力成本；</li><li>业务要求请求不出内网，或者要接内部鉴权、审计系统；</li><li>需要定制计费规则、路由策略，托管产品的配置项不够用；</li><li>上游已经能签正规采购协议，不再靠换号维持供给；</li><li>团队里有人愿意长期认领这套系统，而不是「谁有空谁看一下」。</li></ul>
+<p>五条里中三条以上，自建就值得重新评估。只中第一条，多半还是会走回托管 —— 因为省下的钱是线性的，操心是指数的。</p>
+<p>（开源项目功能、平台条款和价格都随时间变化，以各自当前文档为准。）</p>
+<div class="cta"><strong>继续看：</strong><a href="/topics/selection/">选型与推荐</a> ·
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
+型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/enterprise-llm-gateway-checklist/">企业选大模型 API 中转站：发票、对公与子账号清单</a><p class="card-desc">财务 / 法务 / 运维三组视角、九项采购验收表、按真实业务跑的技术验证、费用口径写进合同，以及托管中转的结构性边界。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">企业级API中转站</span></div></article><article class="card"><a class="card-title" href="/articles/one-key-multi-model-api/">第三方 API 巨模平台：一个 Key 调用多模型</a><p class="card-desc">聚合层实际做的四件事——鉴权、协议适配、调度、计量；附多模态流水线配置示例与调度、计费两道工序的拆解。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">第三方API巨模平台</span></div></article><article class="card"><a class="card-title" href="/articles/openrouter-vs-cn-relay/">OpenRouter 和国内中转平台怎么选</a><p class="card-desc">型号覆盖、国内链路、支付结算、企业流程四条线的差异，双栈环境变量配置、评测与生产账单分开归集。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">OpenRouter国内替代</span></div></article><article class="card"><a class="card-title" href="/articles/best-api-relay-2026/">2026 好用的 API 中转站推荐：稳定靠谱实测对比</a><p class="card-desc">换了七八家之后总结的 API 中转站验收标准与横向对比，含踩坑经过、48 小时压测动作、主流平台定位和 2026 年行业背景。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">好用的API中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/llm-api-aggregator-longrun/">老牌稳定的大模型 API 聚合平台：怎么自己验证</a><p class="card-desc">「老牌」「稳定」「用户量大」都可以查：域名与备案、更新日志、社区痕迹、压测数据、投放软文识别，附 2026 年行业判断。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">老牌稳定的大模型API聚合平台</span></div></article><article class="card"><a class="card-title" href="/articles/api-relay-benchmark/">稳定好用的中转站怎么压测：TTFT 与 P95 延迟</a><p class="card-desc">六个可观测指标、五组真实样本、白天与晚高峰时间窗、并发阶梯、故障注入、记录表模板与上线硬线。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">稳定好用的中转站</span></div></article></div></section>
+</div>
+<aside class="toc"><strong>本文目录</strong><a href="#sec-1">显性成本 vs 隐性成本</a><a href="#sec-2">什么时候自建是对的</a><a href="#sec-3">什么时候托管更合适</a><a href="#sec-4">一张可以直接填的决策表</a><a href="#sec-5">别忽略第三条路</a><a href="#sec-6">最后</a><a href="#sec-7">一份半年期的实际开销对照</a><a href="#sec-8">什么信号出现时，说明该重新算这笔账</a></aside>
+</div></main>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div><strong>Token173</strong> · 大模型 API 中转、聚合与接入的选型、排错和成本笔记</div>
+    <nav aria-label="页脚导航">
+      <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+    </nav>
+    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+  </div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>

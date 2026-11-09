@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>国产模型中转 API：DeepSeek、GLM、Kimi、MiniMax 混合调度</title>
+<meta name="description" content="按任务分档的降级链、升级触发条件、缓存与峰谷计价、跨家族兜底，以及带日期后缀型号 ID 的实测细节。">
+<meta name="keywords" content="国产模型中转API, DeepSeek API聚合, GLM Kimi MiniMax, 一个Key多家模型, Token173, token173.net">
+<meta name="author" content="Token173">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://token173.github.io/articles/domestic-llm-api-aggregator/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Token173 API 中转笔记">
+<meta property="og:title" content="国产模型中转 API：DeepSeek、GLM、Kimi、MiniMax 混合调度">
+<meta property="og:description" content="按任务分档的降级链、升级触发条件、缓存与峰谷计价、跨家族兜底，以及带日期后缀型号 ID 的实测细节。">
+<meta property="og:url" content="https://token173.github.io/articles/domestic-llm-api-aggregator/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="国产模型中转 API：DeepSeek、GLM、Kimi、MiniMax 混合调度">
+<meta name="twitter:description" content="按任务分档的降级链、升级触发条件、缓存与峰谷计价、跨家族兜底，以及带日期后缀型号 ID 的实测细节。">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316509b'/%3E%3Ctext x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "国产模型 API 聚合：DeepSeek、GLM、Kimi、MiniMax 混着用，省钱在调度不在单价", "description": "按任务分档的降级链、升级触发条件、缓存与峰谷计价、跨家族兜底，以及带日期后缀型号 ID 的实测细节。", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "inLanguage": "zh-CN", "keywords": "国产模型中转API, DeepSeek API聚合, GLM Kimi MiniMax, 一个Key多家模型", "author": {"@type": "Organization", "name": "Token173"}, "publisher": {"@type": "Organization", "name": "Token173", "url": "https://token173.net/"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://token173.github.io/articles/domestic-llm-api-aggregator/"}, "articleSection": "模型与型号专题"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://token173.github.io/"}, {"@type": "ListItem", "position": 2, "name": "模型与型号专题", "item": "https://token173.github.io/topics/models/"}, {"@type": "ListItem", "position": 3, "name": "国产模型 API 聚合：DeepSeek、GLM、Kimi、MiniMax 混着用，省钱在调度不在单价", "item": "https://token173.github.io/articles/domestic-llm-api-aggregator/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Token173", "url": "https://token173.net/"}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/"><span class="brand-mark">T</span><span>Token173</span><em>API 中转笔记</em></a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/topics/">分类</a>
+      <a href="/models/">型号</a>
+      <a href="/faq/">FAQ</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false">
+      <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
+      <div id="search-results" class="search-results" hidden></div>
+    </form>
+  </div>
+</header>
+<nav class="wrap breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><a href="/topics/models/">模型与型号专题</a></li><li aria-current="page">国产模型 API 聚合：DeepSeek、GLM、Kimi、MiniMax 混着用，省钱在调度不在单价</li></ol></nav>
+<main id="main" class="wrap"><div class="article-layout">
+<div class="article-body">
+<h1>国产模型 API 聚合：DeepSeek、GLM、Kimi、MiniMax 混着用，省钱在调度不在单价</h1>
+<div class="meta-line"><span class="tag">models</span><span>2026-11-09</span><span class="dot">·</span><span>国产模型中转API</span></div>
+<div class="article-lead">「国产大模型 API 中转」「DeepSeek V4 哪个平台便宜」「一个 Key 调多家国产模型」「国内直连 大模型 API 平台」—— 2026 年这类搜索的落点，已经从「哪家最便宜」变成「怎么按任务分模型」。</div>
+
+<p>国产线这两年有个明显变化：模型之间的能力差在缩小，价格和延迟的差反而拉开了。分类抽取这种活，用旗舰推理模型跑是纯浪费；反过来真要啃几十页材料，快速档的输出又不够用。所以现在更值得花时间的不是挨个比价，是设计一条降级链。</p>
+<h2 id="sec-1">一条能直接用的降级链</h2>
+<pre><code>请求进来
+  │
+  ├─ 轻量档（分类 / 抽取 / 格式化 / 意图识别）
+  │    glm-5.3-flash / deepseek-v4-flash-0731
+  │    → 置信度够，直接返回
+  │
+  ├─ 通用档（常规问答 / 摘要 / 代码补全）
+  │    deepseek-v4 / minimax-h3
+  │
+  └─ 加强档（长材料 / 复杂推理 / 低置信度升级）
+       deepseek-v4-pro-0813 / kimi-k3</code></pre>
+<p>关键是「升级」要有触发条件，不能凭感觉。我们用的几个：输出 JSON 校验失败、置信度低于阈值、输入 token 超过某个量级、用户手动点了「再想想」。没有触发条件的降级链，最后都会退化成「默认全用最贵那档」。</p>
+<p>实现上把型号写成配置，业务代码只传档位：</p>
+<pre><code class="language-python">TIERS = {
+    "light":  "glm-5.3-flash",
+    "normal": "deepseek-v4",
+    "heavy":  "kimi-k3",
+}
+
+def complete(prompt, tier="light", **kw):
+    r = client.chat.completions.create(
+        model=TIERS[tier],
+        messages=[{"role": "user", "content": prompt}],
+        **kw,
+    )
+    return r</code></pre>
+<p>换模型只改字典，不动业务。做 A/B 时也方便，同一批样本在两个 ID 上各跑一遍，把质量、耗时、单条消耗记在同一张表里。</p>
+<h2 id="sec-2">缓存和峰谷，比折扣更影响账单</h2>
+<p>国产模型这边有两项常被忽略的成本杠杆。</p>
+<p><strong>缓存命中。</strong> 大量业务存在重复前缀：固定的 system prompt、产品说明、工具 schema、常见文档片段。命中缓存的单价通常远低于正常调用。设计提示词时把稳定不变的内容放前面、变化的内容放后面，命中率能明显上去。反过来，把时间戳、随机 ID 塞在 system prompt 开头，等于主动把缓存打散。</p>
+<p>验证方法：冷热各跑十次，看后台有没有把缓存字段单列出来，以及冷热调用的扣费是不是真有差别。只报告命中、不按缓存价结算的平台，这项优化等于白做。</p>
+<p><strong>峰谷计价。</strong> 部分模型按官方峰谷价格透传，低谷时段便宜。离线批处理、数据清洗、批量摘要这类不急的任务，挪到夜间跑就行，代码一行不用改。</p>
+<h2 id="sec-3">接聚合平台，还是分别接官方</h2>
+<p>只用一个模型、量又稳定，官方 API 最省心：文档明确、责任清楚、版本更新及时。</p>
+<p>一旦同时用三家以上，或者需要在一个后台看谁花了多少钱，聚合层的价值就出来了：一套 OpenAI 兼容接口、一把 Key、统一日志和账单、型号随便切。这也是 2026 年不少团队把国产线和海外线收进同一个网关的原因 —— 不是因为便宜，是因为维护成本。</p>
+<p>挑这类平台，我盯三样：</p>
+<ol><li>型号是不是真在一个池子里（有的站把国产线和海外线拆成不同分组、不同 Key，名义聚合，用起来还是两套）。</li><li>后台能不能把输入 / 输出 / 缓存分项导出，按项目和 Key 过滤。</li><li>同一型号有没有备用通道，某条线路挂了能否自动切。</li></ol>
+<h2 id="sec-4">海外型号做兜底，别做默认</h2>
+<p>有些任务国产线确实吃力，比如特定语种的复杂推理、某些工具调用习惯、和海外生态工具的配合。稳妥的做法是把这类样本单独标记，升级到 <code>gpt-6.1-sol</code>、<code>claude-sonnet-5-5</code> 这一档，而不是把海外型号设成全局默认。</p>
+<p>我们目前把国产几条线和 GPT、Claude、Gemini、Grok 放在 <a href="https://token173.net">token173.net</a> 同一个 Key 下面，就是为了方便做这种跨家族升级：链路、鉴权、日志格式都一样，升级只是换个字符串，账单还归在一处。控制台列表里 <code>deepseek-v4-pro-0813</code>、<code>glm-5.3-flash</code>、<code>kimi-k3</code>、<code>minimax-h3</code> 这些 ID 直接可选，不用另开账号。</p>
+<h2 id="sec-5">几个实测才发现的细节</h2>
+<ul><li><code>deepseek-v4-flash-0731</code>、<code>deepseek-v4-pro-0813</code> 这类带日期后缀的 ID，手打极易错，从 <code>/v1/models</code> 复制。</li><li>同一家族的快速档和加强档，工具调用支持程度可能不同，Agent 场景要单独测。</li><li>长上下文任务的 <code>finish_reason: "length"</code> 比例偏高时，先查 <code>max_tokens</code> 设置，别急着换模型。</li><li>模型更新快，别把 ID 写死在团队文档里；部署脚本里加一次 ID 存在性校验，下架能早发现。</li><li>价格、倍率、峰谷时段会调，以价格页当前公示为准。</li></ul>
+<h2 id="sec-6">收尾</h2>
+<p>把成本降下来最有效的一步，通常不是谈到更低的折扣，是让便宜模型真的承担了大部分请求。分档、缓存、峰谷、升级触发条件，这四件事做完，再回头看要不要换平台，结论往往已经不一样了。</p>
+<div class="cta"><strong>继续看：</strong><a href="/topics/models/">模型与型号专题</a> ·
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
+型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/llm-relay-model-list-2026/">AI 中转站支持哪些模型：2026 型号 ID 整理</a><p class="card-desc">26 个型号按 Claude / GPT / Gemini / Grok / 国产 / 视觉分组，附命名规则、/v1/models 校验脚本与最小验证组。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">AI中转站模型列表</span></div></article><article class="card"><a class="card-title" href="/articles/agent-multi-model-routing/">AI Agent 工作流多模型调度：统一 API 网关实践</a><p class="card-desc">网关层四件事、成本 / 性能 / 稳定三种路由策略、分层结构图、按步骤打标签的记账方式与兜底清单。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">Agent多模型调度</span></div></article><article class="card"><a class="card-title" href="/articles/coding-relay-cache-cost/">AI 编程中转站：长上下文缓存命中与成本</a><p class="card-desc">编程场景输入占比为何远大于输出、缓存命中率算法、五次成本复盘、会话粘性与长连接稳定性要求。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">AI编程中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/gpt-api-relay-models/">GPT 中转平台：gpt-6-sol 与 gpt-5.6-terra 怎么选</a><p class="card-desc">按轻中重三档绑型号，用综合单价而非折扣横比；附 2026 年型号命名规则、A/B 记录模板和默认旗舰习惯的成本账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">GPT中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/claude-api-relay-models/">Claude 中转平台：长任务翻车复盘与型号配置</a><p class="card-desc">一次超时重发导致的缓存失效复盘，claude-opus-5-5 / sonnet-5-5 / haiku-5-5 分档、缓存命中率算法与长任务参数清单。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Claude中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/gemini-api-relay-china/">Gemini 中转平台：gemini-3.8-flash 国内调用</a><p class="card-desc">多模态上传慢在哪、长上下文被截断的四类原因、协议差异、finish_reason 对照表与体积账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Gemini中转平台</span></div></article></div></section>
+</div>
+<aside class="toc"><strong>本文目录</strong><a href="#sec-1">一条能直接用的降级链</a><a href="#sec-2">缓存和峰谷，比折扣更影响账单</a><a href="#sec-3">接聚合平台，还是分别接官方</a><a href="#sec-4">海外型号做兜底，别做默认</a><a href="#sec-5">几个实测才发现的细节</a><a href="#sec-6">收尾</a></aside>
+</div></main>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div><strong>Token173</strong> · 大模型 API 中转、聚合与接入的选型、排错和成本笔记</div>
+    <nav aria-label="页脚导航">
+      <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+    </nav>
+    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+  </div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>

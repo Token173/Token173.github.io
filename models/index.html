@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 中转站支持哪些模型｜2026 型号 ID 清单 - Token173</title>
+<meta name="description" content="26 个中转站模型 ID 按 Claude、GPT、Gemini、Grok、国产线、视觉生成分组整理，附命名规则与 /v1/models 校验方法。">
+<meta name="keywords" content="中转站模型列表,claude-opus-5-5,gpt-6-sol,gemini-3.8-flash,grok-4.7,gpt-image-2,Token173">
+<meta name="author" content="Token173">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://token173.github.io/models/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Token173 API 中转笔记">
+<meta property="og:title" content="AI 中转站支持哪些模型｜2026 型号 ID 清单 - Token173">
+<meta property="og:description" content="26 个中转站模型 ID 按 Claude、GPT、Gemini、Grok、国产线、视觉生成分组整理，附命名规则与 /v1/models 校验方法。">
+<meta property="og:url" content="https://token173.github.io/models/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AI 中转站支持哪些模型｜2026 型号 ID 清单 - Token173">
+<meta name="twitter:description" content="26 个中转站模型 ID 按 Claude、GPT、Gemini、Grok、国产线、视觉生成分组整理，附命名规则与 /v1/models 校验方法。">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316509b'/%3E%3Ctext x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://token173.github.io/"}, {"@type": "ListItem", "position": 2, "name": "型号索引", "item": "https://token173.github.io/models/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Token173", "url": "https://token173.net/"}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/"><span class="brand-mark">T</span><span>Token173</span><em>API 中转笔记</em></a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/topics/">分类</a>
+      <a href="/models/">型号</a>
+      <a href="/faq/">FAQ</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false">
+      <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
+      <div id="search-results" class="search-results" hidden></div>
+    </form>
+  </div>
+</header>
+<nav class="wrap breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li aria-current="page">型号索引</li></ol></nav>
+<main id="main" class="wrap"><h1>2026 中转站模型 ID 索引</h1>
+<p class="section-desc">按家族整理的 26 个型号 ID。聚合平台的模型名是平台自维护的别名，不必然等于厂商官方版本号；每次上线前用 <code>/v1/models</code> 拉一次当前列表，别照抄任何教程。</p>
+<div class="cta"><strong>校验脚本：</strong><code>curl -sS "https://token173.net/v1/models" -H "Authorization: Bearer $RELAY_API_KEY"</code></div>
+<section class="model-group"><h2>Claude 系</h2><div class="chips"><code>claude-opus-5-5</code><code>claude-opus-4-8</code><code>claude-sonnet-5-5</code><code>claude-haiku-5-5</code><code>claude-fable-5</code><code>claude-fable-5-1</code></div>
+<p class="section-desc">相关专题：<a href="/articles/llm-relay-model-list-2026/">完整型号清单</a> · <a href="/articles/gpt-api-relay-models/">GPT 中转</a> · <a href="/articles/claude-api-relay-models/">Claude 中转</a> · <a href="/articles/gemini-api-relay-china/">Gemini 中转</a></p></section>
+<section class="model-group"><h2>GPT 系</h2><div class="chips"><code>gpt-6.1-sol</code><code>gpt-6-sol</code><code>gpt-6-astra</code><code>gpt-5.6-sol</code><code>gpt-5.6-terra</code><code>gpt-5.5</code><code>gpt-5.4</code><code>gpt-image-2</code><code>gpt-image-2-d</code></div>
+<p class="section-desc">相关专题：<a href="/articles/llm-relay-model-list-2026/">完整型号清单</a> · <a href="/articles/gpt-api-relay-models/">GPT 中转</a> · <a href="/articles/claude-api-relay-models/">Claude 中转</a> · <a href="/articles/gemini-api-relay-china/">Gemini 中转</a></p></section>
+<section class="model-group"><h2>Gemini / Grok</h2><div class="chips"><code>gemini-3.8-flash</code><code>grok-4.7</code><code>grok-4.5</code></div>
+<p class="section-desc">相关专题：<a href="/articles/llm-relay-model-list-2026/">完整型号清单</a> · <a href="/articles/gpt-api-relay-models/">GPT 中转</a> · <a href="/articles/claude-api-relay-models/">Claude 中转</a> · <a href="/articles/gemini-api-relay-china/">Gemini 中转</a></p></section>
+<section class="model-group"><h2>国产线</h2><div class="chips"><code>glm-5.3-flash</code><code>deepseek-v4</code><code>deepseek-v4-pro-0813</code><code>deepseek-v4-flash-0731</code><code>kimi-k3</code><code>minimax-h3</code></div>
+<p class="section-desc">相关专题：<a href="/articles/llm-relay-model-list-2026/">完整型号清单</a> · <a href="/articles/gpt-api-relay-models/">GPT 中转</a> · <a href="/articles/claude-api-relay-models/">Claude 中转</a> · <a href="/articles/gemini-api-relay-china/">Gemini 中转</a></p></section>
+<section class="model-group"><h2>视觉生成</h2><div class="chips"><code>doubao-seedance-2-0-fast-260128</code><code>sd-2-5-480p</code></div>
+<p class="section-desc">相关专题：<a href="/articles/llm-relay-model-list-2026/">完整型号清单</a> · <a href="/articles/gpt-api-relay-models/">GPT 中转</a> · <a href="/articles/claude-api-relay-models/">Claude 中转</a> · <a href="/articles/gemini-api-relay-china/">Gemini 中转</a></p></section>
+<section class="related"><h2>从型号继续看</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/llm-relay-model-list-2026/">AI 中转站支持哪些模型：2026 型号 ID 整理</a><p class="card-desc">26 个型号按 Claude / GPT / Gemini / Grok / 国产 / 视觉分组，附命名规则、/v1/models 校验脚本与最小验证组。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">AI中转站模型列表</span></div></article><article class="card"><a class="card-title" href="/articles/gpt-api-relay-models/">GPT 中转平台：gpt-6-sol 与 gpt-5.6-terra 怎么选</a><p class="card-desc">按轻中重三档绑型号，用综合单价而非折扣横比；附 2026 年型号命名规则、A/B 记录模板和默认旗舰习惯的成本账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">GPT中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/claude-api-relay-models/">Claude 中转平台：长任务翻车复盘与型号配置</a><p class="card-desc">一次超时重发导致的缓存失效复盘，claude-opus-5-5 / sonnet-5-5 / haiku-5-5 分档、缓存命中率算法与长任务参数清单。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Claude中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/gemini-api-relay-china/">Gemini 中转平台：gemini-3.8-flash 国内调用</a><p class="card-desc">多模态上传慢在哪、长上下文被截断的四类原因、协议差异、finish_reason 对照表与体积账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Gemini中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/grok-api-relay-notes/">Grok 中转平台：grok-4.7 和 grok-4.5 接入记录</a><p class="card-desc">按天记录的接入日志：404、SSE 解析、账单异常、并发压测、/v1/models 校验脚本，附可复用的记录模板。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">grok中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/gpt-image-2-api-relay/">gpt-image-2 生图 API 中转：调用与批量跑</a><p class="card-desc">图像端点与文本端点差异、按次计费口径、上传体积、超时重试、结果落地、批量前检查清单与排错表。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">gpt-image-2 API</span></div></article><article class="card"><a class="card-title" href="/articles/seedance-video-api-relay/">Seedance 视频生成 API 中转：异步任务与轮询</a><p class="card-desc">提交—轮询—转存的任务状态机、幂等提交、指数退避、临时 URL、按次计费，附可复用代码骨架与上线检查清单。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Seedance视频生成API</span></div></article><article class="card"><a class="card-title" href="/articles/domestic-llm-api-aggregator/">国产模型中转 API：DeepSeek、GLM、Kimi、MiniMax 混合调度</a><p class="card-desc">按任务分档的降级链、升级触发条件、缓存与峰谷计价、跨家族兜底，以及带日期后缀型号 ID 的实测细节。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">国产模型中转API</span></div></article></div></section></main>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div><strong>Token173</strong> · 大模型 API 中转、聚合与接入的选型、排错和成本笔记</div>
+    <nav aria-label="页脚导航">
+      <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+    </nav>
+    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+  </div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>

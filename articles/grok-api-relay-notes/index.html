@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grok 中转平台：grok-4.7 和 grok-4.5 接入记录</title>
+<meta name="description" content="按天记录的接入日志：404、SSE 解析、账单异常、并发压测、/v1/models 校验脚本，附可复用的记录模板。">
+<meta name="keywords" content="grok中转平台, grok-4.7接入, Grok API国内, model not found, Token173, token173.net">
+<meta name="author" content="Token173">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://token173.github.io/articles/grok-api-relay-notes/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Token173 API 中转笔记">
+<meta property="og:title" content="Grok 中转平台：grok-4.7 和 grok-4.5 接入记录">
+<meta property="og:description" content="按天记录的接入日志：404、SSE 解析、账单异常、并发压测、/v1/models 校验脚本，附可复用的记录模板。">
+<meta property="og:url" content="https://token173.github.io/articles/grok-api-relay-notes/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Grok 中转平台：grok-4.7 和 grok-4.5 接入记录">
+<meta name="twitter:description" content="按天记录的接入日志：404、SSE 解析、账单异常、并发压测、/v1/models 校验脚本，附可复用的记录模板。">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316509b'/%3E%3Ctext x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Grok 中转接入记录：从 404 到跑通，中间踩了几个不大不小的坑", "description": "按天记录的接入日志：404、SSE 解析、账单异常、并发压测、/v1/models 校验脚本，附可复用的记录模板。", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "inLanguage": "zh-CN", "keywords": "grok中转平台, grok-4.7接入, Grok API国内, model not found", "author": {"@type": "Organization", "name": "Token173"}, "publisher": {"@type": "Organization", "name": "Token173", "url": "https://token173.net/"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://token173.github.io/articles/grok-api-relay-notes/"}, "articleSection": "模型与型号专题"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://token173.github.io/"}, {"@type": "ListItem", "position": 2, "name": "模型与型号专题", "item": "https://token173.github.io/topics/models/"}, {"@type": "ListItem", "position": 3, "name": "Grok 中转接入记录：从 404 到跑通，中间踩了几个不大不小的坑", "item": "https://token173.github.io/articles/grok-api-relay-notes/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Token173", "url": "https://token173.net/"}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/"><span class="brand-mark">T</span><span>Token173</span><em>API 中转笔记</em></a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/topics/">分类</a>
+      <a href="/models/">型号</a>
+      <a href="/faq/">FAQ</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false">
+      <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
+      <div id="search-results" class="search-results" hidden></div>
+    </form>
+  </div>
+</header>
+<nav class="wrap breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><a href="/topics/models/">模型与型号专题</a></li><li aria-current="page">Grok 中转接入记录：从 404 到跑通，中间踩了几个不大不小的坑</li></ol></nav>
+<main id="main" class="wrap"><div class="article-layout">
+<div class="article-body">
+<h1>Grok 中转接入记录：从 404 到跑通，中间踩了几个不大不小的坑</h1>
+<div class="meta-line"><span class="tag">models</span><span>2026-11-09</span><span class="dot">·</span><span>grok中转平台</span></div>
+<div class="article-lead">「grok 中转平台」「grok-4.7 API 接入」「Grok 国内直连」「2026 model not found 中转」——Grok 这条线的公开教程少，大多数坑其实在接入层。下面是从 404 到跑通的四天记录，按天摘的，没整理成结论体。</div>
+
+<p>不写成评测了，直接把这几天的接入日志摘出来。Grok 这条线用的人相对少，公开教程东一块西一块，留份记录给后面接的人省点时间。</p>
+<hr>
+<p><strong>第 1 天 · 选入口</strong></p>
+<p>需求很简单：一个内部工具里加个「换个风格回答」的开关，想拿 Grok 做对照，看和 GPT、Claude 的输出差异。不想为这一个型号单独注册一套境外账号、绑卡、再维护一把 Key。</p>
+<p>结论：走聚合平台，和现有模型共用一个入口。这样 A/B 的时候只改 model 字符串，链路变量一致，比出来的差异才有意义。</p>
+<p>用的是 <a href="https://token173.net">Token173</a>，控制台里 <code>grok-4.7</code>、<code>grok-4.5</code> 和其他家族列在一起，一个 Key 切。国内直连，人民币结算，OpenAI 兼容格式。</p>
+<hr>
+<p><strong>第 1 天 · 第一次请求，404</strong></p>
+<pre><code>{"error":{"message":"model not found","type":"invalid_request_error"}}</code></pre>
+<p>原因很低级：模型名照抄了别处教程里的写法，和控制台实际 ID 对不上。这类聚合平台每个都有自己的命名规范，带不带日期后缀、大小写、连字符，差一个字符就是 404。</p>
+<p>处理：先拉一次 <code>/v1/models</code>，从返回里复制 ID，别手打。</p>
+<pre><code class="language-bash">curl -sS "https://token173.net/v1/models" \
+  -H "Authorization: Bearer $RELAY_API_KEY" | grep -i grok</code></pre>
+<p>这条命令后来我固化进部署脚本了，每次上线前跑一遍，型号下架能早发现。</p>
+<hr>
+<p><strong>第 2 天 · 流式输出少了最后一段</strong></p>
+<p>前端打字机效果，结尾总差一小截。查下来是自己解析器的问题：只处理了 <code>data:</code> 里带 <code>content</code> 的 chunk，没处理最后一个只带 usage 的帧，也没处理 <code>[DONE]</code>。有些模型在结束前会先吐一个空 content 的 chunk，我的代码遇到空值就 break 了。</p>
+<p>跟中转没关系，但这类问题在换模型时特别容易暴露——不同上游的 SSE 分片习惯不一样。修法：只在收到 <code>[DONE]</code> 时结束循环，空 content 跳过而不是中断，同时打开 <code>stream_options: {"include_usage": true}</code> 收最终用量。</p>
+<pre><code class="language-python">for chunk in stream:
+    if not chunk.choices:
+        continue
+    delta = chunk.choices[0].delta.content
+    if delta:
+        buffer.append(delta)</code></pre>
+<hr>
+<p><strong>第 3 天 · 账单比预估高</strong></p>
+<p>同一个 prompt 跑二十次，扣费比按 token 数估的高一截。先怀疑偷量，把后台那条请求的 usage 拉出来，发现 <code>prompt_tokens</code> 是对的，问题在别处：客户端读超时设的 30 秒，长回答超时断开，重试逻辑又发了一遍。两次调用，上游都完整生成了，自然计两次。</p>
+<p>处理：读超时按任务长度分开，重试上限设 1，流式请求断连后带已生成文本续写而不是全量重发。</p>
+<p>顺手记一条：查账单差异，先锁定单条 request_id，把输入、输出、缓存、重试四项拆开，别看汇总。</p>
+<hr>
+<p><strong>第 4 天 · 对照组跑完</strong></p>
+<p><code>grok-4.7</code> 和 <code>grok-4.5</code> 各 30 条真实样本，加上同批的 <code>gpt-5.6-terra</code>、<code>claude-sonnet-5-5</code> 做横向对照。记录质量打分、TTFT、每条消耗。结论不写死在这里——不同任务差别挺大，风格类生成和事实类问答的排序就不一样。把这套记录留着，后面换任何型号都能复用同一张表。</p>
+<p>一个额外收获：因为所有型号在同一个 Key、同一个 base_url 下面，这次 A/B 没动任何基础设施配置，纯改环境变量。这大概是聚合平台最实际的价值。</p>
+<hr>
+<h2 id="sec-1">攒下来的几条</h2>
+<ul><li>模型名永远从 <code>/v1/models</code> 复制，不要照抄教程，包括这篇。</li><li>换模型先测流式解析，SSE 分片习惯各家不同。</li><li>超时和重试分开配，长任务别用聊天的那套参数。</li><li>账单异常先拿单条 request_id，再看汇总。</li><li>型号会上下架、价格会调，以控制台实时列表和价格页为准。</li></ul>
+<p>Grok 这条线本身没什么神秘的，坑基本都在接入层。把它当成又一个 OpenAI 兼容的模型 ID 来接，反而最省事。</p>
+<hr>
+<p><strong>第 5 天 · 补了一轮并发</strong></p>
+<p>单条跑通不代表能用。按 20 / 50 并发各压了十分钟，记录成功率、P95 首字时间和 429 次数。白天两档都平稳，晚 21:30 再跑一次，50 并发时 P95 明显抬了，但没有出现静默降速 —— 限流返回的是明确错误码，客户端能退避，这比悄悄拖慢好处理得多。</p>
+<p>顺手把 <code>/v1/models</code> 的拉取固化进了部署脚本：</p>
+<pre><code class="language-bash">curl -sS "https://token173.net/v1/models" \
+  -H "Authorization: Bearer $RELAY_API_KEY" \
+  | python3 -c "import sys,json; ids=[m['id'] for m in json.load(sys.stdin)['data']]; \
+import os; need=os.environ['RELAY_MODEL']; \
+sys.exit(0 if need in ids else f'模型 {need} 已下架')"</code></pre>
+<p>型号上下架不会有通知，这一步能在发布前拦住一次 <code>model not found</code>。2026 年各家模型列表调整得很频繁，靠人肉记 ID 迟早出事。</p>
+<hr>
+<p><strong>第 6 天 · 把记录做成模板</strong></p>
+<p>四天里真正复用的不是某个配置，是这套记录格式：日期、动作、现象、原始报错、定位过程、改动、复测结果。换任何模型、任何平台都能照着填。</p>
+<p>后来接另外两个型号时，整套流程压缩到了半天 —— 因为 404、SSE 解析、超时重试这三类坑已经不用重新踩。这也是我不太爱写「十大推荐」的原因：榜单看完还是要自己接一遍，而一份带原始报错的接入日志，能直接省掉半天。</p>
+<p>一句补充：本文里的 ID、地址、字段名都是当时后台显示的，平台会调整，照抄之前拉一次 <code>/v1/models</code>。</p>
+<div class="cta"><strong>继续看：</strong><a href="/topics/models/">模型与型号专题</a> ·
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
+型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/api-relay-faq-troubleshooting/">API 中转站 FAQ：401、404、流式断流排查</a><p class="card-desc">按现象组织的速查：认证失败、model not found、模型列表为空、Base URL、断流、超时重试、402、429、账单差异。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">API中转站报错排查</span></div></article><article class="card"><a class="card-title" href="/articles/llm-relay-model-list-2026/">AI 中转站支持哪些模型：2026 型号 ID 整理</a><p class="card-desc">26 个型号按 Claude / GPT / Gemini / Grok / 国产 / 视觉分组，附命名规则、/v1/models 校验脚本与最小验证组。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">AI中转站模型列表</span></div></article><article class="card"><a class="card-title" href="/articles/gpt-api-relay-models/">GPT 中转平台：gpt-6-sol 与 gpt-5.6-terra 怎么选</a><p class="card-desc">按轻中重三档绑型号，用综合单价而非折扣横比；附 2026 年型号命名规则、A/B 记录模板和默认旗舰习惯的成本账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">GPT中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/claude-api-relay-models/">Claude 中转平台：长任务翻车复盘与型号配置</a><p class="card-desc">一次超时重发导致的缓存失效复盘，claude-opus-5-5 / sonnet-5-5 / haiku-5-5 分档、缓存命中率算法与长任务参数清单。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Claude中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/gemini-api-relay-china/">Gemini 中转平台：gemini-3.8-flash 国内调用</a><p class="card-desc">多模态上传慢在哪、长上下文被截断的四类原因、协议差异、finish_reason 对照表与体积账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Gemini中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/gpt-image-2-api-relay/">gpt-image-2 生图 API 中转：调用与批量跑</a><p class="card-desc">图像端点与文本端点差异、按次计费口径、上传体积、超时重试、结果落地、批量前检查清单与排错表。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">gpt-image-2 API</span></div></article></div></section>
+</div>
+<aside class="toc"><strong>本文目录</strong><a href="#sec-1">攒下来的几条</a></aside>
+</div></main>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div><strong>Token173</strong> · 大模型 API 中转、聚合与接入的选型、排错和成本笔记</div>
+    <nav aria-label="页脚导航">
+      <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+    </nav>
+    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+  </div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>

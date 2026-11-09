@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Code 与 Cursor 接入中转 API：环境变量配置</title>
+<meta name="description" content="Anthropic 与 OpenAI 兼容两种协议入口、settings.json、VS Code 扩展、cc-switch 本地路由、报错速查与长任务参数。">
+<meta name="keywords" content="Claude Code中转API, Cursor自定义模型, AI编程中转站, ANTHROPIC_BASE_URL, Token173, token173.net">
+<meta name="author" content="Token173">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://token173.github.io/articles/coding-tools-api-relay/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Token173 API 中转笔记">
+<meta property="og:title" content="Claude Code 与 Cursor 接入中转 API：环境变量配置">
+<meta property="og:description" content="Anthropic 与 OpenAI 兼容两种协议入口、settings.json、VS Code 扩展、cc-switch 本地路由、报错速查与长任务参数。">
+<meta property="og:url" content="https://token173.github.io/articles/coding-tools-api-relay/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Claude Code 与 Cursor 接入中转 API：环境变量配置">
+<meta name="twitter:description" content="Anthropic 与 OpenAI 兼容两种协议入口、settings.json、VS Code 扩展、cc-switch 本地路由、报错速查与长任务参数。">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316509b'/%3E%3Ctext x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Claude Code 和 Cursor 接中转 API：一套配置管住所有编程工具", "description": "Anthropic 与 OpenAI 兼容两种协议入口、settings.json、VS Code 扩展、cc-switch 本地路由、报错速查与长任务参数。", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "inLanguage": "zh-CN", "keywords": "Claude Code中转API, Cursor自定义模型, AI编程中转站, ANTHROPIC_BASE_URL", "author": {"@type": "Organization", "name": "Token173"}, "publisher": {"@type": "Organization", "name": "Token173", "url": "https://token173.net/"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://token173.github.io/articles/coding-tools-api-relay/"}, "articleSection": "国内直连与接入"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://token173.github.io/"}, {"@type": "ListItem", "position": 2, "name": "国内直连与接入", "item": "https://token173.github.io/topics/access/"}, {"@type": "ListItem", "position": 3, "name": "Claude Code 和 Cursor 接中转 API：一套配置管住所有编程工具", "item": "https://token173.github.io/articles/coding-tools-api-relay/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Token173", "url": "https://token173.net/"}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/"><span class="brand-mark">T</span><span>Token173</span><em>API 中转笔记</em></a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/topics/">分类</a>
+      <a href="/models/">型号</a>
+      <a href="/faq/">FAQ</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false">
+      <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
+      <div id="search-results" class="search-results" hidden></div>
+    </form>
+  </div>
+</header>
+<nav class="wrap breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><a href="/topics/access/">国内直连与接入</a></li><li aria-current="page">Claude Code 和 Cursor 接中转 API：一套配置管住所有编程工具</li></ol></nav>
+<main id="main" class="wrap"><div class="article-layout">
+<div class="article-body">
+<h1>Claude Code 和 Cursor 接中转 API：一套配置管住所有编程工具</h1>
+<div class="meta-line"><span class="tag">access</span><span>2026-11-09</span><span class="dot">·</span><span>Claude Code中转API</span></div>
+<div class="article-lead">「Claude Code 第三方 API 配置」「Cursor 自定义模型 中转站」「ANTHROPIC_BASE_URL 怎么填」「AI 编程 中转站推荐」—— 2026 年这类问题特别多，根源是 AI 编程工具吃 token 的速度远超聊天场景，一个中等规模的重构任务就能烧掉十万以上 token，大家都在找更省、更稳的接入方式。</div>
+
+<p>麻烦不在接口本身，在工具太杂。Claude Code 说 Anthropic 协议，Cursor 说 OpenAI 兼容，Codex CLI 又是自己的一套配置文件，Cherry Studio、Cline、TRAE 各有各的填写入口。每个工具里塞一把 Key，换平台时挨个改，还容易漏。</p>
+<h2 id="sec-1">先分清两种协议入口</h2>
+<div class="table-wrap"><table><thead><tr><th>工具类型</th><th>用什么协议</th><th>关键变量 / 字段</th></tr></thead><tbody><tr><td>Claude Code CLI</td><td>Anthropic Messages</td><td><code>ANTHROPIC_BASE_URL</code>、<code>ANTHROPIC_AUTH_TOKEN</code>、<code>ANTHROPIC_MODEL</code></td></tr><tr><td>Claude Code VS Code 扩展</td><td>同上，但读扩展设置</td><td><code>claudeCode.environmentVariables</code></td></tr><tr><td>OpenAI 兼容工具（Cursor / Cline / Cherry Studio / Chatbox）</td><td>Chat Completions</td><td><code>OPENAI_BASE_URL</code> 或界面里的 Base URL</td></tr><tr><td>Codex CLI</td><td>可配 chat completions</td><td><code>~/.codex/config.toml</code>、<code>auth.json</code></td></tr></tbody></table></div>
+<p>最常犯的错是把 OpenAI 兼容地址填进 <code>ANTHROPIC_BASE_URL</code>。有的平台两个端点都提供，路径还不一样，填错就是 401 或 404。接之前先看平台文档里「Anthropic 协议」那一栏，别照搬 <code>/v1</code> 那个地址。</p>
+<h2 id="sec-2">Claude Code 的最小可用配置</h2>
+<p><code>~/.claude/settings.json</code>：</p>
+<pre><code class="language-json">{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://token173.net",
+    "ANTHROPIC_AUTH_TOKEN": "sk-你的令牌",
+    "ANTHROPIC_MODEL": "claude-sonnet-5-5",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-5-5",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-5-5"
+  }
+}</code></pre>
+<p>后两行别省。Claude Code 会拿小模型跑摘要、压缩上下文这类后台任务，不指定的话它会去撞一个平台并不存在的默认 ID，报 <code>model not found</code>，而且报错位置很隐蔽，能查半天。</p>
+<p>VS Code 扩展要在用户设置里单独写：</p>
+<pre><code class="language-json">{
+  "claudeCode.environmentVariables": [
+    { "name": "ANTHROPIC_BASE_URL", "value": "https://token173.net" },
+    { "name": "ANTHROPIC_AUTH_TOKEN", "value": "sk-你的令牌" }
+  ]
+}</code></pre>
+<p>扩展在启动前会校验凭据，写在 <code>settings.json</code> 里的值能到达进程，但不参与这一步校验 —— 这是很多人「CLI 能用、插件报认证失败」的原因。</p>
+<h2 id="sec-3">OpenAI 兼容工具：三件套</h2>
+<p>Cursor、Cline、Cherry Studio、Chatbox 这类，字段名字不同，内容永远是这三样：</p>
+<pre><code>Base URL : https://token173.net/v1      （不要写完整 /chat/completions）
+API Key  : sk-你的令牌
+Model    : 控制台模型列表里的 ID</code></pre>
+<p>SDK 会自己拼路径，填完整端点会变成 <code>/v1/chat/completions/chat/completions</code>。反过来，手写 curl 就要用完整地址。</p>
+<p>先用 curl 把链路问题从工具里剥出来：</p>
+<pre><code class="language-bash">curl -sS -X POST "https://token173.net/v1/chat/completions" \
+  -H "Authorization: Bearer sk-你的令牌" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"gpt-6.1-sol","messages":[{"role":"user","content":"只回复 OK"}]}'</code></pre>
+<p>curl 通、工具不通，问题在工具配置；curl 就不通，问题在地址、密钥或模型 ID。</p>
+<h2 id="sec-4">工具太多时，加一层本地路由</h2>
+<p>装了四五个工具之后，我改用本地代理统一收口：cc-switch 这类工具在本机起一个 <code>http://127.0.0.1:15721/v1</code>，真实 Key 只存在它里面，所有工具统一指向这个本地地址，Key 随便填（本地不校验）。</p>
+<p>好处很具体：换平台只改一处；每个工具的调用记录能在一个面板里看到；Key 不散落在五个配置文件里。查「某个工具到底有没有走中转」这种问题，看转发记录就行，不用抓包。</p>
+<p>一个通用公式：凡是支持自定义 Base URL 的工具，都能这么接。配置三件套变成 <code>Base URL = 本地代理地址</code>、<code>API Key = 任意值</code>、<code>Model = 上游实际 ID</code>。</p>
+<h2 id="sec-5">报错速查</h2>
+<div class="table-wrap"><table><thead><tr><th>现象</th><th>常见原因</th><th>动作</th></tr></thead><tbody><tr><td>401 / invalid key</td><td>令牌带空格、鉴权头不对、协议端点混用</td><td>区分 <code>ANTHROPIC_AUTH_TOKEN</code> 与 <code>ANTHROPIC_API_KEY</code>，确认端点类型</td></tr><tr><td>404 model not found</td><td>ID 与平台列表不一致、后台默认型号没配</td><td>拉 <code>/v1/models</code> 复制 ID；补齐两个 DEFAULT 变量</td></tr><tr><td>Connection refused</td><td>本地路由没开、端口被占</td><td>检查路由总开关，<code>lsof -i :15721</code></td></tr><tr><td>长任务中途断</td><td>读超时 30 秒 + 自动重试</td><td>长任务读超时放宽到 120s，重试上限 1</td></tr><tr><td>能聊天不会改文件</td><td>型号不支持 tool calling</td><td>换支持工具调用的型号，查模型说明</td></tr><tr><td>账单比预估高</td><td>超时重发、后台小任务走了重型模型</td><td>查 request_id 附近有没有重复调用；指定 haiku 档</td></tr></tbody></table></div>
+<p>最后一条在编程工具里格外常见。长会话反复带着整个代码文件，缓存命中率直接决定账单。选型时留意后台能不能把 <code>cache_read_tokens</code> 单列、冷热调用扣费是不是真有差别。</p>
+<h2 id="sec-6">配置这块我怎么收口</h2>
+<p>Key 按环境拆：本地开发一个、CI 一个、团队共用走子账号，各自设额度上限。所有值放环境变量或服务端配置，<code>.env</code> 加进 <code>.gitignore</code>，别提交进仓库，也别发群里。</p>
+<p>平台这边我用 <a href="https://token173.net">token173.net</a>，主要是它同时给 OpenAI 兼容和 Anthropic 协议两个入口，控制台里 <code>claude-opus-5-5</code>、<code>claude-sonnet-5-5</code>、<code>claude-haiku-5-5</code> 和 GPT、国产那几条线在一个 Key 下面。上面那套「CLI 走 Anthropic、Cursor 走 OpenAI 兼容」的混合配置，不用开两个账号、也不用对两份账单。</p>
+<h2 id="sec-7">收尾几句</h2>
+<p>编程工具对协议兼容、响应速度和缓存命中都比普通聊天敏感。配好之后别只问「你好」，拿一个真实任务试：让它读 README、改一个函数、补一组测试。能完整跑完三轮，才算真接好了。</p>
+<p>模型 ID、协议端点和参数支持范围会调整，上线前拉一次 <code>/v1/models</code>，以平台当前文档为准。</p>
+<div class="cta"><strong>继续看：</strong><a href="/topics/access/">国内直连与接入</a> ·
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
+型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/claude-code-third-party-api/">国内直连 Claude：Claude Code 配置第三方 API 教程</a><p class="card-desc">ANTHROPIC_BASE_URL / AUTH_TOKEN / MODEL 三个变量，settings.json、VS Code 扩展、curl 最小验证与报错速查表。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">国内直连Claude平台</span></div></article><article class="card"><a class="card-title" href="/articles/coding-relay-cache-cost/">AI 编程中转站：长上下文缓存命中与成本</a><p class="card-desc">编程场景输入占比为何远大于输出、缓存命中率算法、五次成本复盘、会话粘性与长连接稳定性要求。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">AI编程中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/api-relay-faq-troubleshooting/">API 中转站 FAQ：401、404、流式断流排查</a><p class="card-desc">按现象组织的速查：认证失败、model not found、模型列表为空、Base URL、断流、超时重试、402、429、账单差异。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">API中转站报错排查</span></div></article><article class="card"><a class="card-title" href="/articles/ai-api-proxy-china-direct/">AI 中转站推荐：国内直连 GPT 和 Claude 不用代理</a><p class="card-desc">讲清「国内直连」是 API 层而非网页版，三件套配置、最小 curl 验证、不用代理的三种误解，以及超时这个第四字段。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">AI中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/overseas-llm-relay-latency/">海外模型中转平台：跨境链路延迟怎么测</a><p class="card-desc">把一次请求拆成四段计时，TTFT / P95 / 静默降速的测法、故障注入、记录表模板，以及 2026 年链路环境的变化。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">海外模型中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/openai-compatible-migration/">国内直连 GPT：OpenAI 兼容接口迁移只改两处</a><p class="card-desc">Python / Node / curl 迁移示例、七步验证清单、兼容性边界、第一周监控指标与一份回滚预案。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">国内直连GPT平台</span></div></article></div></section>
+</div>
+<aside class="toc"><strong>本文目录</strong><a href="#sec-1">先分清两种协议入口</a><a href="#sec-2">Claude Code 的最小可用配置</a><a href="#sec-3">OpenAI 兼容工具：三件套</a><a href="#sec-4">工具太多时，加一层本地路由</a><a href="#sec-5">报错速查</a><a href="#sec-6">配置这块我怎么收口</a><a href="#sec-7">收尾几句</a></aside>
+</div></main>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div><strong>Token173</strong> · 大模型 API 中转、聚合与接入的选型、排错和成本笔记</div>
+    <nav aria-label="页脚导航">
+      <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+    </nav>
+    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+  </div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>

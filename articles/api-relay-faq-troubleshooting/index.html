@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API 中转站 FAQ：401、404、流式断流排查</title>
+<meta name="description" content="按现象组织的速查：认证失败、model not found、模型列表为空、Base URL、断流、超时重试、402、429、账单差异。">
+<meta name="keywords" content="API中转站报错排查, 401 invalid api key, model not found, 流式输出断掉, Token173, token173.net">
+<meta name="author" content="Token173">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://token173.github.io/articles/api-relay-faq-troubleshooting/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Token173 API 中转笔记">
+<meta property="og:title" content="API 中转站 FAQ：401、404、流式断流排查">
+<meta property="og:description" content="按现象组织的速查：认证失败、model not found、模型列表为空、Base URL、断流、超时重试、402、429、账单差异。">
+<meta property="og:url" content="https://token173.github.io/articles/api-relay-faq-troubleshooting/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="API 中转站 FAQ：401、404、流式断流排查">
+<meta name="twitter:description" content="按现象组织的速查：认证失败、model not found、模型列表为空、Base URL、断流、超时重试、402、429、账单差异。">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316509b'/%3E%3Ctext x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "API 中转站 FAQ：401、404、model not found、流式断流，按现象查", "description": "按现象组织的速查：认证失败、model not found、模型列表为空、Base URL、断流、超时重试、402、429、账单差异。", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "inLanguage": "zh-CN", "keywords": "API中转站报错排查, 401 invalid api key, model not found, 流式输出断掉", "author": {"@type": "Organization", "name": "Token173"}, "publisher": {"@type": "Organization", "name": "Token173", "url": "https://token173.net/"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://token173.github.io/articles/api-relay-faq-troubleshooting/"}, "articleSection": "工程实践"}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "401 / invalid_api_key / 认证失败", "acceptedAnswer": {"@type": "Answer", "text": "见正文对应小节"}}, {"@type": "Question", "name": "404 / model not found", "acceptedAnswer": {"@type": "Answer", "text": "见正文对应小节"}}, {"@type": "Question", "name": "模型列表拉不出来 / 客户端显示空", "acceptedAnswer": {"@type": "Answer", "text": "见正文对应小节"}}, {"@type": "Question", "name": "Base URL 到底填到哪儿", "acceptedAnswer": {"@type": "Answer", "text": "见正文对应小节"}}, {"@type": "Question", "name": "流式输出生成到一半断了", "acceptedAnswer": {"@type": "Answer", "text": "见正文对应小节"}}, {"@type": "Question", "name": "长任务老超时，账单还变高了", "acceptedAnswer": {"@type": "Answer", "text": "见正文对应小节"}}, {"@type": "Question", "name": "余额明明够，却报 402 / insufficient_quota", "acceptedAnswer": {"@type": "Answer", "text": "见正文对应小节"}}, {"@type": "Question", "name": "429 和「静默变慢」哪个更麻烦", "acceptedAnswer": {"@type": "Answer", "text": "见正文对应小节"}}, {"@type": "Question", "name": "账单和预估对不上", "acceptedAnswer": {"@type": "Answer", "text": "见正文对应小节"}}, {"@type": "Question", "name": "怎么判断问题出在工具还是平台", "acceptedAnswer": {"@type": "Answer", "text": "见正文对应小节"}}, {"@type": "Question", "name": "出问题时该给客服什么", "acceptedAnswer": {"@type": "Answer", "text": "见正文对应小节"}}]}]</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://token173.github.io/"}, {"@type": "ListItem", "position": 2, "name": "工程实践", "item": "https://token173.github.io/topics/engineering/"}, {"@type": "ListItem", "position": 3, "name": "API 中转站 FAQ：401、404、model not found、流式断流，按现象查", "item": "https://token173.github.io/articles/api-relay-faq-troubleshooting/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Token173", "url": "https://token173.net/"}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/"><span class="brand-mark">T</span><span>Token173</span><em>API 中转笔记</em></a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/topics/">分类</a>
+      <a href="/models/">型号</a>
+      <a href="/faq/">FAQ</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false">
+      <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
+      <div id="search-results" class="search-results" hidden></div>
+    </form>
+  </div>
+</header>
+<nav class="wrap breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><a href="/topics/engineering/">工程实践</a></li><li aria-current="page">API 中转站 FAQ：401、404、model not found、流式断流，按现象查</li></ol></nav>
+<main id="main" class="wrap"><div class="article-layout">
+<div class="article-body">
+<h1>API 中转站 FAQ：401、404、model not found、流式断流，按现象查</h1>
+<div class="meta-line"><span class="tag">engineering</span><span>2026-11-09</span><span class="dot">·</span><span>API中转站报错排查</span></div>
+<div class="article-lead">搜「中转站 401 怎么解决」「model not found 中转」「API 流式输出断掉」「中转站 超时重试」「余额够却报 402」的，一般不需要一篇教程，需要一张能直接对照的表。这篇按现象组织，不按原理。</div>
+
+<p>2026 年这类问题里，真正出在中转平台本身的其实不多。多数是三件套没对齐 —— API Key、Base URL、模型名，或者客户端的超时和重试配置还停留在聊天场景。下面按遇到频率排。</p>
+<hr>
+<h3 id="sec-1">Q：401 / invalid_api_key / 认证失败</h3>
+<p>先按顺序排除：</p>
+<ol><li>Key 复制带了前后空格，或者粘进配置文件时多了换行。</li><li>Key 来自 A 平台，Base URL 填了 B 平台。三件套必须同源。</li><li>鉴权头不对。Anthropic 客户端发 <code>x-api-key</code>，OpenAI 系发 <code>Authorization: Bearer</code>；有的平台两种都收，有的只收一种。Claude Code 还要区分 <code>ANTHROPIC_AUTH_TOKEN</code> 与 <code>ANTHROPIC_API_KEY</code>。</li><li>Key 被回收、额度用尽、或后台设了 IP 白名单而出口 IP 变了。</li><li>环境变量没生效 —— 改完 <code>.zshrc</code> 忘了重开终端，或者 systemd / CI 里读的是另一份配置。</li></ol>
+<p>拿 curl 打一次最小请求。curl 通、工具不通，问题在工具配置层。</p>
+<hr>
+<h3 id="sec-2">Q：404 / model not found</h3>
+<p>聚合平台的模型 ID 是平台自己维护的别名，不必然等于厂商官方文档里的版本号。带日期后缀的（<code>deepseek-v4-pro-0813</code>、<code>doubao-seedance-2-0-fast-260128</code>）、带变体后缀的（<code>gpt-image-2-d</code>）、大小写和连字符，差一个字符就是 404。</p>
+<p>处理：</p>
+<pre><code class="language-bash">curl -sS "https://token173.net/v1/models" \
+  -H "Authorization: Bearer $RELAY_API_KEY" \
+  | python3 -c "import sys,json; print('\n'.join(m['id'] for m in json.load(sys.stdin)['data']))"</code></pre>
+<p>从返回里复制，别手打，也别照抄任何教程（包括这篇）。另外模型会上下架，把这次校验固化进部署脚本更省事。</p>
+<p>Claude Code 还有个专属坑：后台小任务会去找默认 haiku / sonnet 型号，没显式指定的话会报一个来源很隐蔽的 404。把 <code>ANTHROPIC_DEFAULT_HAIKU_MODEL</code> 和 <code>ANTHROPIC_DEFAULT_SONNET_MODEL</code> 都填上。</p>
+<hr>
+<h3 id="sec-3">Q：模型列表拉不出来 / 客户端显示空</h3>
+<p>有些聚合端点不返回 <code>/v1/models</code>，或返回格式客户端解析不了。这不代表不能用。Chatbox、Cherry Studio 里手动添加模型 ID，再发一条消息验证即可。别卡在列表上。</p>
+<hr>
+<h3 id="sec-4">Q：Base URL 到底填到哪儿</h3>
+<p>多数 SDK 和客户端自己拼 <code>/chat/completions</code>，所以填到 <code>/v1</code> 就够，填完整端点会变成 <code>/v1/chat/completions/chat/completions</code>。手写 curl、<code>requests</code>、Postman 则要用完整地址。</p>
+<p>Anthropic 协议端点是另一套，Claude Code 会自己拼 <code>/v1/messages</code>，地址以平台文档里「Anthropic 端点」那一栏为准，别照搬 OpenAI 兼容地址。Cherry Studio 部分版本还要求去掉末尾斜杠，看字段旁的提示。</p>
+<hr>
+<h3 id="sec-5">Q：流式输出生成到一半断了</h3>
+<p>分三种：</p>
+<p><strong>连接真断了</strong> —— 看有没有收到 FIN、有没有 keep-alive 注释帧。业务侧缓存已生成的增量文本，断连后带 <code>partial_completion</code> 续写，别把整个 prompt 原样重发。</p>
+<p><strong>模型在长思考，连接还活着</strong> —— TCP 没断，只是暂时没有 token。这时候重连只会多扣一次钱。区分靠 keep-alive 和连接状态，别只看「多久没出字」。</p>
+<p><strong>自己的解析器提前退出了</strong> —— 只处理带 <code>content</code> 的 chunk，遇到空 content 就 break，或者没处理最后一个只带 usage 的帧和 <code>[DONE]</code>。换模型时特别容易暴露，因为不同上游的 SSE 分片习惯不一样。</p>
+<pre><code class="language-python">for chunk in stream:
+    if not chunk.choices:
+        continue
+    delta = chunk.choices[0].delta.content
+    if delta:
+        buffer.append(delta)
+# 只在 [DONE] 时结束，空 content 跳过而不是中断</code></pre>
+<hr>
+<h3 id="sec-6">Q：长任务老超时，账单还变高了</h3>
+<p>典型组合：读超时 30 秒 + 自动重试。长回答超时断开，客户端重发全量请求，上游那一次其实已经完整生成并计费了。两次调用，两份钱。</p>
+<p>改法：连接超时 5 秒、读超时按任务类型分开（分类 10 秒、长分析 / 生图 / 视频 120 秒以上）；重试上限 1～2 次，指数退避；视频类任务提交后改轮询，超时先按 task_id 查状态再决定要不要重提。</p>
+<hr>
+<h3 id="sec-7">Q：余额明明够，却报 402 / insufficient_quota</h3>
+<p>几种可能：分组额度独立于总余额、子账号设了单独上限、余额低于某阈值时并发被限到 1、有未完成的长任务预扣冻结、或者欠费阈值触发了保护。去后台看按 Key 的额度明细，别只看总余额。</p>
+<hr>
+<h3 id="sec-8">Q：429 和「静默变慢」哪个更麻烦</h3>
+<p>后者。明确返回 429，客户端能退避、能排队、能提示用户；静默降速会让客户端误判成超时，触发重试，成功率、延迟、账单三样一起变差。压测时专门测这一项：高并发下有没有明确错误码，超时前后 10 秒内有没有重复的 request_id。</p>
+<hr>
+<h3 id="sec-9">Q：账单和预估对不上</h3>
+<p>先别怀疑偷量。锁定一条 request_id，把 <code>prompt_tokens</code>、<code>completion_tokens</code>、缓存字段拆开，检查完整 <code>messages</code>（含 system、历史、工具 schema、图片 base64）本地重算输入侧，再看前后 10 秒有没有重复请求和 <code>client_gone</code> / <code>timeout</code>。大部分差异来自上下文累积和超时重试。</p>
+<p>冷热调用各跑十次，确认缓存命中时扣费是不是真降了。报告命中却不按缓存价结算，属于该换平台的信号。</p>
+<hr>
+<h3 id="sec-10">Q：怎么判断问题出在工具还是平台</h3>
+<p>最小请求用 curl 打一次，通了说明地址、Key、模型名没问题，往后查工具配置、环境变量、解析器、超时。curl 就不通，往前查三件套和协议端点。这个二分能省掉大半瞎猜的时间。</p>
+<hr>
+<h3 id="sec-11">Q：出问题时该给客服什么</h3>
+<p>request_id、精确到秒的时间、模型 ID、完整错误信息（含错误码）、最小可复现的 curl。只发一句「用不了」或者一张没有请求编号的截图，对方也只能回「请稍后重试」。</p>
+<p>这也是选型时值得提前确认的一点：后台能不能按请求查到原始 usage 和错误码。我目前用的 <a href="https://token173.net">token173.net</a> 控制台能展开单条调用，排查时省了很多来回；换任何平台，先把「出问题能不能拿到一条可复核的请求」问清楚，比问便宜几折实在。</p>
+<hr>
+<p>各家的字段命名、端点路径和错误码会随版本调整，上面写的是排查思路，具体以自己后台当前返回为准。</p>
+<div class="cta"><strong>继续看：</strong><a href="/topics/engineering/">工程实践</a> ·
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
+型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/grok-api-relay-notes/">Grok 中转平台：grok-4.7 和 grok-4.5 接入记录</a><p class="card-desc">按天记录的接入日志：404、SSE 解析、账单异常、并发压测、/v1/models 校验脚本，附可复用的记录模板。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">grok中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/token-billing-reconcile/">API 中转站 Token 扣费对不上：四类原因排查</a><p class="card-desc">从一条 request_id 开始，按正常消耗漏算、协议口径、网关 bug、真实动手脚四层排查，附 5 分钟顺序表与换平台信号。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">token扣费对不上</span></div></article><article class="card"><a class="card-title" href="/articles/coding-tools-api-relay/">Claude Code 与 Cursor 接入中转 API：环境变量配置</a><p class="card-desc">Anthropic 与 OpenAI 兼容两种协议入口、settings.json、VS Code 扩展、cc-switch 本地路由、报错速查与长任务参数。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">Claude Code中转API</span></div></article><article class="card"><a class="card-title" href="/articles/one-key-multi-model-api/">第三方 API 巨模平台：一个 Key 调用多模型</a><p class="card-desc">聚合层实际做的四件事——鉴权、协议适配、调度、计量；附多模态流水线配置示例与调度、计费两道工序的拆解。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">第三方API巨模平台</span></div></article><article class="card"><a class="card-title" href="/articles/agent-multi-model-routing/">AI Agent 工作流多模型调度：统一 API 网关实践</a><p class="card-desc">网关层四件事、成本 / 性能 / 稳定三种路由策略、分层结构图、按步骤打标签的记账方式与兜底清单。</p><div class="card-meta"><span class="tag">工程实践</span><span class="kw">Agent多模型调度</span></div></article></div></section>
+</div>
+<aside class="toc"><strong>本文目录</strong></aside>
+</div></main>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div><strong>Token173</strong> · 大模型 API 中转、聚合与接入的选型、排错和成本笔记</div>
+    <nav aria-label="页脚导航">
+      <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+    </nav>
+    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+  </div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>

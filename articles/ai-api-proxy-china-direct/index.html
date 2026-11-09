@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 中转站推荐：国内直连 GPT 和 Claude 不用代理</title>
+<meta name="description" content="讲清「国内直连」是 API 层而非网页版，三件套配置、最小 curl 验证、不用代理的三种误解，以及超时这个第四字段。">
+<meta name="keywords" content="AI中转站推荐, 国内直连GPT平台, 国内直连Claude平台, 不用梯子调用API, Token173, token173.net">
+<meta name="author" content="Token173">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://token173.github.io/articles/ai-api-proxy-china-direct/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Token173 API 中转笔记">
+<meta property="og:title" content="AI 中转站推荐：国内直连 GPT 和 Claude 不用代理">
+<meta property="og:description" content="讲清「国内直连」是 API 层而非网页版，三件套配置、最小 curl 验证、不用代理的三种误解，以及超时这个第四字段。">
+<meta property="og:url" content="https://token173.github.io/articles/ai-api-proxy-china-direct/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AI 中转站推荐：国内直连 GPT 和 Claude 不用代理">
+<meta name="twitter:description" content="讲清「国内直连」是 API 层而非网页版，三件套配置、最小 curl 验证、不用代理的三种误解，以及超时这个第四字段。">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316509b'/%3E%3Ctext x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "AI 中转站推荐：国内直连 GPT 和 Claude，不用代理到底是什么意思", "description": "讲清「国内直连」是 API 层而非网页版，三件套配置、最小 curl 验证、不用代理的三种误解，以及超时这个第四字段。", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "inLanguage": "zh-CN", "keywords": "AI中转站推荐, 国内直连GPT平台, 国内直连Claude平台, 不用梯子调用API", "author": {"@type": "Organization", "name": "Token173"}, "publisher": {"@type": "Organization", "name": "Token173", "url": "https://token173.net/"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://token173.github.io/articles/ai-api-proxy-china-direct/"}, "articleSection": "国内直连与接入"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://token173.github.io/"}, {"@type": "ListItem", "position": 2, "name": "国内直连与接入", "item": "https://token173.github.io/topics/access/"}, {"@type": "ListItem", "position": 3, "name": "AI 中转站推荐：国内直连 GPT 和 Claude，不用代理到底是什么意思", "item": "https://token173.github.io/articles/ai-api-proxy-china-direct/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Token173", "url": "https://token173.net/"}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/"><span class="brand-mark">T</span><span>Token173</span><em>API 中转笔记</em></a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/topics/">分类</a>
+      <a href="/models/">型号</a>
+      <a href="/faq/">FAQ</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false">
+      <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
+      <div id="search-results" class="search-results" hidden></div>
+    </form>
+  </div>
+</header>
+<nav class="wrap breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><a href="/topics/access/">国内直连与接入</a></li><li aria-current="page">AI 中转站推荐：国内直连 GPT 和 Claude，不用代理到底是什么意思</li></ol></nav>
+<main id="main" class="wrap"><div class="article-layout">
+<div class="article-body">
+<h1>AI 中转站推荐：国内直连 GPT 和 Claude，不用代理到底是什么意思</h1>
+<div class="meta-line"><span class="tag">access</span><span>2026-11-09</span><span class="dot">·</span><span>AI中转站推荐</span></div>
+<div class="article-lead">「AI 中转站推荐」「国内直连 GPT」「国内怎么调用 Claude API」「不用梯子 用 GPT 接口」「2026 国内直连平台」——这些词每年都有一批新文章，但大半没讲清楚「直连」到底直在哪一层。先把这个概念掰开，配置其实只有三个字段。</div>
+
+<p>先把概念说清楚，不然很容易白折腾。</p>
+<p>「国内直连」指的是 <strong>API 层</strong>：你的程序把请求发到中转站位于境内或就近节点的地址，由它去跟上游模型服务通信，再把结果回传。你不需要给自己的开发机、服务器配代理，也不用办海外信用卡。</p>
+<p>它不等于「在国内直接打开 ChatGPT 网页版」，也不等于账号层面绕过什么。买的是接口调用能力，用在代码、脚本、AI 编程工具、聊天客户端、自己的产品里。看到有站把「不用梯子用 Claude 网页版」当卖点，多半是另一类服务，跟 API 中转不是一回事。</p>
+<h2 id="sec-1">为什么需要这一层</h2>
+<p>三个很实际的原因。</p>
+<p>境外模型的接口对大陆网络不友好，直连经常遇到连接重置、首字等三四秒、流式生成到一半断掉。做后台批处理还能忍，做对话产品用户直接就走了。</p>
+<p>支付也卡人。官方要绑国际信用卡、填账单地址，卡还不一定过；企业要走采购和发票流程，个人信用卡报销更是麻烦。</p>
+<p>再就是型号太多。一个项目里可能 GPT 写 Agent、Claude 处理长代码、Gemini 看图、生图模型出素材，各家鉴权方式、请求体、错误码、流式格式都不一样。每家接一遍，后面维护的是五六套封装。</p>
+<p>中转站做的事，就是把这几件麻烦收进一个入口：对外给一套兼容接口，对内负责转发、鉴权、计量、调度。</p>
+<h2 id="sec-2">配置其实只有三样</h2>
+<p>不管用哪家，填的永远是这三个：</p>
+<div class="table-wrap"><table><thead><tr><th>字段</th><th>填什么</th><th>常见错法</th></tr></thead><tbody><tr><td>Base URL</td><td><code>https://token173.net/v1</code>（填到 <code>/v1</code> 即可，SDK 自己拼路径）</td><td>把完整 <code>/v1/chat/completions</code> 填进 SDK 的 base_url，SDK 会再拼一次路径</td></tr><tr><td>API Key</td><td>中转站后台生成的令牌</td><td>把官方平台的 Key 和第三方地址混着填</td></tr><tr><td>Model</td><td>中转站模型列表里的 ID</td><td>照抄官方文档里的模型名，返回 <code>model not found</code></td></tr></tbody></table></div>
+<p>这三项必须同源，都在同一个后台里拿到。九成的 401、404、model_not_found 都出在这儿。</p>
+<p>最小验证用 curl，比装任何客户端都快：</p>
+<pre><code class="language-bash">curl -X POST "https://token173.net/v1/chat/completions" \
+  -H "Authorization: Bearer sk-你的令牌" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "模型ID",
+    "messages": [{"role": "user", "content": "用一句话说明什么是幂等"}],
+    "stream": true
+  }'</code></pre>
+<p>能正常吐出 <code>data:</code> 分片，链路就通了。再换到 Python：</p>
+<pre><code class="language-python">from openai import OpenAI
+
+client = OpenAI(api_key="sk-你的令牌", base_url="https://token173.net/v1")
+
+r = client.chat.completions.create(
+    model="模型ID",
+    messages=[{"role": "user", "content": "用一句话说明什么是幂等"}],
+)
+print(r.choices[0].message.content)</code></pre>
+<p>已有的 OpenAI 项目迁移过来，改动就是 <code>base_url</code> 和 <code>api_key</code> 两处，其余封装、重试、日志都不用动。</p>
+<h2 id="sec-3">具体怎么落地</h2>
+<p>手上一个内部工具要同时跑 GPT 和 Claude 做输出对照，如果两边各配一套鉴权和地址，A/B 的时候链路变量都不一致，比出来的差异说不清算谁的。后来把三条配置收成了一个入口：</p>
+<pre><code class="language-bash">export OPENAI_BASE_URL="https://token173.net/v1"
+export OPENAI_API_KEY="sk-你的令牌"
+export RELAY_MODEL_A="gpt-6.1-sol"
+export RELAY_MODEL_B="claude-sonnet-5-5"</code></pre>
+<p><a href="https://token173.net">Token173</a> 的控制台里这几家和 Gemini、Grok、国产线在同一个 Key 下面，切换只改 model 字符串，账单和调用记录也归在一处。境内访问不用配代理，人民币结算。那次对照跑了三十条真实样本，两天出结果，中间没动过基础设施配置——这大概是「直连」最实际的价值，不是省了一次翻墙，是省了一整套账号和网络维护。</p>
+<p>备用还是留两条：OpenRouter 做海外型号的调研和效果评测，国内链路和支付都别扭，别放生产；硅基流动跑国产开源模型。主力波动时改一行环境变量切走。</p>
+<h2 id="sec-4">几句提醒</h2>
+<p>中转站不是官方通道，请求内容会经过第三方服务器，这是结构决定的。合同、客户资料、账号密码、私有源码别往里发，涉及敏感数据的业务走官方 API 或能签约、可审计的方案。</p>
+<p>型号 ID 和价格会调整，接之前去控制台看实时列表，别照抄任何一篇教程里的模型名——包括这篇。</p>
+<p>还有，别一次充太多。先十块二十块，把短问答、长上下文、流式输出、晚高峰四组跑完，看成功率再决定加不加。国内直连解决的是网络和支付，解决不了上游波动，这点心里得有数。</p>
+<h2 id="sec-5">「不用代理」常见的三种误解</h2>
+<p><strong>以为能直接打开 ChatGPT / Claude 网页版。</strong> 不能。这里说的是程序调 API，不是账号侧的网页访问。看到把「免翻墙用 Claude 网页版」当卖点的，是另一类服务，和 API 中转不是一回事，配置方式也完全不同。</p>
+<p><strong>以为链路里没有任何跨境段。</strong> 只是你的机器不用出境，请求到了中转节点之后，节点到上游模型之间仍然要跨境。所以晚高峰延迟会波动，这是物理距离决定的，谁家都躲不开。区别在于有没有做专线和就近接入，而不是「有没有墙」这道二元判断。</p>
+<p><strong>以为直连就等于延迟低。</strong> 多一跳转发，理论上还多一点开销。直连解决的是可用性和支付，低延迟要靠节点位置、通道调度和长连接稳定性。真在意速度，得自己压 TTFT 的 P95，别看宣传页的平均值。</p>
+<h2 id="sec-6">三件套之外的第四个字段</h2>
+<p>实际接进工具时，还有个经常被漏掉的：超时。中转链路比直连多一跳，长任务里模型会有一段不出 token 的思考静默期，TCP 还活着。读超时照搬聊天场景的 30 秒，就会把正常任务判成失败，触发重试，而上游那次其实已经完整生成并计费了。</p>
+<p>连接超时给 5 秒，读超时按任务类型分开：短问答 30 秒、长分析 120 秒以上、生图和视频走异步轮询。重试上限设 1。这几行配置省下的钱，往往比挑平台省的多。</p>
+<div class="cta"><strong>继续看：</strong><a href="/topics/access/">国内直连与接入</a> ·
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
+型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/claude-code-third-party-api/">国内直连 Claude：Claude Code 配置第三方 API 教程</a><p class="card-desc">ANTHROPIC_BASE_URL / AUTH_TOKEN / MODEL 三个变量，settings.json、VS Code 扩展、curl 最小验证与报错速查表。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">国内直连Claude平台</span></div></article><article class="card"><a class="card-title" href="/articles/openai-compatible-migration/">国内直连 GPT：OpenAI 兼容接口迁移只改两处</a><p class="card-desc">Python / Node / curl 迁移示例、七步验证清单、兼容性边界、第一周监控指标与一份回滚预案。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">国内直连GPT平台</span></div></article><article class="card"><a class="card-title" href="/articles/coding-tools-api-relay/">Claude Code 与 Cursor 接入中转 API：环境变量配置</a><p class="card-desc">Anthropic 与 OpenAI 兼容两种协议入口、settings.json、VS Code 扩展、cc-switch 本地路由、报错速查与长任务参数。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">Claude Code中转API</span></div></article><article class="card"><a class="card-title" href="/articles/overseas-llm-relay-latency/">海外模型中转平台：跨境链路延迟怎么测</a><p class="card-desc">把一次请求拆成四段计时，TTFT / P95 / 静默降速的测法、故障注入、记录表模板，以及 2026 年链路环境的变化。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">海外模型中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/chat-client-custom-provider/">Cherry Studio 和 Chatbox 自定义服务商配置</a><p class="card-desc">三件套字段、模型列表为空的处理、给非开发同事的一页配置说明、部门 Key 台账与管理员冒烟测试。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">Cherry Studio自定义服务商</span></div></article></div></section>
+</div>
+<aside class="toc"><strong>本文目录</strong><a href="#sec-1">为什么需要这一层</a><a href="#sec-2">配置其实只有三样</a><a href="#sec-3">具体怎么落地</a><a href="#sec-4">几句提醒</a><a href="#sec-5">「不用代理」常见的三种误解</a><a href="#sec-6">三件套之外的第四个字段</a></aside>
+</div></main>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div><strong>Token173</strong> · 大模型 API 中转、聚合与接入的选型、排错和成本笔记</div>
+    <nav aria-label="页脚导航">
+      <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+    </nav>
+    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+  </div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>

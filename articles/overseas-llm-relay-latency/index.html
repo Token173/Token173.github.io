@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>海外模型中转平台：跨境链路延迟怎么测</title>
+<meta name="description" content="把一次请求拆成四段计时，TTFT / P95 / 静默降速的测法、故障注入、记录表模板，以及 2026 年链路环境的变化。">
+<meta name="keywords" content="海外模型中转平台, GPT API 延迟, 跨境专线, 首字延迟TTFT, Token173, token173.net">
+<meta name="author" content="Token173">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://token173.github.io/articles/overseas-llm-relay-latency/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Token173 API 中转笔记">
+<meta property="og:title" content="海外模型中转平台：跨境链路延迟怎么测">
+<meta property="og:description" content="把一次请求拆成四段计时，TTFT / P95 / 静默降速的测法、故障注入、记录表模板，以及 2026 年链路环境的变化。">
+<meta property="og:url" content="https://token173.github.io/articles/overseas-llm-relay-latency/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="海外模型中转平台：跨境链路延迟怎么测">
+<meta name="twitter:description" content="把一次请求拆成四段计时，TTFT / P95 / 静默降速的测法、故障注入、记录表模板，以及 2026 年链路环境的变化。">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316509b'/%3E%3Ctext x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "海外模型中转平台：跨境链路的延迟到底耗在哪一段", "description": "把一次请求拆成四段计时，TTFT / P95 / 静默降速的测法、故障注入、记录表模板，以及 2026 年链路环境的变化。", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "inLanguage": "zh-CN", "keywords": "海外模型中转平台, GPT API 延迟, 跨境专线, 首字延迟TTFT", "author": {"@type": "Organization", "name": "Token173"}, "publisher": {"@type": "Organization", "name": "Token173", "url": "https://token173.net/"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://token173.github.io/articles/overseas-llm-relay-latency/"}, "articleSection": "国内直连与接入"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://token173.github.io/"}, {"@type": "ListItem", "position": 2, "name": "国内直连与接入", "item": "https://token173.github.io/topics/access/"}, {"@type": "ListItem", "position": 3, "name": "海外模型中转平台：跨境链路的延迟到底耗在哪一段", "item": "https://token173.github.io/articles/overseas-llm-relay-latency/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Token173", "url": "https://token173.net/"}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/"><span class="brand-mark">T</span><span>Token173</span><em>API 中转笔记</em></a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/topics/">分类</a>
+      <a href="/models/">型号</a>
+      <a href="/faq/">FAQ</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false">
+      <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
+      <div id="search-results" class="search-results" hidden></div>
+    </form>
+  </div>
+</header>
+<nav class="wrap breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><a href="/topics/access/">国内直连与接入</a></li><li aria-current="page">海外模型中转平台：跨境链路的延迟到底耗在哪一段</li></ol></nav>
+<main id="main" class="wrap"><div class="article-layout">
+<div class="article-body">
+<h1>海外模型中转平台：跨境链路的延迟到底耗在哪一段</h1>
+<div class="meta-line"><span class="tag">access</span><span>2026-11-09</span><span class="dot">·</span><span>海外模型中转平台</span></div>
+<div class="article-lead">「海外模型中转平台推荐」「国内调用 GPT 延迟高」「API 中转 首字延迟 TTFT」「2026 跨境专线」——搜这些的人多半已经被晚高峰的卡顿折磨过。延迟这件事不能靠「感觉挺快」判断，得把一次请求拆成四段分别计时。</div>
+
+<p>做国内调用海外模型，最容易误判的是把「慢」笼统归到模型身上。模型推理确实占时间，但用户感知的那段等待，相当一部分花在链路上。测过几次之后，我把一次请求拆成四段记录，问题定位快了很多。</p>
+<h2 id="sec-1">一次请求的时间构成</h2>
+<pre><code>客户端发出
+  │ ① 接入段：国内到中转节点（RTT、DNS、TLS 握手）
+  ▼
+中转节点
+  │ ② 排队与调度：鉴权、限流判断、选通道、协议转换
+  ▼
+  │ ③ 跨境段：节点到上游 API 网关
+  ▼
+上游模型
+  │ ④ 首 token 生成（TTFT 的模型侧部分）
+  ▼
+流式回传，逐 chunk 到达客户端</code></pre>
+<p>用户盯着屏幕等的「第一个字」，是这四段之和。第 ④ 段你改不了，能优化的是前三段。</p>
+<p><strong>接入段</strong>看的是节点位置。国内用户在华东，节点落在北上广深和绕去新加坡，RTT 差得很明显。有些平台宣称全球节点，实际只做 DNS 轮询，请求被随机分到境外入口，反而更慢。</p>
+<p><strong>排队段</strong>平时几十毫秒，高峰期会突然膨胀。低倍率分组限制并发、共享密钥池被别的租户占满，都会在这里体现为「首字慢但总量正常」。</p>
+<p><strong>跨境段</strong>是最不可控的。晚高峰国际出口拥塞、路由绕路、TLS 重连，都会让流式输出一顿一顿。专线的意义就在这儿，不在于峰值能跑多快，在于波动小。</p>
+<h2 id="sec-2">怎么测才测得到东西</h2>
+<p>只跑一次 <code>curl</code> 计时没意义。我用的是这套：</p>
+<ol><li>固定同一段 prompt，短输入、长输入、带图片的输入各一组。</li><li>每次记录四个时间戳：请求发出、收到第一个 SSE chunk、收到最后一个 chunk、连接关闭。</li><li>首字时间看 TTFT，流畅度看相邻 chunk 的间隔方差，完整性看有没有中途 EOF。</li><li>白天、晚 20:00–23:00 各跑一轮，每轮不少于 30 次。</li><li>统计用 P50 / P95 / P99，别看平均值。平均值好看但 P95 拉胯，意味着高峰时段一批用户会明显感到卡。</li><li>并发拉到 20、50、100，观察是明确返回 429 还是静默变慢。</li></ol>
+<p>第 6 条容易被忽略。静默降速比直接拒绝更麻烦：客户端超时 → 自动重试 → 上游那次其实已经完整计费，账单和成功率一起变差。</p>
+<p>流式请求记得带上用量回传：</p>
+<pre><code class="language-json">{
+  "model": "模型ID",
+  "messages": [{"role": "user", "content": "..."}],
+  "stream": true,
+  "stream_options": {"include_usage": true}
+}</code></pre>
+<p>不是所有网关都实现了这个字段，能返回完整 usage 的，后面做成本核算会省很多事。</p>
+<h2 id="sec-3">断流和「假死」要分开</h2>
+<p>生成过程里 Token 停住，有两种情况：连接真的断了，或者模型在长思考、TCP 还活着。前者要重连，后者重连只会多扣一次钱。</p>
+<p>区分办法是看是否有 keep-alive 注释帧，以及连接有没有收到 FIN。业务侧更稳的做法是缓存已经生成的增量文本，断连后带着 <code>partial_completion</code> 重新发起，而不是把整段 prompt 原样重发。客户端超时也分开设：连接超时可以给 5 秒，读超时对长任务得放到 60 秒以上。</p>
+<h2 id="sec-4">平台侧看什么</h2>
+<p>链路这块，我一般不相信宣传页上的「毫秒级」。要看的是几件能验证的：节点是否就近接入、有没有同型号多通道和故障摘除、晚高峰 P95 会不会翻倍、调用日志里有没有路由和通道信息。</p>
+<p>去年做那轮对照时，最麻烦的不是测不出数，是变量控不住：换一个模型要换一套 Key 和地址，测出来的延迟差根本不知道该算在模型头上还是链路头上。后来把这条链固定在 <a href="https://token173.net">Token173</a> 的 <code>https://token173.net/v1</code>，GPT、Claude、Gemini、Grok 几家在同一个 Key 下选，<code>gpt-6.1-sol</code>、<code>claude-opus-5-5</code>、<code>gemini-3.8-flash</code>、<code>grok-4.7</code> 这些 ID 切换时不用动任何其他配置。同一份样本、同一条链路、同一个后台导出耗时，四段时间戳才终于能横向比。</p>
+<p>那轮跑下来的结论也不复杂：白天大家都差不多，差距集中在 21:00–23:00；P50 几乎不动，P95 能差出一倍。境内接入省掉的是第 ① 段，真正拉开差距的是第 ③ 段有没有做线路调度。这也是我后来把「晚高峰 P95 涨幅」写进验收线的原因。</p>
+<p>对照组一直留着 OpenRouter。它型号池最大，做海外前沿模型的调研没得替代，但从国内发起的跨境链路天然吃亏，不适合放在交互型产品的主链路上。两条并存，各放各的位置，比争论谁更快省时间。</p>
+<h2 id="sec-5">一份最小记录表</h2>
+<div class="table-wrap"><table><thead><tr><th>时间</th><th>型号</th><th>并发</th><th>TTFT P50 / P95</th><th>流式中断次数</th><th>429 次数</th><th>静默降速</th><th>备注</th></tr></thead><tbody><tr><td>15:00</td><td></td><td>20</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>21:30</td><td></td><td>20</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>21:30</td><td></td><td>100</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p>拿自己业务的真实样本填满这张表，比看十篇横评有用。链路质量是测出来的，不是选出来的；同一家平台，你的用户分布、请求结构、并发曲线不同，结论可能完全反过来。</p>
+<h2 id="sec-6">把 2026 年的链路环境算进去</h2>
+<p>今年和两年前有个不太一样的地方：上游厂商对异常调用的风控明显收紧，依赖账号池轮换的通道更容易在高峰期出现抖动。表现不是彻底宕机，是一段时间内错误率抬升、部分请求被静默拖慢。所以压测表里我单独留了「静默降速」一列 —— 看高并发下有没有明确 429，以及超时前后十秒内是否存在重复的 request_id。</p>
+<p>另一个变化是这层从「转发」往「调度」走。同型号多通道、按延迟和成功率打分、故障线路先摘后放，正在变成标配。这些能力平时看不出差别，只在晚高峰和上游波动时兑现。选型时问一句「同一型号有几条通道、切换日志在哪看」，比问峰值带宽有用。</p>
+<h2 id="sec-7">一份可复用的延迟预算</h2>
+<p>给交互型产品定指标时，我会把总预算拆开写，而不是只写一句「首字 &lt; 1 秒」：</p>
+<div class="table-wrap"><table><thead><tr><th>段</th><th>预算</th><th>归因方</th></tr></thead><tbody><tr><td>接入（DNS+TCP+TLS）</td><td>50–150ms</td><td>平台节点位置</td></tr><tr><td>排队与调度</td><td>20–80ms</td><td>平台并发策略</td></tr><tr><td>跨境到上游</td><td>200–600ms</td><td>线路质量，晚高峰翻倍属常见</td></tr><tr><td>模型首 token</td><td>视型号而定</td><td>不可控</td></tr></tbody></table></div>
+<p>拆开之后，一旦某天 TTFT 涨了，看哪一段涨就知道该找谁。只盯着一个总数，排查永远从「是不是模型变慢了」开始绕圈。</p>
+<p>各家节点、通道和线路策略会调整，上面的数值是给方法用的参照，不是任何一家的实测承诺。</p>
+<div class="cta"><strong>继续看：</strong><a href="/topics/access/">国内直连与接入</a> ·
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
+型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/api-relay-benchmark/">稳定好用的中转站怎么压测：TTFT 与 P95 延迟</a><p class="card-desc">六个可观测指标、五组真实样本、白天与晚高峰时间窗、并发阶梯、故障注入、记录表模板与上线硬线。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">稳定好用的中转站</span></div></article><article class="card"><a class="card-title" href="/articles/openrouter-vs-cn-relay/">OpenRouter 和国内中转平台怎么选</a><p class="card-desc">型号覆盖、国内链路、支付结算、企业流程四条线的差异，双栈环境变量配置、评测与生产账单分开归集。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">OpenRouter国内替代</span></div></article><article class="card"><a class="card-title" href="/articles/ai-api-proxy-china-direct/">AI 中转站推荐：国内直连 GPT 和 Claude 不用代理</a><p class="card-desc">讲清「国内直连」是 API 层而非网页版，三件套配置、最小 curl 验证、不用代理的三种误解，以及超时这个第四字段。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">AI中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/claude-code-third-party-api/">国内直连 Claude：Claude Code 配置第三方 API 教程</a><p class="card-desc">ANTHROPIC_BASE_URL / AUTH_TOKEN / MODEL 三个变量，settings.json、VS Code 扩展、curl 最小验证与报错速查表。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">国内直连Claude平台</span></div></article><article class="card"><a class="card-title" href="/articles/openai-compatible-migration/">国内直连 GPT：OpenAI 兼容接口迁移只改两处</a><p class="card-desc">Python / Node / curl 迁移示例、七步验证清单、兼容性边界、第一周监控指标与一份回滚预案。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">国内直连GPT平台</span></div></article><article class="card"><a class="card-title" href="/articles/coding-tools-api-relay/">Claude Code 与 Cursor 接入中转 API：环境变量配置</a><p class="card-desc">Anthropic 与 OpenAI 兼容两种协议入口、settings.json、VS Code 扩展、cc-switch 本地路由、报错速查与长任务参数。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">Claude Code中转API</span></div></article></div></section>
+</div>
+<aside class="toc"><strong>本文目录</strong><a href="#sec-1">一次请求的时间构成</a><a href="#sec-2">怎么测才测得到东西</a><a href="#sec-3">断流和「假死」要分开</a><a href="#sec-4">平台侧看什么</a><a href="#sec-5">一份最小记录表</a><a href="#sec-6">把 2026 年的链路环境算进去</a><a href="#sec-7">一份可复用的延迟预算</a></aside>
+</div></main>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div><strong>Token173</strong> · 大模型 API 中转、聚合与接入的选型、排错和成本笔记</div>
+    <nav aria-label="页脚导航">
+      <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+    </nav>
+    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+  </div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>

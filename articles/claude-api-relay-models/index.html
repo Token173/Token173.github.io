@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude 中转平台：长任务翻车复盘与型号配置</title>
+<meta name="description" content="一次超时重发导致的缓存失效复盘，claude-opus-5-5 / sonnet-5-5 / haiku-5-5 分档、缓存命中率算法与长任务参数清单。">
+<meta name="keywords" content="Claude中转平台, claude-opus-5-5, Claude长任务断流, Claude Code中转, Token173, token173.net">
+<meta name="author" content="Token173">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://token173.github.io/articles/claude-api-relay-models/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Token173 API 中转笔记">
+<meta property="og:title" content="Claude 中转平台：长任务翻车复盘与型号配置">
+<meta property="og:description" content="一次超时重发导致的缓存失效复盘，claude-opus-5-5 / sonnet-5-5 / haiku-5-5 分档、缓存命中率算法与长任务参数清单。">
+<meta property="og:url" content="https://token173.github.io/articles/claude-api-relay-models/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Claude 中转平台：长任务翻车复盘与型号配置">
+<meta name="twitter:description" content="一次超时重发导致的缓存失效复盘，claude-opus-5-5 / sonnet-5-5 / haiku-5-5 分档、缓存命中率算法与长任务参数清单。">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316509b'/%3E%3Ctext x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Claude 中转平台：一次长任务翻车之后，我改了三处配置", "description": "一次超时重发导致的缓存失效复盘，claude-opus-5-5 / sonnet-5-5 / haiku-5-5 分档、缓存命中率算法与长任务参数清单。", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "inLanguage": "zh-CN", "keywords": "Claude中转平台, claude-opus-5-5, Claude长任务断流, Claude Code中转", "author": {"@type": "Organization", "name": "Token173"}, "publisher": {"@type": "Organization", "name": "Token173", "url": "https://token173.net/"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://token173.github.io/articles/claude-api-relay-models/"}, "articleSection": "模型与型号专题"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://token173.github.io/"}, {"@type": "ListItem", "position": 2, "name": "模型与型号专题", "item": "https://token173.github.io/topics/models/"}, {"@type": "ListItem", "position": 3, "name": "Claude 中转平台：一次长任务翻车之后，我改了三处配置", "item": "https://token173.github.io/articles/claude-api-relay-models/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Token173", "url": "https://token173.net/"}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/"><span class="brand-mark">T</span><span>Token173</span><em>API 中转笔记</em></a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/topics/">分类</a>
+      <a href="/models/">型号</a>
+      <a href="/faq/">FAQ</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false">
+      <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
+      <div id="search-results" class="search-results" hidden></div>
+    </form>
+  </div>
+</header>
+<nav class="wrap breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><a href="/topics/models/">模型与型号专题</a></li><li aria-current="page">Claude 中转平台：一次长任务翻车之后，我改了三处配置</li></ol></nav>
+<main id="main" class="wrap"><div class="article-layout">
+<div class="article-body">
+<h1>Claude 中转平台：一次长任务翻车之后，我改了三处配置</h1>
+<div class="meta-line"><span class="tag">models</span><span>2026-11-09</span><span class="dot">·</span><span>Claude中转平台</span></div>
+<div class="article-lead">「Claude 中转平台推荐」「claude-opus-5-5 国内调用」「Claude 长任务 断流」「2026 Claude Code 缓存命中」——搜这些的人，多半遇到的是「回答突然变笨」或者「账单莫名其妙翻倍」。这两件事经常是同一个原因。</div>
+
+<p>上个月跑一个重构任务，让工具读十几个文件、改完再自己写测试。前二十分钟很顺，第二十三分钟开始答非所问，把之前定好的命名规则忘了个干净。第一反应是模型降智，差点去群里骂平台。</p>
+<p>后来翻日志，问题不在模型。</p>
+<h2 id="sec-1">复盘</h2>
+<p>请求链路是：工具 → 中转 → 上游。我这边开了自动重试，客户端读超时设的 30 秒。长任务里模型有一段思考静默期，没有 token 吐出来，但连接还活着；客户端判定超时，主动断开，重试逻辑又发了一次全量请求。</p>
+<p>新请求被调度到了另一条上游通道，前面积累的上下文缓存全部作废。上下文还在（我发的是完整 messages），但缓存没了，加上模型被换了一条路径，回答风格就飘了。</p>
+<p>三笔账一起出问题：一次中断、一次重复计费、一次缓存失效。</p>
+<p>改了三处：</p>
+<ol><li>读超时按任务类型分开，长任务放到 120 秒以上；连接超时保持 5 秒。</li><li>重试加上限，流式请求不做全量重发，改为携带已生成的增量文本续写。</li><li>同一会话尽量固定通道，也就是所谓的会话粘性。多轮别在中间换上游。</li></ol>
+<p>改完之后同样的任务跑了三遍，都走完了。</p>
+<h2 id="sec-2">长任务真正吃钱的地方</h2>
+<p>Claude 系用在代码和长文分析上，输入侧往往远大于输出侧：整个文件、几轮历史、工具 schema、系统提示词，每次都带着。所以缓存命中率比单价更影响账单。</p>
+<p>有个很实在的判断方法：拿一段固定 system prompt，冷热各跑十次，看后台有没有把 <code>cache_read_tokens</code> 单独列出来，以及冷热调用的实际扣费是不是真有差别。有些面板报告了缓存命中，但扣费一分没少，那这个字段就是摆设。</p>
+<p>另外注意协议差异。Anthropic 的 <code>/v1/messages</code> 里 <code>input_tokens</code> 只算未命中缓存的新增输入，OpenAI 系的 <code>prompt_tokens</code> 是含缓存的总输入。两边字段名字像，口径不一样，做对账时别直接加起来比。</p>
+<h2 id="sec-3">型号怎么配</h2>
+<p>我不按「哪个更强」配，按任务：</p>
+<ul><li>后台小任务、摘要、格式化、工具调用的小型后台请求 → 轻量型号，比如 <code>claude-haiku-5-5</code> 这一档。</li><li>日常编码、单文件重构、常规分析 → <code>claude-sonnet-5-5</code> 这类，性价比和速度比较平衡。</li><li>跨文件规划、架构判断、复杂调试 → <code>claude-opus-5-5</code>，必要时才上。</li><li>还有 <code>claude-opus-4-8</code>、<code>claude-fable-5</code>、<code>claude-fable-5-1</code> 这些，控制台里能看到就顺手做组对照，别凭名字猜能力。</li></ul>
+<p>Claude Code 这类工具会把小任务也发到默认型号上，记得把 <code>ANTHROPIC_DEFAULT_HAIKU_MODEL</code> 和 <code>ANTHROPIC_DEFAULT_SONNET_MODEL</code> 一并设好，否则后台请求会去撞一个不存在的默认 ID，报 <code>model not found</code> 还不好查。</p>
+<h2 id="sec-4">平台侧</h2>
+<p>那次翻车之后，我把调用记录能拆到什么颗粒度，放进了选型的硬条件。现在这条长任务链跑在 <a href="https://token173.net">token173.net</a> 上：Claude 全系和 GPT、Gemini、Grok、国产线共用一个 Key，长任务中间要临时切去轻量型号做摘要时不用改地址；后台能把输入、输出、缓存字段单独展开，<code>end_reason</code> 也能查 —— 上面那次「客户端超时 → 重试 → 换通道 → 缓存失效」的链条，就是靠这几列拼出来的。Anthropic 协议和 OpenAI 兼容格式都能走，Claude Code 配环境变量直接接。</p>
+<p>选它跟「便宜」关系不大，是排查时能拿到数据。换成只回一句「请求失败」的后台，同样的 bug 我大概还会再怀疑三天模型降智。</p>
+<p>它也是托管服务，私有代码、客户数据不往这条链上放，这条边界跟用哪家平台无关。型号 ID 和缓存规则会调整，接之前从控制台复制当前列表，别照抄这篇里的字符串。</p>
+<h2 id="sec-5">一句话收尾</h2>
+<p>长任务出怪事，先查超时、重试、会话粘性和缓存字段，再怀疑模型。我那次要是直接换平台，问题照样会复现，只是换了个地方。</p>
+<h2 id="sec-6">缓存命中率到底怎么算</h2>
+<p>长任务里输入侧远大于输出侧，缓存这一项的权重比单价大。算法不复杂：</p>
+<pre><code>命中率 = cache_read_tokens / (cache_read_tokens + 新输入 tokens)</code></pre>
+<p>拿一段固定 system prompt，冷热各跑十次，把后台导出的字段代进去。正常情况下后十次命中率应该明显不为零，且单条扣费低于冷启动那次。两个条件缺一个，都值得追问：字段有值但扣费没变，说明缓存只做了展示没进结算；命中率一直很低，先检查 prompt 前缀里是不是塞了时间戳、随机 ID 或者每次都变的绝对路径。</p>
+<p>设计提示词时把稳定内容放最前面、变化内容放后面。缓存按前缀匹配，前缀一动，后面整段失效。我见过有人为了调试在 system 开头加了一行当前时间，命中率直接掉到个位数。</p>
+<h2 id="sec-7">一次长任务该单独配的参数</h2>
+<div class="table-wrap"><table><thead><tr><th>参数</th><th>聊天默认值</th><th>长任务建议</th><th>原因</th></tr></thead><tbody><tr><td>连接超时</td><td>5s</td><td>5s</td><td>保持不变</td></tr><tr><td>读超时</td><td>30s</td><td>≥120s</td><td>思考静默期不出 token，但连接还活着</td></tr><tr><td>重试上限</td><td>3</td><td>1</td><td>全量重发等于把整个上下文再付一遍钱</td></tr><tr><td>断连恢复</td><td>重发全量</td><td>带 <code>partial_completion</code> 续写</td><td>避免重复计费与风格漂移</td></tr><tr><td>会话粘性</td><td>无</td><td>同一会话固定通道</td><td>换通道会丢上下文缓存</td></tr></tbody></table></div>
+<p>这五行配置的价值，在第一次跑四十分钟的重构任务时会立刻体现出来。改完再回头看「是不是模型变笨了」，多数情况已经不用回答了。</p>
+<div class="cta"><strong>继续看：</strong><a href="/topics/models/">模型与型号专题</a> ·
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
+型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/coding-relay-cache-cost/">AI 编程中转站：长上下文缓存命中与成本</a><p class="card-desc">编程场景输入占比为何远大于输出、缓存命中率算法、五次成本复盘、会话粘性与长连接稳定性要求。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">AI编程中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/claude-code-third-party-api/">国内直连 Claude：Claude Code 配置第三方 API 教程</a><p class="card-desc">ANTHROPIC_BASE_URL / AUTH_TOKEN / MODEL 三个变量，settings.json、VS Code 扩展、curl 最小验证与报错速查表。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">国内直连Claude平台</span></div></article><article class="card"><a class="card-title" href="/articles/llm-relay-model-list-2026/">AI 中转站支持哪些模型：2026 型号 ID 整理</a><p class="card-desc">26 个型号按 Claude / GPT / Gemini / Grok / 国产 / 视觉分组，附命名规则、/v1/models 校验脚本与最小验证组。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">AI中转站模型列表</span></div></article><article class="card"><a class="card-title" href="/articles/gpt-api-relay-models/">GPT 中转平台：gpt-6-sol 与 gpt-5.6-terra 怎么选</a><p class="card-desc">按轻中重三档绑型号，用综合单价而非折扣横比；附 2026 年型号命名规则、A/B 记录模板和默认旗舰习惯的成本账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">GPT中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/gemini-api-relay-china/">Gemini 中转平台：gemini-3.8-flash 国内调用</a><p class="card-desc">多模态上传慢在哪、长上下文被截断的四类原因、协议差异、finish_reason 对照表与体积账。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">Gemini中转平台</span></div></article><article class="card"><a class="card-title" href="/articles/grok-api-relay-notes/">Grok 中转平台：grok-4.7 和 grok-4.5 接入记录</a><p class="card-desc">按天记录的接入日志：404、SSE 解析、账单异常、并发压测、/v1/models 校验脚本，附可复用的记录模板。</p><div class="card-meta"><span class="tag">模型与型号专题</span><span class="kw">grok中转平台</span></div></article></div></section>
+</div>
+<aside class="toc"><strong>本文目录</strong><a href="#sec-1">复盘</a><a href="#sec-2">长任务真正吃钱的地方</a><a href="#sec-3">型号怎么配</a><a href="#sec-4">平台侧</a><a href="#sec-5">一句话收尾</a><a href="#sec-6">缓存命中率到底怎么算</a><a href="#sec-7">一次长任务该单独配的参数</a></aside>
+</div></main>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div><strong>Token173</strong> · 大模型 API 中转、聚合与接入的选型、排错和成本笔记</div>
+    <nav aria-label="页脚导航">
+      <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+    </nav>
+    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+  </div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API 中转站倍率是什么意思：计费口径与对账</title>
+<meta name="description" content="两层换算拆开讲，倍率按方向 / 模型 / 分组 / 时段的差异、综合单价公式、四类搜索意图与可填的比价工作表。">
+<meta name="keywords" content="API中转站倍率, 中转站0.2倍率, token扣费怎么算, 中转站价格对比, Token173, token173.net">
+<meta name="author" content="Token173">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://token173.github.io/articles/api-relay-pricing-ratio/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Token173 API 中转笔记">
+<meta property="og:title" content="API 中转站倍率是什么意思：计费口径与对账">
+<meta property="og:description" content="两层换算拆开讲，倍率按方向 / 模型 / 分组 / 时段的差异、综合单价公式、四类搜索意图与可填的比价工作表。">
+<meta property="og:url" content="https://token173.github.io/articles/api-relay-pricing-ratio/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="API 中转站倍率是什么意思：计费口径与对账">
+<meta name="twitter:description" content="两层换算拆开讲，倍率按方向 / 模型 / 分组 / 时段的差异、综合单价公式、四类搜索意图与可填的比价工作表。">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316509b'/%3E%3Ctext x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "API 中转站的「倍率」到底是什么意思", "description": "两层换算拆开讲，倍率按方向 / 模型 / 分组 / 时段的差异、综合单价公式、四类搜索意图与可填的比价工作表。", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "inLanguage": "zh-CN", "keywords": "API中转站倍率, 中转站0.2倍率, token扣费怎么算, 中转站价格对比", "author": {"@type": "Organization", "name": "Token173"}, "publisher": {"@type": "Organization", "name": "Token173", "url": "https://token173.net/"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://token173.github.io/articles/api-relay-pricing-ratio/"}, "articleSection": "计费与成本"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://token173.github.io/"}, {"@type": "ListItem", "position": 2, "name": "计费与成本", "item": "https://token173.github.io/topics/billing/"}, {"@type": "ListItem", "position": 3, "name": "API 中转站的「倍率」到底是什么意思", "item": "https://token173.github.io/articles/api-relay-pricing-ratio/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Token173", "url": "https://token173.net/"}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/"><span class="brand-mark">T</span><span>Token173</span><em>API 中转笔记</em></a>
+    <nav class="nav" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/topics/">分类</a>
+      <a href="/models/">型号</a>
+      <a href="/faq/">FAQ</a>
+      <a href="/about/">关于</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false">
+      <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
+      <div id="search-results" class="search-results" hidden></div>
+    </form>
+  </div>
+</header>
+<nav class="wrap breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><a href="/topics/billing/">计费与成本</a></li><li aria-current="page">API 中转站的「倍率」到底是什么意思</li></ol></nav>
+<main id="main" class="wrap"><div class="article-layout">
+<div class="article-body">
+<h1>API 中转站的「倍率」到底是什么意思</h1>
+<div class="meta-line"><span class="tag">billing</span><span>2026-11-09</span><span class="dot">·</span><span>API中转站倍率</span></div>
+<div class="article-lead">「API 中转站倍率是什么意思」「中转站 0.2 倍率」「token 扣费 怎么算」「2026 中转站 价格对比」——同一个模型，A 站写 0.2 倍率、B 站写官方 8 折、C 站写每百万 token 多少钱，三个数字基准不同，直接比一定误判。</div>
+
+<p>同一个模型，A 站写 0.2 倍率，B 站写官方 8 折，C 站写每百万 token 多少钱。三个数字没法直接比，因为它们的基准不是一回事。这篇只讲口径，不推荐平台。</p>
+<h2 id="sec-1">一次扣费中间隔了两层换算</h2>
+<p>大多数中转站的账是这么算的：</p>
+<pre><code>官方 API 标价（美元）
+   × 中转站设定的兑换口径（1 美元标价 = 多少平台币）
+   × 该模型的倍率
+   = 用户实际扣减</code></pre>
+<p>第一层是官方标价折算：系统先算「如果这些请求走官方 API 要花多少钱」，得出一个以美元计的标价额度。</p>
+<p>第二层是平台币兑换：有的站 1 美元标价兑 1 元平台币，有的兑 6.8 或 7。这一步已经改变了你感受到的价格，但界面上通常不显眼。</p>
+<p>第三步才是倍率，按模型、按分组、按输入输出方向分别设系数。</p>
+<p>只看「倍率 0.2」就下结论，是最常见的误判。必须同时知道兑换口径，两个数字缺一个，价格没有可比性。</p>
+<p>还有个容易重复计算的坑：如果平台已经把倍率算进了每次扣费（后台显示的就是最终扣除额），就不要再乘一次。很多人算不对账，卡在这一步。</p>
+<h2 id="sec-2">倍率不是一个数字，是一组数字</h2>
+<ul><li><strong>按方向</strong>：输入倍率、输出倍率常常不同。生成类业务输出占比高，输出倍率的权重更大。</li><li><strong>按模型</strong>：旗舰型号和轻量型号各配一套。宣传里那句「低至 0.1 倍率」往往只覆盖少数几个型号。</li><li><strong>按分组 / 渠道</strong>：同一模型可能有多条上游线路，稳定通道倍率高，低价分组倍率低但可能限并发、限 RPM，甚至来源不同。</li><li><strong>按时段</strong>：部分平台夜间或活动期调倍率，有时效性。</li></ul>
+<p>所以问「这家倍率多少」意义不大，该问的是「我实际要用的这个模型、这个输入输出比例、走这个分组，综合单价是多少」。</p>
+<h2 id="sec-3">用综合单价横比</h2>
+<p>拿自己业务的真实 token 分布代入：</p>
+<pre><code>综合单价 = 官方输入单价 × 输入倍率 × 输入占比
+         + 官方输出单价 × 输出倍率 × 输出占比
+         + 缓存部分（按平台规则另算）</code></pre>
+<p>对话类产品历史上下文越滚越长，输入占比可能到七八成；内容生成反过来。同一家平台对两类业务，算出来的排名可能完全颠倒。</p>
+<p>再补四个必问项：</p>
+<ol><li>失败请求计不计费？</li><li>客户端超时后的重试算不算新请求？</li><li>缓存命中是否按折扣价结算，<code>cache_read_tokens</code> 有没有单列？</li><li>有没有最低计费单位、阶梯折扣、余额低时的并发限制？</li></ol>
+<p>批量任务里，这四项能把预估账单拉偏不少。</p>
+<h2 id="sec-4">倍率很低，成本从哪来</h2>
+<p>不是所有低价都有问题，但低到背离算力成本时值得多问一句。常见的几类来源：批量采购或协议价拿到的折扣、订阅制与按量 API 之间的价差、区域定价差异、上游企业账号的额度拆分，以及来源说不清的号池和逆向通道。</p>
+<p>前几类能持续，后几类随时可能断。判断方法很朴素：让平台把上游类型、分组说明、倍率和兑换口径一起写清楚。写不清楚的，低价只是把风险换了个位置。</p>
+<h2 id="sec-5">对账怎么落</h2>
+<p>选平台时优先看能不能给出请求级 usage，字段至少拆到 <code>prompt_tokens</code>、<code>completion_tokens</code>、缓存相关项。拿到一条具体请求，把完整 messages（含 system、历史、工具 schema）序列化后本地用对应 tokenizer 估一遍，和后台数字比量级。差 5%–10% 属正常波动，差 20% 以上再往深查。</p>
+<p>我一般从 <a href="https://token173.net">token173.net</a> 后台按 request_id 导单条明细来跑这个比对 —— 不是说它算得比别家准，而是字段拆得开、能导出，冷热各十条的成本差异能直接并排看。换成一个只显示「余额 -0.37」的后台，下面这四步一步都做不了，只能靠猜。</p>
+<p>差距集中在缓存字段，多半是协议口径问题（Anthropic 的 <code>input_tokens</code> 只算未命中缓存的新增输入，OpenAI 的 <code>prompt_tokens</code> 是含缓存的总输入），不是扣错钱。差距集中在输入侧、且系统性持续出现，才需要怀疑灌水。</p>
+<p>连原始 usage 都不给、只回一句「以账单为准」的，账是没法对的。这一项在 2026 年已经成了选型的分水岭：能不能对账，比便宜几折更影响长期成本。</p>
+<h2 id="sec-6">一句补充</h2>
+<p>倍率作用于计费金额，通常不改变实际 token 消耗量——消耗多少由分词器和请求内容决定。少数平台把倍率直接乘在 token 数上再按统一单价结算，账面看起来 token 变多了，本质还是计费权重调整。</p>
+<p>选型时把倍率和模型范围、通道质量、限流策略、账务透明度一起看。单独一个漂亮数字，说明不了什么。</p>
+<p>（本文只讲口径。具体某家的倍率、兑换比例、价格请以各自价格页当前公示为准，这个行业调价很频繁。）</p>
+<h2 id="sec-7">搜「倍率」的人，实际在问四件事</h2>
+<p>把搜索框里的问法归一下，指向的证据完全不同：</p>
+<div class="table-wrap"><table><thead><tr><th>问法</th><th>真正想问的</th><th>该看什么</th></tr></thead><tbody><tr><td>「0.2 倍率便宜吗」</td><td>跟别家怎么比</td><td>兑换口径 + 输入/输出/缓存分项</td></tr><tr><td>「为什么比官方便宜这么多」</td><td>上游来源正不正当</td><td>渠道说明、分组规则、可持续性</td></tr><tr><td>「余额掉得比预期快」</td><td>是不是被多扣</td><td>单条 request_id 的原始 usage</td></tr><tr><td>「无限 token 套餐靠谱吗」</td><td>有没有隐藏上限</td><td>频次、并发、静默降速条款</td></tr></tbody></table></div>
+<p>第二行在 2026 年尤其值得展开。公开报道里把低价来源拆得比较清楚：批量采购或协议价、订阅制与按量 API 的价差、区域定价差异，属于能持续的；账号池轮换、逆向其他产品客户端、退款时间差这类，随时可能中断。前者能写进说明，后者只会写「渠道优势」。</p>
+<p>所以判断方法还是那句：让平台把上游类型、分组说明、倍率和兑换口径一起写清楚。写不清楚的，低价只是把风险换了个位置。</p>
+<h2 id="sec-8">一张可以自己填的比价工作表</h2>
+<div class="table-wrap"><table><thead><tr><th>项目</th><th>平台 A</th><th>平台 B</th><th>备注</th></tr></thead><tbody><tr><td>1 美元官方标价 = 多少平台币</td><td></td><td></td><td>缺这项则价格不可比</td></tr><tr><td>目标型号输入倍率</td><td></td><td></td><td></td></tr><tr><td>目标型号输出倍率</td><td></td><td></td><td>常被漏掉</td></tr><tr><td>缓存计价规则</td><td></td><td></td><td>上游返回缓存数才按缓存价？</td></tr><tr><td>失败请求 / 重试是否计费</td><td></td><td></td><td>批量任务影响大</td></tr><tr><td>最低充值 / 余额有效期</td><td></td><td></td><td></td></tr><tr><td>我业务的输入 : 输出占比</td><td></td><td></td><td>用真实分布，别拍脑袋</td></tr><tr><td>综合单价（代入公式）</td><td></td><td></td><td>唯一可比的数字</td></tr></tbody></table></div>
+<p>最后一行算出来，再回头看首页那个「低至 X 折」，通常会有不一样的判断。</p>
+<p>（本文只讲口径。具体倍率、兑换比例、价格以各自价格页当前公示为准，这个行业调价很频繁。）</p>
+<div class="cta"><strong>继续看：</strong><a href="/topics/billing/">计费与成本</a> ·
+<a href="/models/">型号 ID 清单</a> · <a href="/faq/">报错速查</a>。
+型号与价格会调整，接入前以平台控制台当前列表为准。</div>
+<section class="related"><h2>相关文章</h2><div class="grid"><article class="card"><a class="card-title" href="/articles/token-billing-reconcile/">API 中转站 Token 扣费对不上：四类原因排查</a><p class="card-desc">从一条 request_id 开始，按正常消耗漏算、协议口径、网关 bug、真实动手脚四层排查，附 5 分钟顺序表与换平台信号。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">token扣费对不上</span></div></article><article class="card"><a class="card-title" href="/articles/coding-relay-cache-cost/">AI 编程中转站：长上下文缓存命中与成本</a><p class="card-desc">编程场景输入占比为何远大于输出、缓存命中率算法、五次成本复盘、会话粘性与长连接稳定性要求。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">AI编程中转站推荐</span></div></article><article class="card"><a class="card-title" href="/articles/token-relay-balance-risk/">Token 中转站余额清零与跑路风险：小额试跑清单</a><p class="card-desc">预充值结构的五类资金损失方式、五条资金纪律、小额试跑清单，以及 2026 双十一囤 Token 的三个坑与资金敞口表。</p><div class="card-meta"><span class="tag">避坑与风险</span><span class="kw">token中转站跑路</span></div></article></div></section>
+</div>
+<aside class="toc"><strong>本文目录</strong><a href="#sec-1">一次扣费中间隔了两层换算</a><a href="#sec-2">倍率不是一个数字，是一组数字</a><a href="#sec-3">用综合单价横比</a><a href="#sec-4">倍率很低，成本从哪来</a><a href="#sec-5">对账怎么落</a><a href="#sec-6">一句补充</a><a href="#sec-7">搜「倍率」的人，实际在问四件事</a><a href="#sec-8">一张可以自己填的比价工作表</a></aside>
+</div></main>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div><strong>Token173</strong> · 大模型 API 中转、聚合与接入的选型、排错和成本笔记</div>
+    <nav aria-label="页脚导航">
+      <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+    </nav>
+    <p class="disclaimer">本站为技术笔记，内容按公开资料与实际接入经验整理。模型型号、价格与平台规则会调整，请以各平台控制台当前公示为准。使用第三方接口服务请自行评估数据与资金风险。</p>
+  </div>
+</footer>
+<script src="/assets/app.js" defer></script>
+</body>
+</html>
