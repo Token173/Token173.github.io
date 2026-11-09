@@ -700,19 +700,9 @@ python3 tools/build.py
 SITE_BASE_URL=https://guide.token173.net python3 tools/build.py
 ```
 
-## SEO 结构
+## 站点结构
 
-| 层级 | 承接意图 | 页面 |
-|---|---|---|
-| 核心词 | AI 中转站推荐 / API 中转站 / 大模型聚合平台 | `/` |
-| 修饰长尾 | 好用 / 靠谱 / 稳定 / 老牌 / 国内直连 / 各模型家族 | `/topics/<topic>/` |
-| 问题与教程词 | 怎么配 / 怎么查 / 怎么算 / 怎么测 | `/articles/<slug>/` × 30 |
-| 型号词 | 26 个具体模型 ID | `/models/` |
-| 疑问词 | 是什么 / 会不会 / 怎么办 | `/faq/` |
-
-每页含唯一 H1、定制 title / description / keywords、canonical、Open Graph、BreadcrumbList 与 Organization 结构化数据；文章页另有 BlogPosting，含问答的页面与 FAQ 页另有 FAQPage。全站静态 HTML，爬虫无需执行 JS 即可读取正文。
-
-内链：面包屑 → 分类页 → 文章页 → 相关文章 → 型号页 / FAQ，形成 Hub 与内容页的双向链接，避免孤岛页。
+`/` 首页、`/topics/` 分类、`/articles/` 文章、`/models/` 型号索引、`/faq/` 常见问题、`/about/` 关于；附 `sitemap.xml` 与 `robots.txt`。全站纯静态 HTML，无外部依赖。
 
 ## 绑定自定义域名
 
