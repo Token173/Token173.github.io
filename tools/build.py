@@ -448,7 +448,7 @@ def main():
     write("assets/app.js", JS)
     write(".nojekyll", "")
     write(".gitignore", "*.pyc\n__pycache__/\n.DS_Store\n")
-    write("CNAME.example", "docs.token173.net\n")
+    write("CNAME.example", "guide.token173.net\n")
 
     search_index, sitemap = [], []
 
@@ -708,7 +708,7 @@ python3 tools/build.py
 换自定义域名后，用环境变量重建 canonical、og:url 与 sitemap：
 
 ```bash
-SITE_BASE_URL=https://docs.token173.net python3 tools/build.py
+SITE_BASE_URL=https://guide.token173.net python3 tools/build.py
 ```
 
 ## SEO 结构
@@ -729,28 +729,34 @@ SITE_BASE_URL=https://docs.token173.net python3 tools/build.py
 
 **推荐用现有主域的子域，而不是另买新域**：子域能继承主域权重、品牌集中、零成本，新独立域要从零积累信任且需单独备案。
 
-候选子域（按推荐顺序）：
+### 已核查的占用情况（2026-11-09 DNS 实测）
 
-| 子域 | 说明 |
-|---|---|
-| `docs.token173.net` | 首选，文档 / 教程语义清晰 |
-| `guide.token173.net` | 备选，教程导向 |
-| `wiki.token173.net` | 备选，知识库导向 |
-| `blog.token173.net` | 备选，笔记导向 |
+| 子域 | 状态 | 说明 |
+|---|---|---|
+| `docs.token173.net` | **已占用** | CNAME 指向 Apifox 文档服务，不要动它 |
+| `api.token173.net` | **已占用** | CNAME 指向现有接口服务，不要动它 |
+| `guide.token173.net` | 空闲 | **首选**，教程 / 选型笔记语义，与现有 docs 参考文档正好分工 |
+| `apidocs.token173.net` | 空闲 | 备选，API 教程语义更精准 |
+| `wiki.token173.net` | 空闲 | 备选，知识库导向 |
+| `learn.token173.net` / `handbook.token173.net` / `blog.token173.net` | 空闲 | 备选 |
 
-不建议 `api.token173.net`：容易和真实 API 端点混淆。
+主域 NS 托管在 Cloudflare（`elly.ns.cloudflare.com` / `fred.ns.cloudflare.com`），子域也在这里加。
 
-配置步骤：
+### 配置步骤
 
-1. 在 `token173.net` 的 DNS 管理里加一条记录：
-   `docs  CNAME  Token173.github.io.`（TTL 可设 3600）
-2. 把仓库里的 `CNAME.example` 改名为 `CNAME`，内容保持 `docs.token173.net`。
-3. GitHub 仓库 Settings → Pages → Custom domain 填 `docs.token173.net`，保存后等 DNS 生效，再勾 Enforce HTTPS。
-4. 用 `SITE_BASE_URL=https://docs.token173.net python3 tools/build.py` 重建，把 canonical 与 sitemap 换成新域名。
+1. Cloudflare → `token173.net` → DNS → 添加记录：
+   `Type: CNAME` / `Name: guide` / `Target: Token173.github.io` / `TTL: Auto`。
+   **代理状态必须选「仅 DNS / DNS only」（灰云）**，开橙云代理会让 GitHub 的域名所有权校验和证书签发失败。
+2. 把仓库里的 `CNAME.example` 改名为 `CNAME`，内容保持 `guide.token173.net`。
+3. GitHub 仓库 Settings → Pages → Custom domain 填 `guide.token173.net`，保存后等 DNS 生效，再勾 Enforce HTTPS。
+4. 用 `SITE_BASE_URL=https://guide.token173.net python3 tools/build.py` 重建，把 canonical、og:url 与 sitemap 换成新域名，再提交推送。
+5. 到 Search Console / 百度站长平台提交新域名的 sitemap；默认域名 `token173.github.io` 会 301 到自定义域，无需额外处理。
 
 DNS 未生效前不要放 `CNAME` 文件，否则默认域名会被重定向到一个还解析不了的地址。
 
-另买独立新域（可选，非首选）时，方向是「AI 教程 / API 文档」类短词组合；注册前先查可注册性与商标情况，国内解析还需备案。
+### 要不要另买独立新域
+
+不建议作为首选。新域没有历史权重、外链要从零积累、国内解析需备案，还会把品牌权重分散。确有隔离需求时，方向是「AI 教程 / API 文档」类短词组合，注册前先查可注册性与商标情况；买来后仍按上面的方式 CNAME 到本站即可。
 
 ## 内容口径
 
