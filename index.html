@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI 中转站推荐与大模型 API 接入教程｜2026 选型笔记 - Token173</title>
-<meta name="description" content="好用的 API 中转站推荐、靠谱的 token 中转站怎么判断、国内直连 GPT 与 Claude 配置、模型型号清单、倍率对账与报错排查。30 篇可复现的技术笔记。">
+<meta name="description" content="好用的 API 中转站推荐、靠谱的 token 中转站怎么判断、国内直连 GPT 与 Claude 配置、模型型号清单、倍率对账与报错排查。31 篇可复现的技术笔记。">
 <meta name="keywords" content="AI中转站推荐,好用的API中转站推荐,靠谱的token中转站推荐,大模型API聚合平台,国内直连GPT,国内直连Claude,Token173">
 <meta name="author" content="Token173">
 <meta name="robots" content="index,follow,max-image-preview:large">
@@ -12,12 +12,12 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Token173 API 中转笔记">
 <meta property="og:title" content="AI 中转站推荐与大模型 API 接入教程｜2026 选型笔记 - Token173">
-<meta property="og:description" content="好用的 API 中转站推荐、靠谱的 token 中转站怎么判断、国内直连 GPT 与 Claude 配置、模型型号清单、倍率对账与报错排查。30 篇可复现的技术笔记。">
+<meta property="og:description" content="好用的 API 中转站推荐、靠谱的 token 中转站怎么判断、国内直连 GPT 与 Claude 配置、模型型号清单、倍率对账与报错排查。31 篇可复现的技术笔记。">
 <meta property="og:url" content="https://token173.github.io/">
 <meta property="og:locale" content="zh_CN">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AI 中转站推荐与大模型 API 接入教程｜2026 选型笔记 - Token173">
-<meta name="twitter:description" content="好用的 API 中转站推荐、靠谱的 token 中转站怎么判断、国内直连 GPT 与 Claude 配置、模型型号清单、倍率对账与报错排查。30 篇可复现的技术笔记。">
+<meta name="twitter:description" content="好用的 API 中转站推荐、靠谱的 token 中转站怎么判断、国内直连 GPT 与 Claude 配置、模型型号清单、倍率对账与报错排查。31 篇可复现的技术笔记。">
 <link rel="stylesheet" href="/assets/style.css">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316509b'/%3E%3Ctext x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://token173.github.io/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Token173", "url": "https://token173.net/"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Token173 API 中转笔记", "url": "https://token173.github.io/", "potentialAction": {"@type": "SearchAction", "target": "https://token173.github.io/?q={search_term_string}", "query-input": "required name=search_term_string"}}</script>
@@ -33,6 +33,7 @@
       <a href="/models/">型号</a>
       <a href="/faq/">FAQ</a>
       <a href="/about/">关于</a>
+      <a class="nav-official" href="https://token173.net" target="_blank" rel="noopener">官网</a>
     </nav>
     <form class="search" role="search" onsubmit="return false">
       <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
@@ -43,7 +44,7 @@
 <nav class="wrap breadcrumbs" aria-label="面包屑"><ol><li aria-current="page">首页</li></ol></nav>
 <main id="main" class="wrap"><section class="hero">
 <h1>大模型 API 中转、聚合与接入的选型笔记</h1>
-<p>好用的中转站怎么挑、国内直连 GPT 与 Claude 怎么配、倍率和账单怎么算、流式断流怎么查。30 篇按真实搜索意图组织的技术笔记，带可复现的命令、字段与记录表。</p>
+<p>好用的中转站怎么挑、国内直连 GPT 与 Claude 怎么配、倍率和账单怎么算、流式断流怎么查。31 篇按真实搜索意图组织的技术笔记，带可复现的命令、字段与记录表。</p>
 <div class="hero-kws">
 <span class="pill">好用的API中转站推荐</span>
 <span class="pill">靠谱的token中转站推荐</span>
@@ -90,7 +91,7 @@
 <article class="card"><a class="card-title" href="/articles/token-billing-reconcile/">API 中转站 Token 扣费对不上：四类原因排查</a><p class="card-desc">从一条 request_id 开始，按正常消耗漏算、协议口径、网关 bug、真实动手脚四层排查，附 5 分钟顺序表与换平台信号。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">token扣费对不上</span></div></article>
 <article class="card"><a class="card-title" href="/articles/coding-relay-cache-cost/">AI 编程中转站：长上下文缓存命中与成本</a><p class="card-desc">编程场景输入占比为何远大于输出、缓存命中率算法、五次成本复盘、会话粘性与长连接稳定性要求。</p><div class="card-meta"><span class="tag">计费与成本</span><span class="kw">AI编程中转站推荐</span></div></article>
 </div></section>
-<section class="section"><div class="section-head"><h2>全部 30 篇</h2></div><div class="grid">
+<section class="section"><div class="section-head"><h2>全部 31 篇</h2></div><div class="grid">
 <article class="card"><a class="card-title" href="/articles/best-api-relay-2026/">2026 好用的 API 中转站推荐：稳定靠谱实测对比</a><p class="card-desc">换了七八家之后总结的 API 中转站验收标准与横向对比，含踩坑经过、48 小时压测动作、主流平台定位和 2026 年行业背景。</p><div class="card-meta"><span class="tag">选型与推荐</span><span class="kw">好用的API中转站推荐</span></div></article>
 <article class="card"><a class="card-title" href="/articles/token-relay-trust-checklist/">靠谱的 token 中转站推荐：五条自检标准</a><p class="card-desc">不靠口碑判断中转站靠不靠谱：请求级日志、倍率与兑换口径、小额起充、运营主体、状态页，附一次真实筛选记录和风险自查表。</p><div class="card-meta"><span class="tag">避坑与风险</span><span class="kw">靠谱的token中转站推荐</span></div></article>
 <article class="card"><a class="card-title" href="/articles/ai-api-proxy-china-direct/">AI 中转站推荐：国内直连 GPT 和 Claude 不用代理</a><p class="card-desc">讲清「国内直连」是 API 层而非网页版，三件套配置、最小 curl 验证、不用代理的三种误解，以及超时这个第四字段。</p><div class="card-meta"><span class="tag">国内直连与接入</span><span class="kw">AI中转站推荐</span></div></article>
@@ -128,7 +129,7 @@
     <div><strong>Token173</strong> · 大模型 API 中转、聚合与接入的选型、排错和成本笔记</div>
     <nav aria-label="页脚导航">
       <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
-      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a><a href="https://token173.net" target="_blank" rel="noopener">官网</a>
     </nav>
     <p class="disclaimer">型号、价格与平台规则会调整，以各平台控制台当前公示为准；使用第三方接口服务请自行评估数据与资金风险。</p>
   </div>

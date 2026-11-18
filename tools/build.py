@@ -218,6 +218,7 @@ def shell(*, title, seo_title, desc, kws, body, canonical, breadcrumbs, extra_he
       <a href="/models/">型号</a>
       <a href="/faq/">FAQ</a>
       <a href="/about/">关于</a>
+      <a class="nav-official" href="https://token173.net" target="_blank" rel="noopener">官网</a>
     </nav>
     <form class="search" role="search" onsubmit="return false">
       <input id="q" type="search" placeholder="搜索教程、型号、报错…" autocomplete="off" aria-label="站内搜索">
@@ -232,7 +233,7 @@ def shell(*, title, seo_title, desc, kws, body, canonical, breadcrumbs, extra_he
     <div><strong>{brand}</strong> · {site_tagline}</div>
     <nav aria-label="页脚导航">
       <a href="/topics/">分类</a><a href="/models/">型号索引</a><a href="/faq/">常见问题</a>
-      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a>
+      <a href="/about/">关于本站</a><a href="/sitemap.xml">站点地图</a><a href="https://token173.net" target="_blank" rel="noopener">官网</a>
     </nav>
     <p class="disclaimer">型号、价格与平台规则会调整，以各平台控制台当前公示为准；使用第三方接口服务请自行评估数据与资金风险。</p>
   </div>
@@ -290,6 +291,7 @@ a:hover{text-decoration:underline}
 .nav{display:flex;gap:20px;font-size:14px;flex:1}
 .nav a{color:var(--muted)}
 .nav a:hover{color:var(--brand)}
+.nav a.nav-official{color:var(--brand);font-weight:600}
 .search{position:relative;width:230px}
 .search input{width:100%;padding:8px 12px;border:1px solid var(--line);border-radius:8px;font:14px var(--sans);background:var(--bg-soft);outline:none}
 .search input:focus{border-color:var(--brand);background:#fff;box-shadow:0 0 0 3px var(--brand-soft)}
@@ -617,6 +619,7 @@ def main():
     about = """<h1>关于本站</h1>
 <p>这里记录大模型 API 中转、聚合与接入过程中的实际问题：怎么选、怎么配、怎么算账、出了问题怎么查。</p>
 <p>内容来自公开资料与真实接入记录，尽量给出可复现的命令、字段名、报错码和记录表，而不是结论式的推荐。</p>
+<p>本站内容对应的平台是 <a href="https://token173.net">Token173</a>，账号注册、充值与工单都在官网处理。</p>
 <h2>内容范围</h2>
 <p>选型与验收方法、国内直连与协议配置、按家族整理的模型型号清单、计费口径与账单对账、风险边界，以及多模型调度和长耗时任务的工程实践。</p>
 <h2>更新口径</h2>
@@ -635,7 +638,7 @@ def main():
     # ---- 首页 ----
     home = ['<section class="hero">',
             '<h1>大模型 API 中转、聚合与接入的选型笔记</h1>',
-            '<p>好用的中转站怎么挑、国内直连 GPT 与 Claude 怎么配、倍率和账单怎么算、流式断流怎么查。30 篇按真实搜索意图组织的技术笔记，带可复现的命令、字段与记录表。</p>',
+            '<p>好用的中转站怎么挑、国内直连 GPT 与 Claude 怎么配、倍率和账单怎么算、流式断流怎么查。31 篇按真实搜索意图组织的技术笔记，带可复现的命令、字段与记录表。</p>',
             '<div class="hero-kws">']
     for k in ["好用的API中转站推荐", "靠谱的token中转站推荐", "AI中转站推荐", "老牌稳定的大模型聚合平台",
               "第三方API巨模平台", "国内直连GPT平台", "国内直连Claude平台", "GPT中转平台",
@@ -652,13 +655,13 @@ def main():
     home += [article_card(n) for n in [3, 11, 12, 25, 26, 29]]
     home += ['</div></section>', '<section class="section"><div class="section-head"><h2>型号与计费</h2><a href="/models/">型号索引 →</a></div><div class="grid">']
     home += [article_card(n) for n in [19, 7, 8, 13, 16, 27]]
-    home += ['</div></section>', '<section class="section"><div class="section-head"><h2>全部 30 篇</h2></div><div class="grid">']
+    home += ['</div></section>', '<section class="section"><div class="section-head"><h2>全部 31 篇</h2></div><div class="grid">']
     home += [article_card(m[0], compact=True) for m in META]
     home.append('</section>')
     write("index.html", shell(
         title="首页",
         seo_title="AI 中转站推荐与大模型 API 接入教程｜2026 选型笔记 - Token173",
-        desc="好用的 API 中转站推荐、靠谱的 token 中转站怎么判断、国内直连 GPT 与 Claude 配置、模型型号清单、倍率对账与报错排查。30 篇可复现的技术笔记。",
+        desc="好用的 API 中转站推荐、靠谱的 token 中转站怎么判断、国内直连 GPT 与 Claude 配置、模型型号清单、倍率对账与报错排查。31 篇可复现的技术笔记。",
         kws="AI中转站推荐,好用的API中转站推荐,靠谱的token中转站推荐,大模型API聚合平台,国内直连GPT,国内直连Claude,Token173",
         body="\n".join(home), canonical="/", page_type="home",
         breadcrumbs=[("首页", "")]))
@@ -690,7 +693,7 @@ def main():
 纯静态站点，无构建依赖、无外部 CDN、无第三方脚本。GitHub Pages 直接托管。
 
 - 站点地址：`%s/`
-- 内容源：`content/*.md`（30 篇）
+- 内容源：`content/*.md`（31 篇）
 - 构建器：`tools/build.py`
 
 ## 重新构建

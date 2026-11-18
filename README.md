@@ -3,7 +3,7 @@
 纯静态站点，无构建依赖、无外部 CDN、无第三方脚本。GitHub Pages 直接托管。
 
 - 站点地址：`https://token173.github.io/`
-- 内容源：`content/*.md`（30 篇）
+- 内容源：`content/*.md`（31 篇）
 - 构建器：`tools/build.py`
 
 ## 重新构建

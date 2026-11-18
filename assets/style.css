@@ -24,6 +24,7 @@ a:hover{text-decoration:underline}
 .nav{display:flex;gap:20px;font-size:14px;flex:1}
 .nav a{color:var(--muted)}
 .nav a:hover{color:var(--brand)}
+.nav a.nav-official{color:var(--brand);font-weight:600}
 .search{position:relative;width:230px}
 .search input{width:100%;padding:8px 12px;border:1px solid var(--line);border-radius:8px;font:14px var(--sans);background:var(--bg-soft);outline:none}
 .search input:focus{border-color:var(--brand);background:#fff;box-shadow:0 0 0 3px var(--brand-soft)}
