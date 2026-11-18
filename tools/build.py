@@ -14,6 +14,9 @@ ROOT = Path(__file__).resolve().parent.parent
 CONTENT = Path(os.environ.get("CONTENT_DIR", str(ROOT / "content")))
 BASE = os.environ.get("SITE_BASE_URL", "https://token173.github.io").rstrip("/")
 TODAY = os.environ.get("SITE_DATE", date.today().isoformat())
+# 每篇文章的发布/更新日期，按编号覆盖；未登记的用 TODAY。避免重建时把旧文日期统一改成当天。
+_DATES_FILE = ROOT / "tools" / "dates.json"
+DATES = json.loads(_DATES_FILE.read_text(encoding="utf-8")) if _DATES_FILE.exists() else {}
 BRAND = "Token173"
 SITE_NAME = "Token173 API 中转笔记"
 SITE_TAGLINE = "大模型 API 中转、聚合与接入的选型、排错和成本笔记"
@@ -30,7 +33,7 @@ TOPICS = {
 
 MODELS = {
     "Claude 系": ["claude-opus-5-5", "claude-opus-4-8", "claude-sonnet-5-5", "claude-haiku-5-5", "claude-fable-5", "claude-fable-5-1"],
-    "GPT 系": ["gpt-6.1-sol", "gpt-6-sol", "gpt-6-astra", "gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.5", "gpt-5.4", "gpt-image-2", "gpt-image-2-d"],
+    "GPT 系": ["gpt-6.2-astra", "gpt-6.2-sol", "gpt-6.1-sol", "gpt-6.1-terra", "gpt-6-sol", "gpt-6-astra", "gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.5", "gpt-5.4", "gpt-image-2", "gpt-image-2-d"],
     "Gemini / Grok": ["gemini-3.8-flash", "grok-4.7", "grok-4.5"],
     "国产线": ["glm-5.3-flash", "deepseek-v4", "deepseek-v4-pro-0813", "deepseek-v4-flash-0731", "kimi-k3", "minimax-h3"],
     "视觉生成": ["doubao-seedance-2-0-fast-260128", "sd-2-5-480p"],
@@ -56,7 +59,7 @@ META = [
 (16,"token-billing-reconcile","API 中转站 Token 扣费对不上：四类原因排查","从一条 request_id 开始，按正常消耗漏算、协议口径、网关 bug、真实动手脚四层排查，附 5 分钟顺序表与换平台信号。","token扣费对不上",["中转站偷量","账单对不上","usage字段"],"billing",[13,27,29]),
 (17,"api-relay-benchmark","稳定好用的中转站怎么压测：TTFT 与 P95 延迟","六个可观测指标、五组真实样本、白天与晚高峰时间窗、并发阶梯、故障注入、记录表模板与上线硬线。","稳定好用的中转站",["中转站压测","P95延迟","流式中断率"],"selection",[6,1,4]),
 (18,"enterprise-llm-gateway-checklist","企业选大模型 API 中转站：发票、对公与子账号清单","财务 / 法务 / 运维三组视角、九项采购验收表、按真实业务跑的技术验证、费用口径写进合同，以及托管中转的结构性边界。","企业级API中转站",["中转站开发票","对公结算","子账号管理"],"selection",[2,23,4]),
-(19,"llm-relay-model-list-2026","AI 中转站支持哪些模型：2026 型号 ID 整理","26 个型号按 Claude / GPT / Gemini / Grok / 国产 / 视觉分组，附命名规则、/v1/models 校验脚本与最小验证组。","AI中转站模型列表",["中转站支持哪些模型","gpt-6-sol","claude-opus-5-5"],"models",[7,8,20]),
+(19,"llm-relay-model-list-2026","AI 中转站支持哪些模型：2026 型号 ID 整理","29 个型号按 Claude / GPT / Gemini / Grok / 国产 / 视觉分组，附命名规则、/v1/models 校验脚本与最小验证组。","AI中转站模型列表",["中转站支持哪些模型","gpt-6-sol","claude-opus-5-5"],"models",[7,8,20]),
 (20,"gpt-image-2-api-relay","gpt-image-2 生图 API 中转：调用与批量跑","图像端点与文本端点差异、按次计费口径、上传体积、超时重试、结果落地、批量前检查清单与排错表。","gpt-image-2 API",["gpt-image-2-d","生图API中转","GPT图像生成国内直连"],"models",[21,19,9]),
 (21,"seedance-video-api-relay","Seedance 视频生成 API 中转：异步任务与轮询","提交—轮询—转存的任务状态机、幂等提交、指数退避、临时 URL、按次计费，附可复用代码骨架与上线检查清单。","Seedance视频生成API",["doubao-seedance-fast","视频模型中转","异步任务轮询"],"models",[20,19,5]),
 (22,"domestic-llm-api-aggregator","国产模型中转 API：DeepSeek、GLM、Kimi、MiniMax 混合调度","按任务分档的降级链、升级触发条件、缓存与峰谷计价、跨家族兜底，以及带日期后缀型号 ID 的实测细节。","国产模型中转API",["DeepSeek API聚合","GLM Kimi MiniMax","一个Key多家模型"],"models",[19,28,27]),
@@ -68,6 +71,7 @@ META = [
 (28,"agent-multi-model-routing","AI Agent 工作流多模型调度：统一 API 网关实践","网关层四件事、成本 / 性能 / 稳定三种路由策略、分层结构图、按步骤打标签的记账方式与兜底清单。","Agent多模型调度",["统一API网关","多模型路由","工作流降级"],"engineering",[5,22,21]),
 (29,"api-relay-faq-troubleshooting","API 中转站 FAQ：401、404、流式断流排查","按现象组织的速查：认证失败、model not found、模型列表为空、Base URL、断流、超时重试、402、429、账单差异。","API中转站报错排查",["401 invalid api key","model not found","流式输出断掉"],"engineering",[10,16,25]),
 (30,"indie-dev-llm-api-starter","个人开发者低成本调用大模型 API：小额试用路线","三条免费 / 自建 / 聚合路线对比、六步上手、免费额度四条纪律、不碰无限套餐与充值赠送的理由。","个人开发者大模型API",["免费大模型API","学生党GPT API","小额试用中转站"],"selection",[2,15,19]),
+(31,"gpt-6-1-6-2-astra-sol-terra","GPT-6.2 Astra 与 Sol 怎么选：6.1 到 6.2 四个型号对照","把 gpt-6.1-sol、gpt-6.1-terra、gpt-6.2-astra、gpt-6.2-sol 放回同一条时间线，对照价格与官方评测口径，附轻中重三档绑法和接入五个检查点。","GPT-6.2 Astra",["gpt-6.2-sol","gpt-6.1-terra","GPT-6.1 Sol"],"models",[7,19,27]),
 ]
 META_BY_NO = {m[0]: m for m in META}
 
@@ -453,6 +457,7 @@ def main():
 
     # ---- 文章页 ----
     for no, slug, seo_title, desc, kw, extras, topic, extra_related in META:
+        art_date = DATES.get("%02d" % no, TODAY)
         raw = docs[no]
         h1 = re.search(r"^#\s+(.*)$", raw, re.M).group(1).strip()
         body_html, toc = md_to_html(raw)
@@ -469,7 +474,7 @@ def main():
         art_ld = {
             "@context": "https://schema.org", "@type": "BlogPosting",
             "headline": h1, "description": desc,
-            "datePublished": TODAY, "dateModified": TODAY,
+            "datePublished": art_date, "dateModified": art_date,
             "inLanguage": "zh-CN", "keywords": ", ".join([kw] + list(extras)),
             "author": {"@type": "Organization", "name": BRAND},
             "publisher": {"@type": "Organization", "name": BRAND, "url": "https://" + DOMAIN + "/"},
@@ -492,7 +497,7 @@ def main():
 <section class="related"><h2>相关文章</h2><div class="grid">{related}</div></section>
 </div>
 <aside class="toc"><strong>本文目录</strong>{toc}</aside>
-</div>""".format(h1=esc(h1), topic=esc(topic), date=TODAY, kw=esc(kw),
+</div>""".format(h1=esc(h1), topic=esc(topic), date=art_date, kw=esc(kw),
                  tname=esc(TOPICS[topic][0]), content=body_html,
                  related="".join(article_card(r) for r in related), toc=toc_html)
         canonical = "/articles/%s/" % slug
@@ -543,7 +548,7 @@ def main():
     # ---- 型号页 ----
     model_links = {7: "GPT", 8: "Claude", 9: "Gemini", 10: "Grok", 20: "生图", 21: "视频", 22: "国产"}
     mb = ['<h1>2026 中转站模型 ID 索引</h1>',
-          '<p class="section-desc">按家族整理的 26 个型号 ID。聚合平台的模型名是平台自维护的别名，'
+          '<p class="section-desc">按家族整理的 29 个型号 ID。聚合平台的模型名是平台自维护的别名，'
           '不必然等于厂商官方版本号；每次上线前用 <code>/v1/models</code> 拉一次当前列表，别照抄任何教程。</p>',
           '<div class="cta"><strong>校验脚本：</strong><code>curl -sS "https://token173.net/v1/models" -H "Authorization: Bearer $RELAY_API_KEY"</code></div>']
     for group, ids in MODELS.items():
@@ -563,7 +568,7 @@ def main():
         body="\n".join(mb), canonical="/models/",
         breadcrumbs=[("首页", "/"), ("型号索引", "")]))
     sitemap.append("/models/")
-    search_index.append({"t": "2026 中转站模型 ID 索引", "d": "26 个型号按家族分组，含校验脚本",
+    search_index.append({"t": "2026 中转站模型 ID 索引", "d": "29 个型号按家族分组，含校验脚本",
                          "u": "/models/", "k": " ".join(sum(MODELS.values(), [])), "c": "型号"})
 
     # ---- FAQ 页 ----
